@@ -1,14 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, Check, ChevronRight, ShieldCheck, Award, Printer } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 
-const getSrc = (img) => (typeof img === 'object' && img?.src ? img.src : img);
+const getSrc = (img) => {
+  if (!img) return '/slider1.webp';
+  if (typeof img === 'object' && img?.src) return img.src;
+  return img;
+};
 
 export default function ProductDetail({ product, relatedProducts = [] }) {
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  
   if (!product) {
     return (
       <PageWrapper>
@@ -72,17 +78,49 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
           {/* Main Showcase: Image + Technical Specifications (Printed) */}
           <div className="mb-12 print:mb-0 flex flex-col md:flex-row print:flex-row items-center md:items-start print:items-start gap-8 lg:gap-12 print:gap-8">
             
-            {/* Left: Product Image */}
-            <div className="w-full md:w-1/2 print:w-1/2 flex items-center justify-center p-4 sm:p-6 print:p-2 min-h-[280px] sm:min-h-[340px] print:min-h-0 bg-white">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={500}
-                height={500}
-                priority
-                sizes="(max-width: 768px) 100vw, 500px"
-                className="max-h-[320px] print:max-h-[340px] w-auto max-w-full object-contain filter drop-shadow-sm print:drop-shadow-none"
-              />
+            {/* Left: Product Image & Gallery */}
+            <div className="w-full md:w-1/2 print:w-1/2 flex flex-col items-center justify-center p-4 sm:p-6 print:p-2 bg-white">
+              <div className="w-full min-h-[280px] sm:min-h-[340px] flex items-center justify-center">
+                <Image
+                  src={selectedPhoto || getSrc(product.image)}
+                  alt={product.name}
+                  width={500}
+                  height={500}
+                  priority
+                  sizes="(max-width: 768px) 100vw, 500px"
+                  className="max-h-[320px] print:max-h-[340px] w-auto max-w-full object-contain filter drop-shadow-sm print:drop-shadow-none transition-all duration-300"
+                />
+              </div>
+
+              {/* Thumbnails if multiple photos exist */}
+              {Array.isArray(product.images) && product.images.length > 1 && (
+                <div className="flex flex-wrap items-center justify-center gap-2 mt-4 print:hidden">
+                  {product.images.map((img, idx) => {
+                    const src = getSrc(img);
+                    const isCurrent = (selectedPhoto || getSrc(product.image)) === src;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedPhoto(src)}
+                        className={`w-14 h-14 rounded-lg border-2 p-1 overflow-hidden transition-all duration-200 cursor-pointer ${
+                          isCurrent
+                            ? 'border-[#DE1D3A] ring-2 ring-[#DE1D3A]/20 scale-105'
+                            : 'border-gray-200 hover:border-gray-400 opacity-70 hover:opacity-100'
+                        }`}
+                      >
+                        <Image
+                          src={src}
+                          alt={`${product.name} photo ${idx + 1}`}
+                          width={60}
+                          height={60}
+                          className="w-full h-full object-contain"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Right: Technical Specifications */}
@@ -222,7 +260,7 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
                   >
                     <div className="h-40 bg-white border border-gray-100 rounded-lg flex items-center justify-center p-4 mb-4">
                       <Image
-                        src={item.image}
+                        src={getSrc(item.image)}
                         alt={item.name}
                         width={200}
                         height={160}

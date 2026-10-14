@@ -188,6 +188,7 @@ export default function Footer() {
             <Link href="/contact" className="hover:text-accent transition-colors duration-200">Privacy Policy</Link>
             <Link href="/contact" className="hover:text-accent transition-colors duration-200">Terms of Service</Link>
             <Link href="/sitemap.xml" className="hover:text-accent transition-colors duration-200">Sitemap</Link>
+            <Link href="/admin" className="hover:text-[#DE1D3A] transition-colors duration-200">Admin Portal</Link>
           </div>
         </div>
       </div>

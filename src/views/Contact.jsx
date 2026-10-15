@@ -131,25 +131,25 @@ export default function Contact() {
     { 
       icon: Phone,
       title: "Call Our Hotline",
-      details: "+91 95 3963 7133",
+      details: "+91 90617 82023",
       sub: "Mon - Sat: 9:00 AM - 8:00 PM IST",
-      action: "tel:+919539637133",
+      action: "tel:+919061782023",
       actionText: "Call Now"
     },
     {
       icon: Mail,
       title: "Email Our Engineers",
-      details: "tpkasimvlr@gmail.com",
+      details: "infocobolt123@gmail.com",
       sub: "Send specifications for bidding",
-      action: "mailto:tpkasimvlr@gmail.com",
+      action: "mailto:infocobolt123@gmail.com",
       actionText: "Email Us"
     },
     {
       icon: MessageSquare,
       title: "Chat on WhatsApp",
-      details: "+91 97 4523 5226",
+      details: "+91 90617 82023",
       sub: "Instant technical support routing",
-      action: "https://wa.me/919745235226",
+      action: "https://wa.me/919061782023",
       actionText: "Start Chat"
     }
   ];

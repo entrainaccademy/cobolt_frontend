@@ -736,10 +736,10 @@ export default function Careers() {
             <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto">
               Send your profile to our talent recruitment inbox directly at{' '}
               <a
-                href="mailto:tpkasimvlr@gmail.com?subject=General%20Careers%20Application"
+                href="mailto:infocobolt123@gmail.com?subject=General%20Careers%20Application"
                 className="text-[#DE1D3A] font-semibold hover:underline"
               >
-                tpkasimvlr@gmail.com
+                infocobolt123@gmail.com
               </a>{' '}
               and mention your core specialization.
             </p>

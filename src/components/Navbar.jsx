@@ -65,11 +65,11 @@ export default function Navbar() {
               <span className="text-xs font-semibold text-slate-700">Veembur, Manjeri, Kerala</span>
             </Link>
             <a
-              href="mailto:tpkasimvlr@gmail.com?subject=Enquiry&body=Hello COBOLT Machineries,"
+              href="mailto:infocobolt123@gmail.com?subject=Enquiry&body=Hello COBOLT Machineries,"
               className="flex items-center gap-2 hover:text-accent transition-colors text-slate-600 font-sans"
             >
               <Mail className="w-3.5 h-3.5 text-[#DE1D3A]" />
-              <span className="text-xs font-semibold text-slate-700">tpkasimvlr@gmail.com</span>
+              <span className="text-xs font-semibold text-slate-700">infocobolt123@gmail.com</span>
             </a>
 
             {/* Social Icons */}
@@ -346,7 +346,7 @@ export default function Navbar() {
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="mailto:tpkasimvlr@gmail.com"
+                href="mailto:infocobolt123@gmail.com"
                 className="text-slate-400 hover:text-accent transition-colors duration-200"
                 aria-label="Email"
               >

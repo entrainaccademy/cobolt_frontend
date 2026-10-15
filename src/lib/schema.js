@@ -24,7 +24,7 @@ export const organization = {
   description:
     'Industrial machinery, commercial food processing equipment, stainless steel fabrication and engineering solutions from Manjeri, Kerala.',
   telephone: '+91-9061782023',
-  email: 'tpkasimvlr@gmail.com',
+  email: 'infocobolt123@gmail.com',
   address,
   areaServed: 'IN',
   openingHoursSpecification: [

@@ -28,12 +28,9 @@ import {
   ChevronRight,
   MoveUp,
   MoveDown,
-<<<<<<< HEAD
-=======
   MessageSquare,
   Inbox,
   Phone,
->>>>>>> ca192ae (admin portal)
 } from 'lucide-react';
 import {
   adminLogin,
@@ -46,19 +43,14 @@ import {
   updateProductStatusApi,
   manageProductPhotosApi,
   uploadPhotoApi,
-<<<<<<< HEAD
-=======
   fetchInquiriesApi,
   updateInquiryStatusApi,
   deleteInquiryApi,
->>>>>>> ca192ae (admin portal)
 } from '../../lib/api';
 
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
   if (typeof img === 'object' && img?.src) return img.src;
-<<<<<<< HEAD
-=======
   if (typeof img === 'string') {
     let s = img.trim();
     if (s.startsWith('http://cobolt-backend.onrender.com')) {
@@ -68,7 +60,6 @@ const getSrc = (img) => {
     }
     return s;
   }
->>>>>>> ca192ae (admin portal)
   return img;
 };
 
@@ -91,8 +82,6 @@ export default function AdminPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedAvailability, setSelectedAvailability] = useState('All');
 
-<<<<<<< HEAD
-=======
   // Dashboard Tabs: 'products' | 'inquiries'
   const [activeTab, setActiveTab] = useState('products');
 
@@ -104,8 +93,6 @@ export default function AdminPage() {
   const [inquirySearch, setInquirySearch] = useState('');
   const [selectedInquiryModal, setSelectedInquiryModal] = useState(null);
   const [inquiryBackendPending, setInquiryBackendPending] = useState(false);
-
->>>>>>> ca192ae (admin portal)
   // Modal states
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null); // null = new, object = editing
@@ -159,14 +146,6 @@ export default function AdminPage() {
     }
   };
 
-<<<<<<< HEAD
-  useEffect(() => {
-    if (token) {
-      loadDashboardData();
-    }
-  }, [token]);
-
-=======
   // Fetch customer inquiries from backend
   const loadInquiries = async () => {
     if (!token) return;
@@ -228,7 +207,6 @@ export default function AdminPage() {
     }
   };
 
->>>>>>> ca192ae (admin portal)
   // Handle Login
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -316,8 +294,6 @@ export default function AdminPage() {
     return matchesSearch && matchesCategory && matchesAvailability;
   });
 
-<<<<<<< HEAD
-=======
   // Filter inquiries for display
   const filteredInquiries = inquiries.filter((inq) => {
     const matchesStatus =
@@ -332,8 +308,6 @@ export default function AdminPage() {
       inq.message?.toLowerCase().includes(inquirySearch.toLowerCase());
     return matchesStatus && matchesSearch;
   });
-
->>>>>>> ca192ae (admin portal)
   // Calculate stats
   const stats = {
     total: products.length,
@@ -477,19 +451,12 @@ export default function AdminPage() {
 
             <button
               onClick={handleLogout}
-<<<<<<< HEAD
-              title="Logout"
-              className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-            >
-              <LogOut className="w-4 h-4" />
-=======
               id="admin-logout-btn"
               title="Logout from Admin Panel"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 hover:text-white bg-red-50 hover:bg-[#DE1D3A] border border-red-200 hover:border-[#DE1D3A] rounded-lg transition-all duration-200 cursor-pointer shadow-xs active:scale-95"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Logout</span>
->>>>>>> ca192ae (admin portal)
             </button>
           </div>
         </div>
@@ -497,13 +464,6 @@ export default function AdminPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-<<<<<<< HEAD
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-500 uppercase">Total Items</span>
-=======
         {/* Navigation Tabs */}
         <div className="flex items-center gap-3 mb-8 border-b border-gray-200 pb-3">
           <button
@@ -774,7 +734,6 @@ export default function AdminPage() {
               <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-gray-500 uppercase">Total Items</span>
->>>>>>> ca192ae (admin portal)
               <Package className="w-4 h-4 text-gray-400" />
             </div>
             <p className="text-2xl font-extrabold text-gray-900 mt-2 font-display">{stats.total}</p>
@@ -913,14 +872,6 @@ export default function AdminPage() {
                     </td>
                   </tr>
                 ) : (
-<<<<<<< HEAD
-                  filteredProducts.map((p) => {
-                    const imgSrc = getSrc(p.image);
-                    const photoCount = Array.isArray(p.images) ? p.images.length : 1;
-
-                    return (
-                      <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
-=======
                   filteredProducts.map((p, idx) => {
                     const imgSrc = getSrc(p.image);
                     const photoCount = Array.isArray(p.images) ? p.images.length : 1;
@@ -928,7 +879,6 @@ export default function AdminPage() {
 
                     return (
                       <tr key={rowKey} className="hover:bg-gray-50/50 transition-colors">
->>>>>>> ca192ae (admin portal)
                         {/* Product Image & Name */}
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-3">
@@ -938,10 +888,7 @@ export default function AdminPage() {
                                 alt={p.name}
                                 width={48}
                                 height={48}
-<<<<<<< HEAD
-=======
                                 unoptimized
->>>>>>> ca192ae (admin portal)
                                 className="w-full h-full object-contain"
                               />
                             </div>
@@ -1054,15 +1001,6 @@ export default function AdminPage() {
             </table>
           </div>
 
-<<<<<<< HEAD
-          <div className="px-5 py-3.5 bg-gray-50/75 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
-            <span>Showing {filteredProducts.length} of {products.length} products</span>
-            <span className="text-[11px] text-gray-400">Database: MongoDB Atlas (cobolt)</span>
-          </div>
-        </div>
-      </main>
-
-=======
             <div className="px-5 py-3.5 bg-gray-50/75 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
               <span>Showing {filteredProducts.length} of {products.length} products</span>
               <span className="text-[11px] text-gray-400">Database: MongoDB Atlas (cobolt)</span>
@@ -1082,7 +1020,6 @@ export default function AdminPage() {
         />
       )}
 
->>>>>>> ca192ae (admin portal)
       {/* --- PRODUCT EDIT / CREATE MODAL --- */}
       {productModalOpen && (
         <ProductFormModal
@@ -1398,18 +1335,11 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
             <div className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-gray-200 rounded-xl bg-gray-50/50">
               <div className="w-20 h-20 rounded-xl border border-gray-200 bg-white p-1 flex items-center justify-center flex-shrink-0">
                 <Image
-<<<<<<< HEAD
-                  src={image}
-                  alt="Preview"
-                  width={80}
-                  height={80}
-=======
                   src={getSrc(image)}
                   alt="Preview"
                   width={80}
                   height={80}
                   unoptimized
->>>>>>> ca192ae (admin portal)
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -1735,18 +1665,11 @@ function PhotoGalleryModal({ token, product, onClose, onUpdate }) {
                 {/* Image */}
                 <div className="w-full h-32 flex items-center justify-center p-2 mb-2">
                   <Image
-<<<<<<< HEAD
-                    src={img}
-                    alt={`Photo ${idx + 1}`}
-                    width={120}
-                    height={120}
-=======
                     src={getSrc(img)}
                     alt={`Photo ${idx + 1}`}
                     width={120}
                     height={120}
                     unoptimized
->>>>>>> ca192ae (admin portal)
                     className="max-h-full max-w-full object-contain"
                   />
                 </div>
@@ -1867,8 +1790,6 @@ function PhotoGalleryModal({ token, product, onClose, onUpdate }) {
     </div>
   );
 }
-<<<<<<< HEAD
-=======
 
 /**
  * --- INQUIRY DETAIL MODAL ---
@@ -1994,4 +1915,3 @@ function InquiryDetailModal({ inquiry, onClose, onUpdateStatus, onDelete }) {
   );
 }
 
->>>>>>> ca192ae (admin portal)

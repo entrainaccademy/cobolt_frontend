@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const DEFAULT_BACKEND_URL = 'http://localhost:5000';
-=======
 const DEFAULT_BACKEND_URL = 'https://cobolt-backend.onrender.com';
->>>>>>> ca192ae (admin portal)
 
 export const getBackendUrl = () => {
   if (typeof window !== 'undefined') {
@@ -244,8 +240,6 @@ export async function uploadPhotoApi(file, token) {
   }
   return data.url || data.path;
 }
-<<<<<<< HEAD
-=======
 
 /**
  * Public: Submit machinery / contact inquiry
@@ -347,4 +341,3 @@ export async function deleteInquiryApi(id, token) {
   return data;
 }
 
->>>>>>> ca192ae (admin portal)

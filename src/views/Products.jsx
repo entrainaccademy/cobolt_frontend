@@ -3,11 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-<<<<<<< HEAD
-import { Info, ChevronRight, Search, Loader2 } from 'lucide-react';
-=======
 import { Info, ChevronRight, Search, Loader2, Shield } from 'lucide-react';
->>>>>>> ca192ae (admin portal)
 import { motion } from 'framer-motion';
 import PageWrapper from '../components/PageWrapper';
 import { categories as defaultCategories, productsList as initialProducts } from '../data/products';
@@ -16,8 +12,6 @@ import { fetchProducts, fetchCategories } from '../lib/api';
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
   if (typeof img === 'object' && img?.src) return img.src;
-<<<<<<< HEAD
-=======
   if (typeof img === 'string') {
     let s = img.trim();
     if (s.startsWith('http://cobolt-backend.onrender.com')) {
@@ -27,7 +21,6 @@ const getSrc = (img) => {
     }
     return s;
   }
->>>>>>> ca192ae (admin portal)
   return img;
 };
 
@@ -172,14 +165,6 @@ export default function Products() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-<<<<<<< HEAD
-              {displayedProducts.map((product) => {
-                const imgSrc = getSrc(product.image);
-                return (
-                  <motion.div
-                    layout
-                    key={`${product.id}-${product.category}`}
-=======
               {displayedProducts.map((product, idx) => {
                 const imgSrc = getSrc(product.image);
                 const uniqueKey = product._id ? String(product._id) : `${product.id || 'prod'}-${idx}`;
@@ -187,7 +172,6 @@ export default function Products() {
                   <motion.div
                     layout
                     key={uniqueKey}
->>>>>>> ca192ae (admin portal)
                     initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}

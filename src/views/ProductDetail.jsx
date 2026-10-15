@@ -9,8 +9,6 @@ import PageWrapper from '../components/PageWrapper';
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
   if (typeof img === 'object' && img?.src) return img.src;
-<<<<<<< HEAD
-=======
   if (typeof img === 'string') {
     let s = img.trim();
     if (s.startsWith('http://cobolt-backend.onrender.com')) {
@@ -20,7 +18,6 @@ const getSrc = (img) => {
     }
     return s;
   }
->>>>>>> ca192ae (admin portal)
   return img;
 };
 

@@ -3,7 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+<<<<<<< HEAD
 import { Info, ChevronRight, Search, Loader2 } from 'lucide-react';
+=======
+import { Info, ChevronRight, Search, Loader2, Shield } from 'lucide-react';
+>>>>>>> ca192ae (admin portal)
 import { motion } from 'framer-motion';
 import PageWrapper from '../components/PageWrapper';
 import { categories as defaultCategories, productsList as initialProducts } from '../data/products';
@@ -12,6 +16,18 @@ import { fetchProducts, fetchCategories } from '../lib/api';
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
   if (typeof img === 'object' && img?.src) return img.src;
+<<<<<<< HEAD
+=======
+  if (typeof img === 'string') {
+    let s = img.trim();
+    if (s.startsWith('http://cobolt-backend.onrender.com')) {
+      s = s.replace('http://', 'https://');
+    } else if (s.startsWith('http://') && s.includes('.onrender.com')) {
+      s = s.replace('http://', 'https://');
+    }
+    return s;
+  }
+>>>>>>> ca192ae (admin portal)
   return img;
 };
 
@@ -76,16 +92,27 @@ export default function Products() {
       <section className="relative pt-32 pb-8 sm:pt-28 md:pt-32 md:pb-12 bg-[#F8FAFC] border-b border-[#E5E7EB]/60 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] bg-[size:3rem_3rem]" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left relative z-10">
-          <div className="space-y-2 sm:space-y-2 md:space-y-5 max-w-3xl">
-            <span className="text-[#DE1D3A] font-bold text-[10px] sm:text-xs uppercase tracking-widest">
-              Industrial Catalog
-            </span>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] font-display leading-tight">
-              Our Machineries & Toolings
-            </h1>
-            <p className="text-[#6B7280] text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed">
-              Explore our line of industrial setups. Engineered with heavy components, high safety ratios, and intuitive controller architectures.
-            </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-2 sm:space-y-2 md:space-y-5 max-w-3xl">
+              <span className="text-[#DE1D3A] font-bold text-[10px] sm:text-xs uppercase tracking-widest">
+                Industrial Catalog
+              </span>
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] font-display leading-tight">
+                Our Machineries & Toolings
+              </h1>
+              <p className="text-[#6B7280] text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed">
+                Explore our line of industrial setups. Engineered with heavy components, high safety ratios, and intuitive controller architectures.
+              </p>
+            </div>
+
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-white hover:border-[#DE1D3A] text-gray-700 hover:text-[#DE1D3A] text-xs font-bold uppercase tracking-wider shadow-xs transition-all w-fit cursor-pointer"
+              title="Open Admin Panel"
+            >
+              <Shield className="w-4 h-4 text-[#DE1D3A]" />
+              <span>Admin Panel</span>
+            </Link>
           </div>
         </div>
       </section>
@@ -145,12 +172,22 @@ export default function Products() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<<<<<<< HEAD
               {displayedProducts.map((product) => {
                 const imgSrc = getSrc(product.image);
                 return (
                   <motion.div
                     layout
                     key={`${product.id}-${product.category}`}
+=======
+              {displayedProducts.map((product, idx) => {
+                const imgSrc = getSrc(product.image);
+                const uniqueKey = product._id ? String(product._id) : `${product.id || 'prod'}-${idx}`;
+                return (
+                  <motion.div
+                    layout
+                    key={uniqueKey}
+>>>>>>> ca192ae (admin portal)
                     initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}

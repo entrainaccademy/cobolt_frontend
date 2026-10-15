@@ -640,7 +640,7 @@ export const productsList = [
   },
 
  {
-    id: "1DECKS-1-TRAYS-GAS-OVEN",
+    id: "1DECKS-1-TRAYS-GAS-OVEN-ECO",
     name: "  Eco GAS OVEN 1D1T",
     category: "Banking Equipments",
     image: b4,
@@ -704,7 +704,7 @@ export const productsList = [
     accessories: ["Dish Rack", "Glass Rack", "Cutlery Holder", "Inlet & Drain Hoses"]
   },
  {
-    id: "PIZZA-OVEN-BERJAYA ",
+    id: "PIZZA-OVEN-BERJAYA",
     name: "PIZZA OVEN BERJAYA ",
     category: "Banking Equipments",
     image: pizza,
@@ -726,7 +726,7 @@ export const productsList = [
   },
 
   {
-    id: "PIZZA-OVEN-BERJAYA ",
+    id: "ELECTRIC-PIZZA-OVEN-BERJAYA",
     name: "ELECTRIC PIZZA OVEN  ",
     category: "Banking Equipments",
     image: pizza1d,

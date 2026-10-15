@@ -9,6 +9,18 @@ import PageWrapper from '../components/PageWrapper';
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
   if (typeof img === 'object' && img?.src) return img.src;
+<<<<<<< HEAD
+=======
+  if (typeof img === 'string') {
+    let s = img.trim();
+    if (s.startsWith('http://cobolt-backend.onrender.com')) {
+      s = s.replace('http://', 'https://');
+    } else if (s.startsWith('http://') && s.includes('.onrender.com')) {
+      s = s.replace('http://', 'https://');
+    }
+    return s;
+  }
+>>>>>>> ca192ae (admin portal)
   return img;
 };
 
@@ -252,9 +264,9 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {relatedProducts.map((item) => (
+                {relatedProducts.map((item, idx) => (
                   <Link
-                    key={item.id}
+                    key={item._id ? String(item._id) : `${item.id || 'rel'}-${idx}`}
                     href={`/products/${item.id}`}
                     className="group border border-gray-200 rounded-xl p-4 bg-white hover:border-[#DE1D3A]/40 hover:shadow-md transition-all flex flex-col justify-between"
                   >

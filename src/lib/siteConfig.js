@@ -20,7 +20,7 @@ export const SITE_CONFIG = {
     'Manjeri machinery',
   ],
   phone: '+91 9061782023',
-  email: 'infocobolt123@gmail.com',
+  email: 'tpkasimvlr@gmail.com',
   address: {
     streetAddress: 'Veemboor Industrial Zone',
     addressLocality: 'Manjeri',

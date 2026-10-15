@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const DEFAULT_BACKEND_URL = 'http://localhost:5000';
+=======
+const DEFAULT_BACKEND_URL = 'https://cobolt-backend.onrender.com';
+>>>>>>> ca192ae (admin portal)
 
 export const getBackendUrl = () => {
   if (typeof window !== 'undefined') {
@@ -240,3 +244,107 @@ export async function uploadPhotoApi(file, token) {
   }
   return data.url || data.path;
 }
+<<<<<<< HEAD
+=======
+
+/**
+ * Public: Submit machinery / contact inquiry
+ */
+export async function submitContactInquiry(inquiryData) {
+  const backendUrl = getBackendUrl();
+  const res = await fetch(`${backendUrl}/api/contact`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(inquiryData),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    if (res.status === 404) {
+      throw new Error('Contact API endpoint is being deployed on Render. Please push the latest backend commit or contact us via WhatsApp.');
+    }
+    throw new Error(data.message || 'Failed to submit inquiry. Please try again.');
+  }
+  return data;
+}
+
+/**
+ * Admin: Fetch customer inquiries
+ */
+export async function fetchInquiriesApi(params = {}, token) {
+  const backendUrl = getBackendUrl();
+  const url = new URL(`${backendUrl}/api/contact`);
+  if (params.status) url.searchParams.set('status', params.status);
+  if (params.search) url.searchParams.set('search', params.search);
+
+  try {
+    const res = await fetch(url.toString(), {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      if (res.status === 404) {
+        // Backend has not yet deployed the contact endpoint
+        return {
+          success: false,
+          notDeployed: true,
+          inquiries: [],
+          stats: { total: 0, new: 0, contacted: 0, archived: 0 },
+        };
+      }
+      throw new Error(data.message || 'Failed to fetch inquiries.');
+    }
+    return data;
+  } catch (err) {
+    if (err.message && err.message.includes('not exist on this API')) {
+      return {
+        success: false,
+        notDeployed: true,
+        inquiries: [],
+        stats: { total: 0, new: 0, contacted: 0, archived: 0 },
+      };
+    }
+    throw err;
+  }
+}
+
+/**
+ * Admin: Update inquiry status or notes
+ */
+export async function updateInquiryStatusApi(id, updateData, token) {
+  const backendUrl = getBackendUrl();
+  const res = await fetch(`${backendUrl}/api/contact/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updateData),
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to update inquiry.');
+  }
+  return data.inquiry;
+}
+
+/**
+ * Admin: Delete inquiry
+ */
+export async function deleteInquiryApi(id, token) {
+  const backendUrl = getBackendUrl();
+  const res = await fetch(`${backendUrl}/api/contact/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to delete inquiry.');
+  }
+  return data;
+}
+
+>>>>>>> ca192ae (admin portal)

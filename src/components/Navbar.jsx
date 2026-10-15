@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ArrowRight, Phone, MapPin, Youtube, Facebook, Instagram, Mail } from 'lucide-react';
+import { Menu, X, ArrowRight, Phone, MapPin, Youtube, Facebook, Instagram, Mail, Shield } from 'lucide-react';
 
 import blacklogo from '../assets/blacklogotr.webp';
 
@@ -38,10 +38,12 @@ export default function Navbar() {
     } else {
       document.body.style.overflow = 'unset';
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isMobileMenuOpen]);
+
+  // Hide public navbar on admin pages
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -63,11 +65,11 @@ export default function Navbar() {
               <span className="text-xs font-semibold text-slate-700">Veembur, Manjeri, Kerala</span>
             </Link>
             <a
-              href="mailto:infocobolt123@gmail.com?subject=Enquiry&body=Hello COBOLT Machineries,"
+              href="mailto:tpkasimvlr@gmail.com?subject=Enquiry&body=Hello COBOLT Machineries,"
               className="flex items-center gap-2 hover:text-accent transition-colors text-slate-600 font-sans"
             >
               <Mail className="w-3.5 h-3.5 text-[#DE1D3A]" />
-              <span className="text-xs font-semibold text-slate-700">infocobolt123@gmail.com</span>
+              <span className="text-xs font-semibold text-slate-700">tpkasimvlr@gmail.com</span>
             </a>
 
             {/* Social Icons */}
@@ -102,13 +104,17 @@ export default function Navbar() {
             </div>
           </div>
 
-          <a
-            href="tel:+919061782023"
-            className="flex items-center gap-1.5 px-4 py-1 bg-red/10 hover:bg-accent text-[#2596be] hover:text-white text-xs font-poppins font-semibold uppercase tracking-wider rounded-full transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 animate-pulse-glow"
-          >
-            <Phone className="w-3 h-3 text-[#DE1D3A]" />
-            <span className="text-[#DE1D3A]">Call Now</span>
-          </a>
+          <div className="flex items-center gap-4">
+          
+
+            <a
+              href="tel:+919061782023"
+              className="flex items-center gap-1.5 px-4 py-1 bg-red/10 hover:bg-accent text-[#2596be] hover:text-white text-xs font-poppins font-semibold uppercase tracking-wider rounded-full transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 animate-pulse-glow"
+            >
+              <Phone className="w-3 h-3 text-[#DE1D3A]" />
+              <span className="text-[#DE1D3A]">Call Now</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -174,7 +180,9 @@ export default function Navbar() {
             </div>
 
             {/* Action CTA Block (Desktop) */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-3">
+             
+
               <Link
                 href="/contact"
                 className="relative group overflow-hidden px-6 py-2.5 rounded-full bg-[#DE1D3A] text-white font-poppins font-semibold text-xs uppercase tracking-wider shadow-lg shadow-[#DE1D3A]/25 hover:shadow-[#DE1D3A]/40 hover:bg-[#c51831] hover:-translate-y-0.5 transition-all duration-300 ease-out active:translate-y-0 text-center"
@@ -290,7 +298,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <Link
               href="/contact"
               className="w-full flex items-center justify-center px-6 py-3.5 bg-gradient-to-r from-[#DE1D3A] to-[#F04A63] hover:from-[#C91834] hover:to-[#DE1D3A] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all duration-300 shadow-lg shadow-[#DE1D3A]/30 hover:shadow-xl hover:shadow-[#DE1D3A]/40 hover:scale-[1.02] text-center"
@@ -298,6 +306,15 @@ export default function Navbar() {
               Get in Touch
               <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
+
+            <Link
+              href="/admin"
+              className="w-full flex items-center justify-center gap-2 py-3 border border-slate-200 text-slate-700 hover:text-[#DE1D3A] hover:border-[#DE1D3A] text-xs font-bold uppercase tracking-widest rounded-xl transition-all bg-slate-50 hover:bg-white text-center"
+            >
+              <Shield className="w-4 h-4 text-[#DE1D3A]" />
+              <span>Admin Portal</span>
+            </Link>
+          </div>
 
             {/* Social Icons for Mobile */}
             <div className="flex justify-center gap-6 pt-2 border-t border-slate-100 mt-2">
@@ -329,7 +346,7 @@ export default function Navbar() {
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="mailto:infocobolt123@gmail.com"
+                href="mailto:tpkasimvlr@gmail.com"
                 className="text-slate-400 hover:text-accent transition-colors duration-200"
                 aria-label="Email"
               >
@@ -339,6 +356,5 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-    </div>
   );
 }

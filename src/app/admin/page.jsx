@@ -28,6 +28,12 @@ import {
   ChevronRight,
   MoveUp,
   MoveDown,
+<<<<<<< HEAD
+=======
+  MessageSquare,
+  Inbox,
+  Phone,
+>>>>>>> ca192ae (admin portal)
 } from 'lucide-react';
 import {
   adminLogin,
@@ -40,11 +46,29 @@ import {
   updateProductStatusApi,
   manageProductPhotosApi,
   uploadPhotoApi,
+<<<<<<< HEAD
+=======
+  fetchInquiriesApi,
+  updateInquiryStatusApi,
+  deleteInquiryApi,
+>>>>>>> ca192ae (admin portal)
 } from '../../lib/api';
 
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
   if (typeof img === 'object' && img?.src) return img.src;
+<<<<<<< HEAD
+=======
+  if (typeof img === 'string') {
+    let s = img.trim();
+    if (s.startsWith('http://cobolt-backend.onrender.com')) {
+      s = s.replace('http://', 'https://');
+    } else if (s.startsWith('http://') && s.includes('.onrender.com')) {
+      s = s.replace('http://', 'https://');
+    }
+    return s;
+  }
+>>>>>>> ca192ae (admin portal)
   return img;
 };
 
@@ -67,6 +91,21 @@ export default function AdminPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedAvailability, setSelectedAvailability] = useState('All');
 
+<<<<<<< HEAD
+=======
+  // Dashboard Tabs: 'products' | 'inquiries'
+  const [activeTab, setActiveTab] = useState('products');
+
+  // Customer Inquiries state
+  const [inquiries, setInquiries] = useState([]);
+  const [inquiryStats, setInquiryStats] = useState({ total: 0, new: 0, contacted: 0, archived: 0 });
+  const [inquiriesLoading, setInquiriesLoading] = useState(false);
+  const [selectedInquiryStatus, setSelectedInquiryStatus] = useState('all');
+  const [inquirySearch, setInquirySearch] = useState('');
+  const [selectedInquiryModal, setSelectedInquiryModal] = useState(null);
+  const [inquiryBackendPending, setInquiryBackendPending] = useState(false);
+
+>>>>>>> ca192ae (admin portal)
   // Modal states
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null); // null = new, object = editing
@@ -120,12 +159,76 @@ export default function AdminPage() {
     }
   };
 
+<<<<<<< HEAD
   useEffect(() => {
     if (token) {
       loadDashboardData();
     }
   }, [token]);
 
+=======
+  // Fetch customer inquiries from backend
+  const loadInquiries = async () => {
+    if (!token) return;
+    try {
+      setInquiriesLoading(true);
+      const res = await fetchInquiriesApi({}, token);
+      if (res?.notDeployed) {
+        setInquiryBackendPending(true);
+      } else {
+        setInquiryBackendPending(false);
+      }
+      if (res?.inquiries) setInquiries(res.inquiries);
+      if (res?.stats) setInquiryStats(res.stats);
+    } catch (err) {
+      // Gracefully silent on transient network errors
+      console.warn('Inquiry service notice:', err.message);
+    } finally {
+      setInquiriesLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      loadDashboardData();
+      loadInquiries();
+    }
+  }, [token]);
+
+  // Handle inquiry status toggle
+  const handleUpdateInquiryStatus = async (id, newStatus) => {
+    try {
+      await updateInquiryStatusApi(id, { status: newStatus }, token);
+      setInquiries((prev) =>
+        prev.map((inq) => (inq._id === id ? { ...inq, status: newStatus } : inq))
+      );
+      if (selectedInquiryModal && selectedInquiryModal._id === id) {
+        setSelectedInquiryModal((prev) => ({ ...prev, status: newStatus }));
+      }
+      showToast(`Inquiry marked as ${newStatus}`);
+      loadInquiries();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
+  // Handle inquiry delete
+  const handleDeleteInquiry = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this customer inquiry?')) return;
+    try {
+      await deleteInquiryApi(id, token);
+      setInquiries((prev) => prev.filter((inq) => inq._id !== id));
+      if (selectedInquiryModal && selectedInquiryModal._id === id) {
+        setSelectedInquiryModal(null);
+      }
+      showToast('Inquiry deleted successfully');
+      loadInquiries();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
+>>>>>>> ca192ae (admin portal)
   // Handle Login
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -213,6 +316,24 @@ export default function AdminPage() {
     return matchesSearch && matchesCategory && matchesAvailability;
   });
 
+<<<<<<< HEAD
+=======
+  // Filter inquiries for display
+  const filteredInquiries = inquiries.filter((inq) => {
+    const matchesStatus =
+      selectedInquiryStatus === 'all' || inq.status === selectedInquiryStatus;
+    const matchesSearch =
+      !inquirySearch.trim() ||
+      inq.name?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
+      inq.email?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
+      inq.phone?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
+      inq.company?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
+      inq.subject?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
+      inq.message?.toLowerCase().includes(inquirySearch.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
+
+>>>>>>> ca192ae (admin portal)
   // Calculate stats
   const stats = {
     total: products.length,
@@ -356,10 +477,19 @@ export default function AdminPage() {
 
             <button
               onClick={handleLogout}
+<<<<<<< HEAD
               title="Logout"
               className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
+=======
+              id="admin-logout-btn"
+              title="Logout from Admin Panel"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 hover:text-white bg-red-50 hover:bg-[#DE1D3A] border border-red-200 hover:border-[#DE1D3A] rounded-lg transition-all duration-200 cursor-pointer shadow-xs active:scale-95"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Logout</span>
+>>>>>>> ca192ae (admin portal)
             </button>
           </div>
         </div>
@@ -367,11 +497,284 @@ export default function AdminPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+<<<<<<< HEAD
         {/* Stats Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-gray-500 uppercase">Total Items</span>
+=======
+        {/* Navigation Tabs */}
+        <div className="flex items-center gap-3 mb-8 border-b border-gray-200 pb-3">
+          <button
+            type="button"
+            onClick={() => setActiveTab('products')}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${
+              activeTab === 'products'
+                ? 'bg-[#DE1D3A] text-white shadow-md shadow-[#DE1D3A]/20'
+                : 'bg-white text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <Package className="w-4 h-4" />
+            <span>Products Catalog ({products.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('inquiries');
+              loadInquiries();
+            }}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer relative ${
+              activeTab === 'inquiries'
+                ? 'bg-[#DE1D3A] text-white shadow-md shadow-[#DE1D3A]/20'
+                : 'bg-white text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4" />
+            <span>Customer Inquiries</span>
+            {inquiryStats.new > 0 && (
+              <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full ${activeTab === 'inquiries' ? 'bg-white text-[#DE1D3A]' : 'bg-[#DE1D3A] text-white'}`}>
+                {inquiryStats.new} new
+              </span>
+            )}
+          </button>
+        </div>
+
+        {activeTab === 'inquiries' ? (
+          <div>
+            {/* Inquiry Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+              <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-500 uppercase">Total Inquiries</span>
+                  <Inbox className="w-4 h-4 text-gray-400" />
+                </div>
+                <p className="text-2xl font-extrabold text-gray-900 mt-2 font-display">{inquiryStats.total}</p>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[#DE1D3A] uppercase">New / Unread</span>
+                  <MessageSquare className="w-4 h-4 text-[#DE1D3A]" />
+                </div>
+                <p className="text-2xl font-extrabold text-[#DE1D3A] mt-2 font-display">{inquiryStats.new}</p>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-emerald-600 uppercase">Contacted</span>
+                  <Check className="w-4 h-4 text-emerald-500" />
+                </div>
+                <p className="text-2xl font-extrabold text-emerald-600 mt-2 font-display">{inquiryStats.contacted}</p>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-400 uppercase">Archived</span>
+                  <Layers className="w-4 h-4 text-gray-400" />
+                </div>
+                <p className="text-2xl font-extrabold text-gray-500 mt-2 font-display">{inquiryStats.archived}</p>
+              </div>
+            </div>
+
+            {/* Filter Bar */}
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-xs mb-6">
+              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+                <div className="relative flex-1">
+                  <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search inquiries by client name, email, phone, company, or message..."
+                    value={inquirySearch}
+                    onChange={(e) => setInquirySearch(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:border-[#DE1D3A] focus:ring-1 focus:ring-[#DE1D3A] transition-all"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <select
+                    value={selectedInquiryStatus}
+                    onChange={(e) => setSelectedInquiryStatus(e.target.value)}
+                    className="px-3 py-2 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#DE1D3A] text-gray-700 font-medium"
+                  >
+                    <option value="all">All Statuses ({inquiryStats.total})</option>
+                    <option value="new">New ({inquiryStats.new})</option>
+                    <option value="contacted">Contacted ({inquiryStats.contacted})</option>
+                    <option value="archived">Archived ({inquiryStats.archived})</option>
+                  </select>
+
+                  <button
+                    type="button"
+                    onClick={loadInquiries}
+                    title="Refresh Inquiries"
+                    className="p-2 text-gray-500 hover:text-gray-900 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${inquiriesLoading ? 'animate-spin text-[#DE1D3A]' : ''}`} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Inquiries Table */}
+            <div className="bg-white border border-gray-200 rounded-2xl shadow-xs overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-gray-600">
+                  <thead className="bg-gray-50/75 border-b border-gray-200 text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                    <tr>
+                      <th className="px-5 py-3.5">Date</th>
+                      <th className="px-5 py-3.5">Client & Company</th>
+                      <th className="px-5 py-3.5">Contact Details</th>
+                      <th className="px-5 py-3.5">Service / Subject</th>
+                      <th className="px-5 py-3.5">Message Snippet</th>
+                      <th className="px-5 py-3.5">Status</th>
+                      <th className="px-5 py-3.5 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 text-xs">
+                    {filteredInquiries.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="px-5 py-12 text-center text-gray-400">
+                          {inquiriesLoading ? (
+                            <div className="flex items-center justify-center gap-2">
+                              <Loader2 className="w-4 h-4 animate-spin text-[#DE1D3A]" />
+                              <span>Loading customer inquiries...</span>
+                            </div>
+                          ) : inquiryBackendPending ? (
+                            <div className="space-y-2 p-6 max-w-md mx-auto bg-amber-50/70 border border-amber-200 rounded-2xl text-center my-4">
+                              <Inbox className="w-8 h-8 mx-auto text-amber-500" />
+                              <p className="font-bold text-sm text-gray-900">Backend Update Pending</p>
+                              <p className="text-xs text-gray-600 leading-relaxed">
+                                The live backend on Render is awaiting the latest commit. Run <code className="bg-amber-100 px-1.5 py-0.5 rounded text-amber-900 font-mono text-[11px]">git push origin main</code> in the backend directory to activate live inquiries.
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="space-y-1">
+                              <Inbox className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+                              <p className="font-semibold text-gray-600">No customer inquiries found</p>
+                              <p className="text-[11px] text-gray-400">When visitors submit the contact form, leads will appear here in real-time.</p>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredInquiries.map((inq) => {
+                        const cleanPhone = (inq.phone || '').replace(/[^0-9+]/g, '');
+                        const waNumber = cleanPhone.startsWith('+') ? cleanPhone.slice(1) : cleanPhone;
+                        const formattedDate = new Date(inq.createdAt).toLocaleDateString('en-IN', {
+                          day: '2-digit',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        });
+
+                        return (
+                          <tr key={inq._id} className="hover:bg-gray-50/50 transition-colors">
+                            <td className="px-5 py-3.5 whitespace-nowrap text-gray-400 font-mono text-[11px]">
+                              {formattedDate}
+                            </td>
+
+                            <td className="px-5 py-3.5">
+                              <div className="font-bold text-gray-900">{inq.name}</div>
+                              {inq.company && <div className="text-[10px] text-gray-400 font-medium">{inq.company}</div>}
+                            </td>
+
+                            <td className="px-5 py-3.5 whitespace-nowrap">
+                              <div>
+                                <a href={`mailto:${inq.email}`} className="text-[#DE1D3A] hover:underline font-medium">
+                                  {inq.email}
+                                </a>
+                              </div>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <a href={`tel:${inq.phone}`} className="text-gray-700 hover:text-gray-900 font-mono text-[11px]">
+                                  {inq.phone}
+                                </a>
+                                {waNumber && (
+                                  <a
+                                    href={`https://wa.me/${waNumber}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-green-600 hover:text-green-700 font-bold text-[10px]"
+                                    title="Open WhatsApp chat"
+                                  >
+                                    [WA]
+                                  </a>
+                                )}
+                              </div>
+                            </td>
+
+                            <td className="px-5 py-3.5 whitespace-nowrap">
+                              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-700 mb-0.5">
+                                {inq.serviceType || 'Machinery'}
+                              </span>
+                              <div className="text-gray-900 font-medium truncate max-w-[150px]">{inq.subject}</div>
+                            </td>
+
+                            <td className="px-5 py-3.5">
+                              <p className="line-clamp-2 max-w-xs text-gray-600 text-[11px]">
+                                {inq.message}
+                              </p>
+                            </td>
+
+                            <td className="px-5 py-3.5 whitespace-nowrap">
+                              <select
+                                value={inq.status}
+                                onChange={(e) => handleUpdateInquiryStatus(inq._id, e.target.value)}
+                                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border cursor-pointer focus:outline-none ${
+                                  inq.status === 'new'
+                                    ? 'bg-red-50 text-red-700 border-red-200'
+                                    : inq.status === 'contacted'
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                    : 'bg-gray-100 text-gray-600 border-gray-200'
+                                }`}
+                              >
+                                <option value="new">New</option>
+                                <option value="contacted">Contacted</option>
+                                <option value="archived">Archived</option>
+                              </select>
+                            </td>
+
+                            <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                              <div className="flex items-center justify-end gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedInquiryModal(inq)}
+                                  className="px-2.5 py-1 text-xs text-gray-600 hover:text-[#DE1D3A] hover:bg-gray-100 rounded-lg transition-colors cursor-pointer font-medium"
+                                >
+                                  View
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteInquiry(inq._id)}
+                                  title="Delete Inquiry"
+                                  className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="px-5 py-3.5 bg-gray-50/75 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
+                <span>Showing {filteredInquiries.length} of {inquiries.length} inquiries</span>
+                <span className="text-[11px] text-gray-400">Database: MongoDB Atlas (cobolt.inquiries)</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div>
+            {/* Stats Row */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+              <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-gray-500 uppercase">Total Items</span>
+>>>>>>> ca192ae (admin portal)
               <Package className="w-4 h-4 text-gray-400" />
             </div>
             <p className="text-2xl font-extrabold text-gray-900 mt-2 font-display">{stats.total}</p>
@@ -510,12 +913,22 @@ export default function AdminPage() {
                     </td>
                   </tr>
                 ) : (
+<<<<<<< HEAD
                   filteredProducts.map((p) => {
                     const imgSrc = getSrc(p.image);
                     const photoCount = Array.isArray(p.images) ? p.images.length : 1;
 
                     return (
                       <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
+=======
+                  filteredProducts.map((p, idx) => {
+                    const imgSrc = getSrc(p.image);
+                    const photoCount = Array.isArray(p.images) ? p.images.length : 1;
+                    const rowKey = p._id ? String(p._id) : `${p.id || 'prod'}-${idx}`;
+
+                    return (
+                      <tr key={rowKey} className="hover:bg-gray-50/50 transition-colors">
+>>>>>>> ca192ae (admin portal)
                         {/* Product Image & Name */}
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-3">
@@ -525,6 +938,10 @@ export default function AdminPage() {
                                 alt={p.name}
                                 width={48}
                                 height={48}
+<<<<<<< HEAD
+=======
+                                unoptimized
+>>>>>>> ca192ae (admin portal)
                                 className="w-full h-full object-contain"
                               />
                             </div>
@@ -637,6 +1054,7 @@ export default function AdminPage() {
             </table>
           </div>
 
+<<<<<<< HEAD
           <div className="px-5 py-3.5 bg-gray-50/75 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
             <span>Showing {filteredProducts.length} of {products.length} products</span>
             <span className="text-[11px] text-gray-400">Database: MongoDB Atlas (cobolt)</span>
@@ -644,6 +1062,27 @@ export default function AdminPage() {
         </div>
       </main>
 
+=======
+            <div className="px-5 py-3.5 bg-gray-50/75 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
+              <span>Showing {filteredProducts.length} of {products.length} products</span>
+              <span className="text-[11px] text-gray-400">Database: MongoDB Atlas (cobolt)</span>
+            </div>
+          </div>
+        </div>
+      )}
+      </main>
+
+      {/* --- INQUIRY DETAIL MODAL --- */}
+      {selectedInquiryModal && (
+        <InquiryDetailModal
+          inquiry={selectedInquiryModal}
+          onClose={() => setSelectedInquiryModal(null)}
+          onUpdateStatus={handleUpdateInquiryStatus}
+          onDelete={handleDeleteInquiry}
+        />
+      )}
+
+>>>>>>> ca192ae (admin portal)
       {/* --- PRODUCT EDIT / CREATE MODAL --- */}
       {productModalOpen && (
         <ProductFormModal
@@ -959,10 +1398,18 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
             <div className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-gray-200 rounded-xl bg-gray-50/50">
               <div className="w-20 h-20 rounded-xl border border-gray-200 bg-white p-1 flex items-center justify-center flex-shrink-0">
                 <Image
+<<<<<<< HEAD
                   src={image}
                   alt="Preview"
                   width={80}
                   height={80}
+=======
+                  src={getSrc(image)}
+                  alt="Preview"
+                  width={80}
+                  height={80}
+                  unoptimized
+>>>>>>> ca192ae (admin portal)
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -1288,10 +1735,18 @@ function PhotoGalleryModal({ token, product, onClose, onUpdate }) {
                 {/* Image */}
                 <div className="w-full h-32 flex items-center justify-center p-2 mb-2">
                   <Image
+<<<<<<< HEAD
                     src={img}
                     alt={`Photo ${idx + 1}`}
                     width={120}
                     height={120}
+=======
+                    src={getSrc(img)}
+                    alt={`Photo ${idx + 1}`}
+                    width={120}
+                    height={120}
+                    unoptimized
+>>>>>>> ca192ae (admin portal)
                     className="max-h-full max-w-full object-contain"
                   />
                 </div>
@@ -1412,3 +1867,131 @@ function PhotoGalleryModal({ token, product, onClose, onUpdate }) {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+/**
+ * --- INQUIRY DETAIL MODAL ---
+ */
+function InquiryDetailModal({ inquiry, onClose, onUpdateStatus, onDelete }) {
+  if (!inquiry) return null;
+  const cleanPhone = (inquiry.phone || '').replace(/[^0-9+]/g, '');
+  const waNumber = cleanPhone.startsWith('+') ? cleanPhone.slice(1) : cleanPhone;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white rounded-2xl max-w-lg w-full border border-gray-200 shadow-2xl p-6 my-8 animate-fade-in">
+        <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+          <div>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-100 text-[#DE1D3A]">
+              {inquiry.serviceType || 'Machinery Purchase'}
+            </span>
+            <h3 className="text-lg font-bold text-gray-900 mt-1 font-display">
+              {inquiry.subject || 'Customer Inquiry'}
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="py-4 space-y-3.5 text-xs">
+          <div>
+            <span className="font-semibold text-gray-500 uppercase tracking-wider text-[10px]">Customer Name</span>
+            <p className="text-sm font-bold text-gray-900">{inquiry.name}</p>
+          </div>
+
+          {inquiry.company && (
+            <div>
+              <span className="font-semibold text-gray-500 uppercase tracking-wider text-[10px]">Company / Facility</span>
+              <p className="text-gray-900 font-medium">{inquiry.company}</p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <span className="font-semibold text-gray-500 uppercase tracking-wider text-[10px]">Email Address</span>
+              <p>
+                <a href={`mailto:${inquiry.email}`} className="text-[#DE1D3A] hover:underline font-medium">
+                  {inquiry.email}
+                </a>
+              </p>
+            </div>
+            <div>
+              <span className="font-semibold text-gray-500 uppercase tracking-wider text-[10px]">Phone Number</span>
+              <p>
+                <a href={`tel:${inquiry.phone}`} className="text-gray-900 hover:text-[#DE1D3A] font-medium">
+                  {inquiry.phone}
+                </a>
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <span className="font-semibold text-gray-500 uppercase tracking-wider text-[10px]">Received On</span>
+            <p className="text-gray-600 font-mono text-[11px]">
+              {new Date(inquiry.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST
+            </p>
+          </div>
+
+          <div>
+            <span className="font-semibold text-gray-500 uppercase tracking-wider text-[10px]">Inquiry Message</span>
+            <div className="mt-1 p-3.5 bg-gray-50 rounded-xl border border-gray-200 text-gray-800 text-xs leading-relaxed whitespace-pre-wrap">
+              {inquiry.message}
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <a
+              href={`mailto:${inquiry.email}?subject=Re:%20${encodeURIComponent(inquiry.subject || 'Cobolt Machineries Inquiry')}`}
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#DE1D3A] hover:bg-[#B7152D] text-white text-xs font-semibold rounded-xl transition-all shadow-xs"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>Reply Email</span>
+            </a>
+
+            {waNumber && (
+              <a
+                href={`https://wa.me/${waNumber}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-xl transition-all shadow-xs"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>WhatsApp</span>
+              </a>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {inquiry.status !== 'contacted' && (
+              <button
+                type="button"
+                onClick={() => onUpdateStatus(inquiry._id, 'contacted')}
+                className="px-3 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+              >
+                Mark Contacted
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => onDelete(inquiry._id)}
+              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl border border-gray-200 transition-colors cursor-pointer"
+              title="Delete Inquiry"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+>>>>>>> ca192ae (admin portal)

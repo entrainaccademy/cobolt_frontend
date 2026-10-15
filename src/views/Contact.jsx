@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Mail, Phone, MapPin, Send, MessageSquare, Clock, ShieldCheck, CheckCircle2, User, Building, Landmark } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageSquare, Clock, ShieldCheck, CheckCircle2, User, Building, Landmark, AlertCircle } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
+import { submitContactInquiry } from '../lib/api';
 
 function SearchParamsHandler({ onParams }) {
   const searchParams = useSearchParams();
@@ -92,8 +93,11 @@ export default function Contact() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const [submitError, setSubmitError] = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError('');
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -101,9 +105,8 @@ export default function Contact() {
     }
 
     setIsSubmitting(true);
-    // Mock API request delay
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await submitContactInquiry(formData);
       setIsSubmitted(true);
       setFormData({
         name: '',
@@ -114,34 +117,39 @@ export default function Contact() {
         subject: '',
         message: ''
       });
-      // Reset success banner after 8 seconds
-      setTimeout(() => setIsSubmitted(false), 8000);
-    }, 1500);
+      // Reset success banner after 10 seconds
+      setTimeout(() => setIsSubmitted(false), 10000);
+    } catch (err) {
+      console.error('Contact inquiry submission failed:', err);
+      setSubmitError(err.message || 'Unable to submit your inquiry at this moment. Please reach us directly via WhatsApp or phone.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactCards = [
     { 
       icon: Phone,
       title: "Call Our Hotline",
-      details: "+91 90 6178 2023",
+      details: "+91 95 3963 7133",
       sub: "Mon - Sat: 9:00 AM - 8:00 PM IST",
-      action: "tel:+919061782023",
+      action: "tel:+919539637133",
       actionText: "Call Now"
     },
     {
       icon: Mail,
       title: "Email Our Engineers",
-      details: "infocobolt123@gmail.com",
+      details: "tpkasimvlr@gmail.com",
       sub: "Send specifications for bidding",
-      action: "mailto:infocobolt123@gmail.com",
+      action: "mailto:tpkasimvlr@gmail.com",
       actionText: "Email Us"
     },
     {
       icon: MessageSquare,
       title: "Chat on WhatsApp",
-      details: "+91 90 6178 2023",
+      details: "+91 97 4523 5226",
       sub: "Instant technical support routing",
-      action: "https://wa.me/919061782023",
+      action: "https://wa.me/919745235226",
       actionText: "Start Chat"
     }
   ];
@@ -261,6 +269,13 @@ export default function Contact() {
                   <p className="text-xs leading-relaxed">
                     Thank you for connecting with Cobolt Machineries. Our system engineers will review your specifications and contact you at the provided email within 12-24 business hours.
                   </p>
+                </div>
+              ) : null}
+
+              {submitError ? (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs mb-6 flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-[#DE1D3A] flex-shrink-0 mt-0.5" />
+                  <span>{submitError}</span>
                 </div>
               ) : null}
 

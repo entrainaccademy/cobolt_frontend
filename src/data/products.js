@@ -59,7 +59,7 @@ export const categories = [
   'All',
   'Food Preparation Machines',
   'Refrigeration Items',
-  'Banking Equipments',
+  'Baking Equipments',
   'Cooking Equipments',
   'Stainless Steel Fabrications',
   'Industrial And Food Service',
@@ -499,13 +499,13 @@ export const productsList = [
 
 
 
-  //  banking 
+  //  baking 
 
 
   {
     id: "2Deck4Trays8TraysProoferGasDeckOven",
     name: " M GAS BAKING OVEN 1D2T",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b4new,
     
     description: "220V  .015KW  TRAY SIZE:40X60CM  WITH FLAMOUT PROCTED FUNCTION,ALUMUIUM MAIN GAS PIPE,PURE COPPER BRANCH PIPE,ALUSTEEL INSIDE BAKING CHAMBER,CHAMBER SIZE:87X67X18.5CM,PLASTIC DOOR HANDLE,UNIFORM BAKING EFFECT",
@@ -531,7 +531,7 @@ export const productsList = [
   {
     id: "DA-M-GBO-1D2T",
     name: "D GAS BAKING OVEN 1D2T ",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b4new,
   
     description: "220V 50Hz 0.075kW E.X. Size:108*68*65 N/G Weight:100/110 Pack. Size/CBM:118*78*72/0.66 Details:Tray size: 400*600mm 1.With flameout protected function. 2.Oven warranty 1 years. 3.Gas heater warranty 1 years. 4.Aluminum main gas pipe. 5.Pure copper branch gas pipe. 6.Alusteel inside baking chamber 7.Chamber size 470*670*185mm 8.Plastic door handle. 9.Uniform baking effect.",
@@ -553,7 +553,7 @@ export const productsList = [
   {
     id: "DA-M-GBO-1D3T",
     name: "D GAS BAKING OVEN 1D3T ",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b4 ,
   
     description: "220V 50Hz 0.075kW E.X. Size:108*68*65 N/G Weight:100/110 Pack. Size/CBM:118*78*72/0.66 Details:Tray size: 400*600mm 1.With flameout protected function. 2.Oven warranty 1 years. 3.Gas heater warranty 1 years. 4.Aluminum main gas pipe. 5.Pure copper branch gas pipe. 6.Alusteel inside baking chamber 7.Chamber size 470*670*185mm 8.Plastic door handle. 9.Uniform baking effect.",
@@ -575,7 +575,7 @@ export const productsList = [
  {
     id: "DA-M-GBO-2D4T",
     name: "D GAS BAKING OVEN 2D3T ",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b1,
   
     description: "220V 50Hz 0.075kW E.X. Size:108*68*65 N/G Weight:100/110 Pack. Size/CBM:118*78*72/0.66 Details:Tray size: 400*600mm 1.With flameout protected function. 2.Oven warranty 1 years. 3.Gas heater warranty 1 years. 4.Aluminum main gas pipe. 5.Pure copper branch gas pipe. 6.Alusteel inside baking chamber 7.Chamber size 470*670*185mm 8.Plastic door handle. 9.Uniform baking effect.",
@@ -597,7 +597,7 @@ export const productsList = [
    {
     id: "1DECKS-1-TRAYS-GAS-OVEN",
     name: "  M GAS BAKING OVEN 1D1T",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b4new,
   
     description: "220V 50Hz 0.075kW E.X. Size:108*68*65 N/G Weight:100/110 Pack. Size/CBM:118*78*72/0.66 Details:Tray size: 400*600mm 1.With flameout protected function. 2.Oven warranty 1 years. 3.Gas heater warranty 1 years. 4.Aluminum main gas pipe. 5.Pure copper branch gas pipe. 6.Alusteel inside baking chamber 7.Chamber size 470*670*185mm 8.Plastic door handle. 9.Uniform baking effect.",
@@ -620,7 +620,7 @@ export const productsList = [
    {
     id: "M-GAS-BAKING-OVEN-1D3T",
     name: "  M GAS BAKING OVEN 1D3T",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b4,
   
     description: "220V 50Hz 0.075kW E.X. Size:108*68*65 N/G Weight:100/110 Pack. Size/CBM:118*78*72/0.66 Details:Tray size: 400*600mm 1.With flameout protected function. 2.Oven warranty 1 years. 3.Gas heater warranty 1 years. 4.Aluminum main gas pipe. 5.Pure copper branch gas pipe. 6.Alusteel inside baking chamber 7.Chamber size 470*670*185mm 8.Plastic door handle. 9.Uniform baking effect.",
@@ -642,7 +642,7 @@ export const productsList = [
  {
     id: "1DECKS-1-TRAYS-GAS-OVEN-ECO",
     name: "  Eco GAS OVEN 1D1T",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b4,
   
     description: "220V 50Hz 0.075kW E.X. Size:108*68*65 N/G Weight:100/110 Pack. Size/CBM:118*78*72/0.66 Details:Tray size: 400*600mm 1.With flameout protected function. 2.Oven warranty 1 years. 3.Gas heater warranty 1 years. 4.Aluminum main gas pipe. 5.Pure copper branch gas pipe. 6.Alusteel inside baking chamber 7.Chamber size 470*670*185mm 8.Plastic door handle. 9.Uniform baking effect.",
@@ -664,7 +664,7 @@ export const productsList = [
   {
     id: "3DECKS-6-TRAYS-GAS-OVEN",
     name: "D GAS BAKING OVEN 3D6T",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b5,
     
     description: "220V  .0225KW  TRAY SIZE:40X60CM  WITH FLAMOUT PROCTED FUNCTION,ALUMUIUM MAIN GAS PIPE,PURE COPPER BRANCH PIPE,ALUSTEEL INSIDE BAKING CHAMBER,CHAMBER SIZE:87X67X18.5 CM,PLASTIC DOOR HANDLE,UNIFORM BAKING EFFECT.",
@@ -685,7 +685,7 @@ export const productsList = [
   {
     id: "3DECKS-9-TRAYS-GAS-OVEN",
     name: "D GAS BAKING OVEN 3D9T",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: b6,
     // tagline: "Digital Control Glasswasher & Dishwasher Station",
     description: "Heavy-duty undercounter commercial dishwasher designed for rapid cleanup in bars, cafes, and small restaurants. Stainless steel double-skin body with quick wash cycles.",
@@ -706,7 +706,7 @@ export const productsList = [
  {
     id: "PIZZA-OVEN-BERJAYA",
     name: "PIZZA OVEN BERJAYA ",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: pizza,
     // tagline: "Digital Control Glasswasher & Dishwasher Station",
     description: "Heavy-duty undercounter commercial dishwasher designed for rapid cleanup in bars, cafes, and small restaurants. Stainless steel double-skin body with quick wash cycles.",
@@ -728,7 +728,7 @@ export const productsList = [
   {
     id: "ELECTRIC-PIZZA-OVEN-BERJAYA",
     name: "ELECTRIC PIZZA OVEN  ",
-    category: "Banking Equipments",
+    category: "Baking Equipments",
     image: pizza1d,
     // tagline: "Digital Control Glasswasher & Dishwasher Station",
     description: "Heavy-duty undercounter commercial dishwasher designed for rapid cleanup in bars, cafes, and small restaurants. Stainless steel double-skin body with quick wash cycles.",
@@ -753,7 +753,7 @@ export const productsList = [
   // {
   //   id: "3DECKS-9-TRAYS-GAS-OVEN-2",
   //   name: "3 DECKS 9 TRAYS GAS OVEN",
-  //   category: "Banking Equipments",
+  //   category: "Baking Equipments",
   //   image: b7,
   //   tagline: "Digital Control Glasswasher & Dishwasher Station",
   //   description: "Heavy-duty undercounter commercial dishwasher designed for rapid cleanup in bars, cafes, and small restaurants. Stainless steel double-skin body with quick wash cycles.",

@@ -98,14 +98,7 @@ export default function Products() {
               </p>
             </div>
 
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-white hover:border-[#DE1D3A] text-gray-700 hover:text-[#DE1D3A] text-xs font-bold uppercase tracking-wider shadow-xs transition-all w-fit cursor-pointer"
-              title="Open Admin Panel"
-            >
-              <Shield className="w-4 h-4 text-[#DE1D3A]" />
-              <span>Admin Panel</span>
-            </Link>
+          
           </div>
         </div>
       </section>

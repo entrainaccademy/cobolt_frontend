@@ -31,6 +31,8 @@ import {
   MessageSquare,
   Inbox,
   Phone,
+  FileText,
+  Table,
 } from 'lucide-react';
 import {
   adminLogin,
@@ -1117,12 +1119,52 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
   const [isAvailable, setIsAvailable] = useState(product ? product.isAvailable !== false : true);
   const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
 
-  // Dynamic Specs
-  const [specs, setSpecs] = useState(
+  // Dynamic Specs & Fast Text Input Mode
+  const initialSpecs =
     Array.isArray(product?.specs) && product.specs.length > 0
       ? product.specs.map((s) => ({ label: s.label || '', value: s.value || '' }))
-      : [{ label: '', value: '' }]
+      : [];
+
+  const specsToText = (items) => {
+    if (!Array.isArray(items) || items.length === 0) return '';
+    return items
+      .filter((s) => (s.label && s.label.trim()) || (s.value && s.value.trim()))
+      .map((s) => `${(s.label || '').trim()} : ${(s.value || '').trim()}`)
+      .join('\n');
+  };
+
+  const parseSpecsText = (text) => {
+    if (!text || !text.trim()) return [];
+    const lines = text.split('\n');
+    const result = [];
+
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) continue;
+
+      let delimiter = ':';
+      if (!line.includes(':') && line.includes('\t')) delimiter = '\t';
+      else if (!line.includes(':') && line.includes('|')) delimiter = '|';
+
+      const idx = line.indexOf(delimiter);
+      if (idx !== -1) {
+        const label = line.slice(0, idx).trim();
+        const value = line.slice(idx + 1).trim();
+        if (label || value) {
+          result.push({ label: label || 'Specification', value: value || '-' });
+        }
+      } else {
+        result.push({ label: 'Specification', value: line });
+      }
+    }
+    return result;
+  };
+
+  const [specs, setSpecs] = useState(
+    initialSpecs.length > 0 ? initialSpecs : [{ label: '', value: '' }]
   );
+  const [rawSpecsText, setRawSpecsText] = useState(specsToText(initialSpecs));
+  const [specInputMode, setSpecInputMode] = useState('text'); // 'text' (Fast text/paste) or 'table' (Row by row)
 
   // Dynamic Accessories
   const [accessories, setAccessories] = useState(
@@ -1136,17 +1178,37 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
 
   // Handle Spec Rows
   const addSpecRow = () => {
-    setSpecs([...specs, { label: '', value: '' }]);
+    const updated = [...specs, { label: '', value: '' }];
+    setSpecs(updated);
+    setRawSpecsText(specsToText(updated));
   };
 
   const updateSpecRow = (idx, field, val) => {
     const updated = [...specs];
     updated[idx][field] = val;
     setSpecs(updated);
+    setRawSpecsText(specsToText(updated));
   };
 
   const removeSpecRow = (idx) => {
-    setSpecs(specs.filter((_, i) => i !== idx));
+    const updated = specs.filter((_, i) => i !== idx);
+    const finalUpdated = updated.length > 0 ? updated : [{ label: '', value: '' }];
+    setSpecs(finalUpdated);
+    setRawSpecsText(specsToText(finalUpdated));
+  };
+
+  const handleTablePaste = (e, idx) => {
+    const pasted = e.clipboardData?.getData('text');
+    if (pasted && (pasted.includes('\n') || pasted.includes(':'))) {
+      const parsed = parseSpecsText(pasted);
+      if (parsed.length > 0) {
+        e.preventDefault();
+        const existing = specs.filter((s, i) => i !== idx || (s.label.trim() && s.value.trim()));
+        const merged = [...existing, ...parsed];
+        setSpecs(merged.length > 0 ? merged : [{ label: '', value: '' }]);
+        setRawSpecsText(specsToText(merged));
+      }
+    }
   };
 
   // Handle Accessories Tags
@@ -1197,7 +1259,14 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
       description: description.trim(),
       image,
       images: [image],
-      specs: specs.filter((s) => s.label.trim() && s.value.trim()),
+      specs: (
+        specInputMode === 'text' ? parseSpecsText(rawSpecsText) : specs
+      )
+        .filter((s) => (s.label && s.label.trim()) || (s.value && s.value.trim()))
+        .map((s) => ({
+          label: s.label?.trim() || 'Specification',
+          value: s.value?.trim() || '-',
+        })),
       accessories: accessories.filter(Boolean),
       isAvailable,
       isFeatured,
@@ -1395,47 +1464,157 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
 
           {/* Technical Specifications */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">
-                Technical Specifications Table
-              </label>
-              <button
-                type="button"
-                onClick={addSpecRow}
-                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#DE1D3A] hover:underline cursor-pointer"
-              >
-                <Plus className="w-3 h-3" /> Add Spec Row
-              </button>
-            </div>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700">
+                  Technical Specifications
+                </label>
+                <p className="text-[11px] text-gray-500">
+                  {specInputMode === 'text'
+                    ? 'Type or paste specs (e.g. MODEL : OFG-5910)'
+                    : 'Manage each specification row-by-row'}
+                </p>
+              </div>
 
-            <div className="space-y-2 border border-gray-200 rounded-xl p-3 bg-gray-50/50">
-              {specs.map((spec, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="Spec Label (e.g. Motor Power)"
-                    value={spec.label}
-                    onChange={(e) => updateSpecRow(idx, 'label', e.target.value)}
-                    className="w-2/5 px-3 py-1.5 text-xs bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#DE1D3A]"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Value (e.g. 1.5 HP / 1100W)"
-                    value={spec.value}
-                    onChange={(e) => updateSpecRow(idx, 'value', e.target.value)}
-                    className="flex-1 px-3 py-1.5 text-xs bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#DE1D3A]"
-                  />
+              <div className="flex items-center gap-2">
+                {/* Switch between Fast Text Mode and Table Mode */}
+                <div className="flex items-center bg-gray-100 p-0.5 rounded-lg border border-gray-200">
                   <button
                     type="button"
-                    onClick={() => removeSpecRow(idx)}
-                    className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors cursor-pointer"
-                    title="Remove row"
+                    onClick={() => {
+                      if (specInputMode !== 'text') {
+                        setRawSpecsText(specsToText(specs));
+                        setSpecInputMode('text');
+                      }
+                    }}
+                    className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                      specInputMode === 'text'
+                        ? 'bg-white text-[#DE1D3A] shadow-xs'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <FileText className="w-3.5 h-3.5" /> Fast Text / Paste
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (specInputMode !== 'table') {
+                        const parsed = parseSpecsText(rawSpecsText);
+                        setSpecs(parsed.length > 0 ? parsed : [{ label: '', value: '' }]);
+                        setSpecInputMode('table');
+                      }
+                    }}
+                    className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                      specInputMode === 'table'
+                        ? 'bg-white text-[#DE1D3A] shadow-xs'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    <Table className="w-3.5 h-3.5" /> Table Rows
                   </button>
                 </div>
-              ))}
+
+                {specInputMode === 'table' && (
+                  <button
+                    type="button"
+                    onClick={addSpecRow}
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-[#DE1D3A] hover:underline cursor-pointer ml-1"
+                  >
+                    <Plus className="w-3 h-3" /> Add Row
+                  </button>
+                )}
+              </div>
             </div>
+
+            {specInputMode === 'text' ? (
+              <div className="space-y-2 border border-gray-200 rounded-xl p-3 bg-gray-50/50">
+                <div className="flex items-center justify-between text-[11px] text-gray-500">
+                  <span>
+                    Format: <code className="text-[#DE1D3A] bg-red-50 px-1.5 py-0.5 rounded font-mono font-bold">MODEL : DA-EOG-PZA-1D1T</code> (one per line)
+                  </span>
+                  <span className="font-semibold text-gray-700 bg-white px-2 py-0.5 rounded border border-gray-200 shadow-xs">
+                    {parseSpecsText(rawSpecsText).length} spec{parseSpecsText(rawSpecsText).length === 1 ? '' : 's'} detected
+                  </span>
+                </div>
+
+                <textarea
+                  rows={8}
+                  value={rawSpecsText}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setRawSpecsText(val);
+                    setSpecs(parseSpecsText(val));
+                  }}
+                  placeholder={`MODEL : DA-EOG-PZA-1D1T\nRATED VOLTAGE : 220V/50HZ/1PH\nMJ/H : 16MJ/±10%\nTEMPERATURE RANGE : AMBIENT TO 400°C\nNET WEIGHT : 70KG`}
+                  className="w-full px-3.5 py-2.5 text-xs font-mono bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#DE1D3A] leading-relaxed shadow-xs"
+                />
+
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px]">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const sample = `MODEL : DA-EOG-PZA-1D1T\nRATED VOLTAGE : 220V/50HZ/1PH\nMJ/H : 16MJ/±10%\nTEMPERATURE RANGE : AMBIENT TO 400°C\nNET WEIGHT : 70KG`;
+                        setRawSpecsText(sample);
+                        setSpecs(parseSpecsText(sample));
+                      }}
+                      className="text-[#DE1D3A] hover:underline font-semibold cursor-pointer"
+                    >
+                      Insert Example Template
+                    </button>
+                    <span className="text-gray-300">|</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRawSpecsText('');
+                        setSpecs([{ label: '', value: '' }]);
+                      }}
+                      className="text-gray-500 hover:text-red-600 font-medium cursor-pointer"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                  <span className="text-gray-400 italic">
+                    Supports colon (:), tab, or pipe (|) delimiters
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 border border-gray-200 rounded-xl p-3 bg-gray-50/50">
+                {specs.map((spec, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Spec Label (e.g. MODEL)"
+                      value={spec.label}
+                      onPaste={(e) => handleTablePaste(e, idx)}
+                      onChange={(e) => updateSpecRow(idx, 'label', e.target.value)}
+                      className="w-2/5 px-3 py-1.5 text-xs bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#DE1D3A]"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Value (e.g. DA-EOG-PZA-1D1T)"
+                      value={spec.value}
+                      onChange={(e) => updateSpecRow(idx, 'value', e.target.value)}
+                      className="flex-1 px-3 py-1.5 text-xs bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#DE1D3A]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeSpecRow(idx)}
+                      className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors cursor-pointer"
+                      title="Remove row"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+                {specs.length === 0 && (
+                  <div className="text-center py-4 text-xs text-gray-400">
+                    No specifications. Click &quot;Add Row&quot; or switch to &quot;Fast Text / Paste&quot;.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Included Accessories */}

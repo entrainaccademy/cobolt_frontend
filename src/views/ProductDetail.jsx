@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, ArrowRight, Check, ChevronRight, ShieldCheck, Award, Printer } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 
 const getSrc = (img) => {
@@ -23,6 +23,50 @@ const getSrc = (img) => {
 
 export default function ProductDetail({ product, relatedProducts = [] }) {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  const formattedSpecs = useMemo(() => {
+    if (!product?.specs) return [];
+    if (Array.isArray(product.specs)) {
+      return product.specs
+        .map((item) => {
+          if (item && typeof item === 'object') {
+            return {
+              label: item.label || 'Specification',
+              value: item.value || '-',
+            };
+          }
+          if (typeof item === 'string') {
+            const idx = item.indexOf(':');
+            if (idx !== -1) {
+              return {
+                label: item.slice(0, idx).trim(),
+                value: item.slice(idx + 1).trim(),
+              };
+            }
+            return { label: 'Specification', value: item.trim() };
+          }
+          return { label: 'Specification', value: String(item) };
+        })
+        .filter((s) => s.label && s.value);
+    }
+    if (typeof product.specs === 'string') {
+      return product.specs
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .map((line) => {
+          const idx = line.indexOf(':');
+          if (idx !== -1) {
+            return {
+              label: line.slice(0, idx).trim(),
+              value: line.slice(idx + 1).trim(),
+            };
+          }
+          return { label: 'Specification', value: line };
+        });
+    }
+    return [];
+  }, [product?.specs]);
   
   if (!product) {
     return (
@@ -72,174 +116,119 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
             </Link>
           </div>
 
-          {/* Product Header Title (Printed) */}
-          <div className="text-left mb-8 print:mb-6">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl print:text-2xl font-bold text-gray-900 font-display leading-tight uppercase">
-              {product.name}
-            </h1>
-            {product.tagline && (
-              <p className="text-sm sm:text-base print:text-sm font-medium text-[#DE1D3A] mt-1">
-                {product.tagline}
-              </p>
-            )}
-          </div>
-
-          {/* Main Showcase: Image + Technical Specifications (Printed) */}
-          <div className="mb-12 print:mb-0 flex flex-col md:flex-row print:flex-row items-center md:items-start print:items-start gap-8 lg:gap-12 print:gap-8">
+          {/* Unified One-View Container: Photo, Description & Specs all in ONE VIEW */}
+          <div className="mb-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start text-left">
             
-            {/* Left: Product Image & Gallery */}
-            <div className="w-full md:w-1/2 print:w-1/2 flex flex-col items-center justify-center p-4 sm:p-6 print:p-2 bg-white">
-              <div className="w-full min-h-[280px] sm:min-h-[340px] flex items-center justify-center">
-                <Image
-                  src={selectedPhoto || getSrc(product.image)}
-                  alt={product.name}
-                  width={500}
-                  height={500}
-                  priority
-                  sizes="(max-width: 768px) 100vw, 500px"
-                  className="max-h-[320px] print:max-h-[340px] w-auto max-w-full object-contain filter drop-shadow-sm print:drop-shadow-none transition-all duration-300"
-                />
+            {/* Left Column: Product Image, Gallery & Quote Action (6 cols) */}
+            <div className="lg:col-span-6 flex flex-col items-center lg:sticky lg:top-28">
+              <div className="w-full flex flex-col items-center justify-center bg-white">
+                <div className="w-full flex items-center justify-center">
+                  <Image
+                    src={selectedPhoto || getSrc(product.image)}
+                    alt={product.name}
+                    width={700}
+                    height={700}
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 600px"
+                    className="max-h-[360px] sm:max-h-[420px] lg:max-h-[460px] w-auto max-w-full object-contain filter drop-shadow-md hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+
+                {/* Thumbnails if multiple photos exist */}
+                {Array.isArray(product.images) && product.images.length > 1 && (
+                  <div className="flex flex-wrap items-center justify-center gap-2 mt-3 print:hidden">
+                    {product.images.map((img, idx) => {
+                      const src = getSrc(img);
+                      const isCurrent = (selectedPhoto || getSrc(product.image)) === src;
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setSelectedPhoto(src)}
+                          className={`w-16 h-16 rounded-lg border-2 p-1 overflow-hidden transition-all duration-200 cursor-pointer ${
+                            isCurrent
+                              ? 'border-[#DE1D3A] ring-2 ring-[#DE1D3A]/20 scale-105'
+                              : 'border-gray-200 hover:border-gray-400 opacity-70 hover:opacity-100'
+                          }`}
+                        >
+                          <Image
+                            src={src}
+                            alt={`${product.name} photo ${idx + 1}`}
+                            width={70}
+                            height={70}
+                            className="w-full h-full object-contain"
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
-              {/* Thumbnails if multiple photos exist */}
-              {Array.isArray(product.images) && product.images.length > 1 && (
-                <div className="flex flex-wrap items-center justify-center gap-2 mt-4 print:hidden">
-                  {product.images.map((img, idx) => {
-                    const src = getSrc(img);
-                    const isCurrent = (selectedPhoto || getSrc(product.image)) === src;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => setSelectedPhoto(src)}
-                        className={`w-14 h-14 rounded-lg border-2 p-1 overflow-hidden transition-all duration-200 cursor-pointer ${
-                          isCurrent
-                            ? 'border-[#DE1D3A] ring-2 ring-[#DE1D3A]/20 scale-105'
-                            : 'border-gray-200 hover:border-gray-400 opacity-70 hover:opacity-100'
-                        }`}
-                      >
-                        <Image
-                          src={src}
-                          alt={`${product.name} photo ${idx + 1}`}
-                          width={60}
-                          height={60}
-                          className="w-full h-full object-contain"
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
             </div>
 
-            {/* Right: Technical Specifications */}
-            <div className="w-full md:w-1/2 print:w-1/2 flex flex-col justify-center text-left">
-              <h2 className="text-sm sm:text-base print:text-sm font-bold text-gray-900 font-display uppercase tracking-wider mb-4 print:mb-3">
-                Technical Specifications
-              </h2>
+            {/* Right Column: Title, Description & Specs directly together (6 cols) */}
+            <div className="lg:col-span-6 flex flex-col space-y-4 sm:space-y-5">
+              <div>
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 font-display leading-snug uppercase">
+                  {product.name}
+                </h1>
 
-              {product.specs ? (
-                <div className="border border-gray-200 print:border-gray-300 rounded-xl print:rounded-lg overflow-hidden bg-white shadow-xs print:shadow-none">
-                  <table className="min-w-full divide-y divide-gray-100 print:divide-gray-200 text-left">
-                    <tbody className="divide-y divide-gray-100 print:divide-gray-200 bg-white">
-                      {Array.isArray(product.specs) ? (
-                        product.specs.map((spec, idx) => (
-                          <tr key={idx} className="bg-white">
-                            <td className="px-5 py-3.5 print:px-4 print:py-3 text-sm sm:text-base print:text-xs font-bold text-gray-900 w-2/5 border-r border-gray-100 print:border-gray-200">
-                              {typeof spec === 'object' ? spec.label : 'Specification'}
+                {product.tagline && (
+                  <p className="text-xs sm:text-sm font-medium text-[#DE1D3A] mt-1">
+                    {product.tagline}
+                  </p>
+                )}
+              </div>
+
+              {/* Description */}
+              {product.description && (
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                    {product.description}
+                  </p>
+                </div>
+              )}
+
+              {/* Technical Specifications (Integrated into the same view) */}
+              <div>
+
+                {formattedSpecs.length > 0 ? (
+                  <div className="overflow-hidden bg-white">
+                    <table className="min-w-full divide-y divide-gray-100 print:divide-gray-200 text-left">
+                      <tbody className="divide-y divide-gray-100 print:divide-gray-200 bg-white">
+                        {formattedSpecs.map((spec, idx) => (
+                          <tr
+                            key={idx}
+                            className={idx % 2 === 0 ? 'bg-gray-50/60' : 'bg-white hover:bg-gray-50/30'}
+                          >
+                            <td className="px-3.5 py-1.5 sm:py-2 print:px-2.5 print:py-1.5 text-[10px] sm:text-[11px] font-bold text-gray-800 w-2/5">
+                              {spec.label}
                             </td>
-                            <td className="px-5 py-3.5 print:px-4 print:py-3 text-sm sm:text-base print:text-xs font-medium text-gray-700">
-                              {typeof spec === 'object' ? spec.value : spec}
+                            <td className="px-3.5 py-1.5 sm:py-2 print:px-2.5 print:py-1.5 text-[10px] sm:text-[11px] font-medium text-gray-600">
+                              {spec.value}
                             </td>
                           </tr>
-                        ))
-                      ) : (
-                        <tr className="bg-white">
-                          <td className="px-5 py-4 print:px-4 print:py-3 text-sm sm:text-base print:text-xs text-gray-700" colSpan={2}>
-                            {product.specs}
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">Contact us for custom mechanical tolerances and drawings.</p>
-              )}
-            </div>
-          </div>
-
-          {/* Bottom Section: Description & Actions + Accessories & Trust Badges (Hidden in Print) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-start text-left pt-6 border-t border-gray-100 print:hidden">
-            
-            {/* Description & Action Buttons */}
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
-                  Description
-                </h2>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {product.description}
-                </p>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-500 bg-gray-50 p-3 rounded-xl">
+                    Contact us for custom mechanical tolerances and drawings.
+                  </p>
+                )}
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3 pt-2">
+              {/* Action Button: Request Quote (At bottom of spec details) */}
+              <div className="w-full pt-2 flex justify-start print:hidden">
                 <Link
                   href={`/contact?product=${encodeURIComponent(product.name)}`}
-                  className="flex-1 min-w-[160px] px-6 py-3.5 bg-[#DE1D3A] hover:bg-[#B7152D] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full sm:w-[450px] max-w-full py-3 px-5 bg-[#DE1D3A] hover:bg-[#B7152D] text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md cursor-pointer"
                 >
                   Request Quote
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
-
-                {/* <button
-                  onClick={() => window.print()}
-                  className="px-5 py-3.5 border border-gray-200 bg-white text-gray-600 hover:text-gray-900 hover:border-gray-400 text-xs font-semibold uppercase tracking-wider rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                  title="Print Specification Sheet"
-                >
-                  <Printer className="w-4 h-4" /> Print Specs
-                </button> */}
-              </div>
-            </div>
-
-            {/* Included Accessories & Quality Badges */}
-            <div className="space-y-6">
-              {product.accessories && product.accessories.length > 0 && (
-                <div>
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">
-                    Included Accessories
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {product.accessories.map((acc, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center gap-2 text-xs text-gray-700 bg-white border border-gray-200 px-3 py-2.5 rounded-lg shadow-xs"
-                      >
-                        <Check className="w-3.5 h-3.5 text-[#22C55E] flex-shrink-0" />
-                        <span>{acc}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Quality & Assurance Badges */}
-              <div className="grid grid-cols-2 gap-3 pt-1">
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
-                  <ShieldCheck className="w-4 h-4 text-[#DE1D3A] flex-shrink-0" />
-                  <div className="text-left">
-                    <p className="text-[11px] font-bold text-gray-900">Food Grade SUS304</p>
-                    <p className="text-[10px] text-gray-500">Commercial Standard</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-gray-200 shadow-xs">
-                  <Award className="w-4 h-4 text-[#DE1D3A] flex-shrink-0" />
-                  <div className="text-left">
-                    <p className="text-[11px] font-bold text-gray-900">Warranty Coverage</p>
-                    <p className="text-[10px] text-gray-500">Parts & Factory Support</p>
-                  </div>
-                </div>
               </div>
             </div>
 

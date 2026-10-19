@@ -19,12 +19,21 @@ export default function Footer() {
   ];
 
   const servicesLinks = [
-    { name: 'Installation & Setup', path: '/services' },
-    { name: 'Preventive Maintenance', path: '/services' },
-    { name: 'Expert Repair Services', path: '/services' },
-    { name: 'Engineering Consultation', path: '/services' },
-    { name: 'Annual Maintenance (AMC)', path: '/services' },
-    { name: 'Custom Machinery Solutions', path: '/services' },
+    { name: 'Steel Fabrication', path: '/services/steel-fabrication' },
+    { name: 'Import & Export', path: '/services/import-export' },
+    { name: 'Machinery Manufacturing', path: '/services/machinery-manufacturing' },
+    { name: 'Engineering Consulting', path: '/services/consulting' },
+    { name: 'Annual Maintenance (AMC)', path: '/services/amc' },
+    { name: 'Custom Machinery Design', path: '/services/custom-machinery-design-fabrication' },
+  ];
+
+  const policyLinks = [
+    { name: 'Privacy Policy', path: '/privacy-policy' },
+    { name: 'Terms of Service', path: '/terms-of-service' },
+    { name: 'Warranty Policy', path: '/warranty-policy' },
+    { name: 'Return and Refund', path: '/return-refund-policy' },
+    { name: 'Shipping Policy', path: '/shipping-policy' },
+    { name: 'Partial COD Policy', path: '/partial-cod-policy' },
   ];
 
   return (
@@ -48,9 +57,9 @@ export default function Footer() {
 
       {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 lg:gap-6">
           {/* Brand Info */}
-          <div className="space-y-6">
+          <div className="space-y-6 sm:col-span-2 md:col-span-1 lg:col-span-1">
             <Link href="/" className="flex items-center gap-3">
               <Image
                 className="h-12 w-auto object-contain"
@@ -146,6 +155,26 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Our Policies Column */}
+          <div>
+            <h4 className="font-display font-bold text-sm tracking-widest text-primary uppercase mb-6">
+              Our Policies
+            </h4>
+            <ul className="space-y-3">
+              {policyLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.path}
+                    prefetch={false}
+                    className="text-text-light hover:text-accent text-sm transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Contact Details */}
           <div className="space-y-4">
             <h4 className="font-display font-bold text-sm tracking-widest text-primary uppercase mb-6">
@@ -184,9 +213,10 @@ export default function Footer() {
           <p className="text-text-light text-xs text-center md:text-left">
             &copy; {new Date().getFullYear()} Cobolt Machineries Private Limited. All rights reserved.
           </p>
-          <div className="flex space-x-6 text-xs text-text-light">
-            <Link href="/contact" className="hover:text-accent transition-colors duration-200">Privacy Policy</Link>
-            <Link href="/contact" className="hover:text-accent transition-colors duration-200">Terms of Service</Link>
+          <div className="flex flex-wrap gap-4 sm:gap-6 text-xs text-text-light justify-center md:justify-end">
+            <Link href="/privacy-policy" className="hover:text-accent transition-colors duration-200">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="hover:text-accent transition-colors duration-200">Terms of Service</Link>
+            <Link href="/warranty-policy" className="hover:text-accent transition-colors duration-200">Warranty</Link>
             <Link href="/sitemap.xml" className="hover:text-accent transition-colors duration-200">Sitemap</Link>
             <Link href="/admin" className="hover:text-[#DE1D3A] transition-colors duration-200">Admin Portal</Link>
           </div>

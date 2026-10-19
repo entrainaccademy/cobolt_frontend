@@ -3,113 +3,34 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ShieldAlert, FileSliders, Settings2, Hammer, Landmark, ArrowRight, CheckCircle } from 'lucide-react';
+import {
+  ShieldAlert,
+  FileSliders,
+  Settings2,
+  Hammer,
+  Landmark,
+  ArrowRight,
+  CheckCircle,
+  Wrench,
+} from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
+import { servicesList } from '../data/services';
 
-const getSrc = (img) => (typeof img === 'object' && img?.src ? img.src : img);
-
-import service1 from '../assets/service1.webp';
-import service2 from '../assets/service2.webp';
-import service3 from '../assets/service3.webp';
-import service4 from '../assets/service4.webp';
-import service5 from '../assets/service5.webp';
-import service6 from '../assets/service6.webp';
+const iconMap = {
+  'steel-fabrication': Hammer,
+  'installation': Hammer,
+  'import-export': Settings2,
+  'machinery-manufacturing': ShieldAlert,
+  'manufacturing': ShieldAlert,
+  'consulting': FileSliders,
+  'consultation': FileSliders,
+  'amc': Landmark,
+  'annual-maintenance-contracts': Landmark,
+  'custom-machinery-design-fabrication': CheckCircle,
+  'custom-solutions': CheckCircle,
+};
 
 export default function Services() {
-  const servicesList = [
-    {
-      id: "installation",
-      icon: Hammer,
-      image: service1,
-      title: "Steel fabrication",
-      tagline: "Millwright services, foundation design, and mechanical alignment.",
-      description: "Experience the pinnacle of kitchen innovation with our steel fabrication. Impeccably crafted stainless steel equipment, tailored to elevate your culinary space. Precision, durability, and style converge to redefine your kitchen experience. Explore excellence in every detail.",
-      points: [
-        "Custom kitchen layout planning and 3D modeling",
-        "High-grade food-safe 304/316 stainless steel fabrication",
-        "Seamless TIG/MIG welding and satin finish polishing",
-        "Precision on-site installation and alignment"
-      ]
-    },
-   {
-  id: "import-export",
-  icon: Settings2,
-  image: service2,
-  title: "Import & Export",
-  tagline: "Connecting businesses to global markets with confidence.",
-  description:
-    "Our import and export services are designed to streamline cross-border trade while ensuring compliance, efficiency, and cost-effectiveness. We manage procurement, customs procedures, international logistics, and delivery, allowing businesses to focus on growth while we handle the complexities of global commerce.",
-
-  points: [
-    "Worldwide sourcing and supplier management",
-    "Customs compliance and regulatory documentation",
-    "Air, sea, and land freight solutions",
-    "Secure, timely, and cost-effective global deliveries"
-  ]
-},
-    {
-  id: "manufacturing",
-  icon: ShieldAlert,
-  image: service3,
-  title: "Machinery Manufacturing",
-  tagline: "Innovative manufacturing solutions engineered for industrial excellence.",
-  description:
-    "From concept and design to production and final testing, we manufacture robust industrial machinery that meets international quality standards. Our team focuses on precision engineering, operational efficiency, and long-term reliability to provide equipment that supports sustainable business growth.",
-
-  points: [
-    "End-to-end machinery design and development",
-    "Advanced manufacturing with precision engineering",
-    "Rigorous quality assurance and safety compliance",
-    "After-sales support, maintenance, and spare parts availability"
-  ]
-},{
-  id: "consultation",
-  icon: FileSliders,
-  image: service4,
-  title: "Consulting",
-  tagline: "Strategic engineering expertise for smarter industrial operations.",
-  description:
-    "We provide comprehensive consulting services tailored to the unique needs of manufacturers and industrial businesses. Our experts deliver strategic guidance on process optimization, equipment planning, technology integration, and operational excellence to help organizations achieve sustainable growth and long-term success.",
-
-  points: [
-    "Engineering and technical consulting",
-    "Industrial process optimization",
-    "Equipment planning and technology integration",
-    "Risk assessment and operational improvement"
-  ]
-},
-    {
-  id: "amc",
-  icon: Landmark,
-  image: service5,
-  title: "Annual Maintenance Contracts (AMC)",
-  tagline: "Reliable maintenance solutions designed for maximum uptime.",
-  description:
-    "Our AMC services deliver complete maintenance management through scheduled servicing, preventive inspections, emergency support, and performance monitoring. We ensure your equipment operates efficiently throughout the year, helping you reduce operational risks, improve productivity, and achieve long-term cost savings.",
-
-  points: [
-    "Customized maintenance schedules based on operational needs",
-    "Preventive inspections to reduce unexpected breakdowns",
-    "Priority on-site support from experienced service engineers",
-    "Detailed maintenance reports and performance recommendations"
-  ]
-},{
-      id: "custom-solutions",
-      icon: CheckCircle,
-      image: service6,
-      title: "Custom Machinery Design & Fabrication",
-      tagline: "Bespoke engineering from concept blueprints to shopfloor integration.",
-      description: "Crafting culinary solutions tailored to you. Our custom machine manufacturing turns your kitchen dreams into reality. Impeccable precision and innovation meet as we design and create bespoke machinery for a unique cooking experience.",
-      points: [
-        "Full 3D CAD modeling and dynamic load simulation",
-        "Bespoke hydraulic manifold and pneumatic layouts",
-        "Multi-language custom touch HMI programming",
-        "Full CE & OSHA safety compliance integration"
-      ]
-    }
-  ];
-
   return (
     <PageWrapper>
       {/* Header */}
@@ -121,7 +42,7 @@ export default function Services() {
               Engineering Support
             </span>
             <h1 className="text-4xl sm:text-5xl font-extrabold text-[#111827] font-display leading-tight">
-              Machinery Support & Services
+              Machinery Support &amp; Services
             </h1>
             <p className="text-[#6B7280] text-base md:text-lg max-w-2xl leading-relaxed">
               We back our hardware with certified technicians and proactive service packages. Keep your production floor operating at maximum capacity.
@@ -134,74 +55,95 @@ export default function Services() {
       <section className="py-20 bg-[#FFFFFF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {servicesList.map((service) => (
-              <div
-                key={service.id}
-                className="bg-[#F8FAFC] border border-[#E5E7EB] hover:border-[#DE1D3A]/20 hover:bg-[#FFFFFF] rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group"
-              >
-                <div>
-                  {/* Service Image Banner */}
-                  <div className="relative">
-                    <div className="h-48 overflow-hidden bg-[#F8FAFC] rounded-t-2xl">
-                      <Image
-                        src={service.image}
-                        alt={service.title}
-                        width={400}
-                        height={192}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    </div>
-                    
-                    {/* Overlapping Floating Icon */}
-                    <div className="absolute -bottom-6 left-6 w-12 h-12 bg-[#FFFFFF] border border-[#E5E7EB] text-[#DE1D3A] group-hover:bg-[#DE1D3A] group-hover:text-white rounded-xl flex items-center justify-center transition-all duration-300 shadow-md z-10">
-                      <service.icon className="w-5 h-5" />
-                    </div>
-                  </div>
-
-                  <div className="p-6 pt-10">
-                    <h3 className="font-display font-bold text-lg text-[#111827] mb-2 mt-2">
-                      {service.title}
-                    </h3>
-                    <p className="text-[#DE1D3A] text-[10px] font-semibold tracking-wide uppercase mb-4">
-                      {service.tagline}
-                    </p>
-                    <p className="text-[#6B7280] text-sm leading-relaxed mb-6">
-                      {service.description}
-                    </p>
-                    
-                    {/* Points */}
-                    {service.points && (
-                      <div className="space-y-3 mb-4">
-                        <h5 className="font-display font-bold text-xs uppercase tracking-wider text-[#DE1D3A]">
-                          What's Included:
-                        </h5>
-                        <ul className="space-y-2">
-                          {service.points.map((pt, idx) => (
-                            <li key={idx} className="flex items-start gap-2 text-xs text-[#6B7280]">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#DE1D3A] mt-1.5 flex-shrink-0" />
-                              <span className="leading-relaxed">{pt}</span>
-                            </li>
-                          ))}
-                        </ul>
+            {servicesList.map((service) => {
+              const IconComp = iconMap[service.id] || Wrench;
+              return (
+                <div
+                  key={service.id}
+                  className="bg-[#F8FAFC] border border-[#E5E7EB] hover:border-[#DE1D3A]/20 hover:bg-[#FFFFFF] rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden text-left group"
+                >
+                  <div>
+                    {/* Service Image Banner - Clickable Link to Details */}
+                    <Link
+                      href={`/services/${service.id}`}
+                      className="block relative overflow-hidden"
+                    >
+                      <div className="h-48 overflow-hidden bg-[#F8FAFC] rounded-t-2xl">
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          width={400}
+                          height={192}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent group-hover:from-black/60 transition-colors" />
                       </div>
-                    )}
+
+                      {/* Overlapping Floating Icon */}
+                      <div className="absolute -bottom-6 left-6 w-12 h-12 bg-[#FFFFFF] border border-[#E5E7EB] text-[#DE1D3A] group-hover:bg-[#DE1D3A] group-hover:text-white rounded-xl flex items-center justify-center transition-all duration-300 shadow-md z-10">
+                        <IconComp className="w-5 h-5" />
+                      </div>
+                    </Link>
+
+                    <div className="p-6 pt-10">
+                      <h3 className="font-display font-bold text-lg text-[#111827] mb-2 mt-2">
+                        <Link
+                          href={`/services/${service.id}`}
+                          className="hover:text-[#DE1D3A] transition-colors"
+                        >
+                          {service.title}
+                        </Link>
+                      </h3>
+                      <p className="text-[#DE1D3A] text-[10px] font-semibold tracking-wide uppercase mb-4">
+                        {service.tagline}
+                      </p>
+                      <p className="text-[#6B7280] text-sm leading-relaxed mb-6">
+                        {service.description}
+                      </p>
+
+                      {/* Points */}
+                      {service.points && (
+                        <div className="space-y-3 mb-4">
+                          <h5 className="font-display font-bold text-xs uppercase tracking-wider text-[#DE1D3A]">
+                            What&apos;s Included:
+                          </h5>
+                          <ul className="space-y-2">
+                            {service.points.slice(0, 4).map((pt, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-start gap-2 text-xs text-[#6B7280]"
+                              >
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#DE1D3A] mt-1.5 flex-shrink-0" />
+                                <span className="leading-relaxed">{pt}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Card Action Footer */}
+                  <div className="mx-6 pb-6 pt-4 border-t border-[#E5E7EB]/60 flex items-center justify-between gap-2">
+                    <Link
+                      href={`/services/${service.id}`}
+                      className="inline-flex items-center text-[#DE1D3A] font-bold text-xs group-hover:text-[#B7152D] transition-colors duration-200"
+                    >
+                      View Service Details
+                      <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Link>
+                    <Link
+                      href={`/contact?service=${encodeURIComponent(service.title)}`}
+                      className="text-[11px] font-semibold text-gray-500 hover:text-gray-900 transition-colors"
+                    >
+                      Inquire →
+                    </Link>
                   </div>
                 </div>
-
-                <div className="mx-6 pb-6 pt-4 border-t border-[#E5E7EB]/60">
-                  <Link
-                    href={`/contact?service=${encodeURIComponent(service.title)}`}
-                    className="inline-flex items-center text-[#DE1D3A] font-bold text-xs group-hover:text-[#B7152D] transition-colors duration-200"
-                  >
-                    Inquire About This Service
-                    <ArrowRight className="w-4 h-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

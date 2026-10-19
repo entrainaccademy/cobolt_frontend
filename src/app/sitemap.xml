@@ -20,6 +20,42 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.coboltmachineries.com/services/steel-fabrication</loc>
+    <lastmod>2026-10-17T10:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/services/import-export</loc>
+    <lastmod>2026-10-17T10:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/services/machinery-manufacturing</loc>
+    <lastmod>2026-10-17T10:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/services/consulting</loc>
+    <lastmod>2026-10-17T10:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/services/amc</loc>
+    <lastmod>2026-10-17T10:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/services/custom-machinery-design-fabrication</loc>
+    <lastmod>2026-10-17T10:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.coboltmachineries.com/about</loc>
     <lastmod>2026-10-03T04:41:36.161Z</lastmod>
     <changefreq>monthly</changefreq>
@@ -48,6 +84,44 @@
     <lastmod>2026-10-03T04:41:36.161Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+
+  <!-- Company Policy URLs -->
+  <url>
+    <loc>https://www.coboltmachineries.com/privacy-policy</loc>
+    <lastmod>2026-10-17T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/terms-of-service</loc>
+    <lastmod>2026-10-17T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/warranty-policy</loc>
+    <lastmod>2026-10-17T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/return-refund-policy</loc>
+    <lastmod>2026-10-17T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/shipping-policy</loc>
+    <lastmod>2026-10-17T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/partial-cod-policy</loc>
+    <lastmod>2026-10-17T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
   <!-- Product Catalog URLs -->

@@ -2,7 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 
-export default function HeroVideo({ mobileSrc = '/heroinmobile.MP4', desktopSrc = '/mainvd5mb.mp4', poster = '/heroinmobile_poster.webp' }) {
+export default function HeroVideo({
+  mobileSrc = '/heroinmobile.MP4',
+  desktopSrc = '/mainvd5mb.mp4',
+  poster = '/heroinmobile_poster.webp',
+  children,
+}) {
   const [loadVideo, setLoadVideo] = useState(false);
 
   useEffect(() => {
@@ -13,21 +18,22 @@ export default function HeroVideo({ mobileSrc = '/heroinmobile.MP4', desktopSrc 
     }
   }, []);
 
-  if (!loadVideo) {
-    return null;
-  }
-
   return (
-    <video
-      autoPlay
-      loop
-      muted
-      playsInline
-      preload="auto"
-      className="w-full h-full object-cover object-center animate-slow-zoom relative z-10 transition-opacity duration-700"
-    >
-      <source src={desktopSrc} type="video/mp4" />
-    </video>
+    <>
+      {loadVideo && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover object-center animate-slow-zoom relative z-10 transition-opacity duration-700"
+        >
+          <source src={desktopSrc} type="video/mp4" />
+        </video>
+      )}
+      {children}
+    </>
   );
 }
 

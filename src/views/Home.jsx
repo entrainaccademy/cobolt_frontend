@@ -181,12 +181,12 @@ export default function Home() {
   return (
     <PageWrapper>
       {/* Hero Section */}
-      <section className="relative h-[55vh] min-h-[480px] sm:h-[70vh] sm:min-h-[550px] md:h-screen md:min-h-[600px] w-full overflow-hidden bg-[#1F2937]">
+      <section className="relative h-[60vh] min-h-[520px] sm:h-[70vh] sm:min-h-[560px] md:h-screen md:min-h-[620px] w-full overflow-hidden bg-[#1F2937]">
         {/* Background Video & Priority Poster Image */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
           <Image
             src="/heroinmobile_poster.webp"
-            alt="Cobolt Machineries Precision Engineering Background"
+            alt="Cobolt Machineries - Commercial Kitchen Equipment Manufacturer & Supplier, Kerala"
             fill
             priority
             fetchPriority="high"
@@ -194,20 +194,23 @@ export default function Home() {
             className="object-cover object-center"
           />
           <HeroVideo mobileSrc={heroinmobile} desktopSrc={hero5mb} poster="/heroinmobile_poster.webp" />
+          {/* Dark gradient overlay for text readability over video */}
+          {/* <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/35 z-10" /> */}
         </div>
 
         {/* Hero Content - Rendered immediately with zero opacity delay */}
-        <div className="absolute inset-0 flex items-center">
-          <div className="max-w-7xl mx-auto px-4 mt-16 md:mt-0 sm:px-6 lg:px-8 w-full">
-            <div className="max-w-3xl bg-red-000 text-left">
-              <span className="inline-block px-1 py-1.5 bg-transparent md:border border-[#DE1D3A]/40 text-[#DE1D3A] mt-2 text-[8px] md:text-xs font-thin uppercase tracking-widest rounded-md mb-4 md:mb-6">
-                Advanced Engineering Systems
-              </span>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl -mt-6 md:mt-0 font-extrabold text-white leading-tight font-display mb-4 md:mb-6">
-                Precision <br />Engineering &amp; Machinery Solutions
+        <div className="absolute inset-0 flex items-center z-20">
+          <div className="max-w-7xl mx-auto px-4 mt-12 md:mt-0 sm:px-6 lg:px-8 w-full">
+            <div className="max-w-4xl text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight font-sora tracking-tight mb-3 md:mb-5 drop-shadow-sm">
+                {/* Built for Busy Kitchens */}
+                <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mt-2 sm:mt-3 md:mt-4 font-display tracking-normal">
+                  Commercial Kitchen Equipment Manufacturer &amp; Supplier
+                </span>
               </h1>
-              <p className="text-[12px] leading-2 md:text-[16px] text-slate-200 mb-6 sm:mb-8 md:mb-10 leading-relaxed font-sans max-w-2xl">
-                Delivering innovative industrial machinery and engineering excellence for modern industries.
+              <p className="text-[12px] sm:text-sm md:text-base text-slate-200 mb-6 sm:mb-8 md:mb-10 leading-relaxed font-sans max-w-2xl drop-shadow-xs">
+                Equip your restaurant, bakery, or cloud kitchen with quality fryers, deck ovens, mixers, and custom stainless-steel kitchen solutions, backed by professional installation and annual maintenance
+
               </p>
               <div className="flex flex-wrap gap-4">
                 {/* Laptop/Desktop Buttons (Hidden on mobile/tablet) */}

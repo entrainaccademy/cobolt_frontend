@@ -11,7 +11,7 @@ export const servicesList = [
     aliases: ['installation', 'steel-fabrication'],
     title: 'Steel Fabrication',
     tagline: 'Custom stainless steel equipment engineered for commercial culinary excellence.',
-    badge: 'Food-Grade SUS 304 / 316',
+    
     image: service1,
     description:
       'Experience the pinnacle of commercial kitchen innovation with our precision stainless steel fabrication. Impeccably crafted food-safe stainless steel equipment, tailored to elevate your culinary space with unmatched hygiene, structural strength, and ergonomic workflow.',
@@ -71,7 +71,7 @@ export const servicesList = [
     aliases: ['import-export'],
     title: 'Import & Export',
     tagline: 'Connecting businesses to global commercial machinery markets with confidence.',
-    badge: 'Global Supply Chain & Logistics',
+    
     image: service2,
     description:
       'Our import and export services streamline cross-border machinery procurement while ensuring regulatory compliance, rapid customs clearance, and cost efficiency. We connect you directly with leading global manufacturers of commercial food machinery.',
@@ -131,7 +131,7 @@ export const servicesList = [
     aliases: ['manufacturing', 'machinery-manufacturing'],
     title: 'Machinery Manufacturing',
     tagline: 'Innovative manufacturing solutions engineered for industrial and culinary excellence.',
-    badge: 'Heavy-Duty Industrial Build',
+   
     image: service3,
     description:
       'From concept and blueprint to production and final load testing, we manufacture robust commercial kitchen and food processing machinery that meets international safety, durability, and operational standards.',
@@ -191,7 +191,7 @@ export const servicesList = [
     aliases: ['consultation', 'consulting'],
     title: 'Engineering Consulting',
     tagline: 'Strategic engineering expertise for smarter, more efficient industrial operations.',
-    badge: 'Workflow & Efficiency Optimization',
+   
     image: service4,
     description:
       'We provide comprehensive consulting services tailored to commercial kitchens, bakery operators, and food processing businesses. Our consultants deliver strategic guidance on layout optimization, equipment sizing, energy efficiency, and operational excellence.',
@@ -251,7 +251,7 @@ export const servicesList = [
     aliases: ['amc', 'annual-maintenance-contracts'],
     title: 'Annual Maintenance Contracts (AMC)',
     tagline: 'Reliable preventive maintenance designed for zero downtime and maximum equipment lifespan.',
-    badge: '24/7 Priority Emergency Support',
+  
     image: service5,
     description:
       'Our AMC services deliver complete peace of mind through scheduled preventive servicing, oil/lubrication changes, safety calibrations, emergency priority repairs, and performance monitoring. Keep your commercial kitchen operational 365 days a year.',
@@ -311,7 +311,7 @@ export const servicesList = [
     aliases: ['custom-solutions', 'custom-machinery-design-fabrication'],
     title: 'Custom Machinery Design & Fabrication',
     tagline: 'Bespoke engineering from concept blueprints to shopfloor integration.',
-    badge: 'Tailored Mechanical Engineering',
+  
     image: service6,
     description:
       'Crafting specialized culinary and industrial machinery tailored to your unique recipes, processing volumes, and spatial constraints. Impeccable engineering precision turns custom concepts into high-efficiency automated reality.',

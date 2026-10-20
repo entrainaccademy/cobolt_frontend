@@ -1,17 +1,53 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ArrowRight, Phone, MapPin, Youtube, Facebook, Instagram, Mail, Shield } from 'lucide-react';
+import {
+  Menu,
+  X,
+  ArrowRight,
+  Phone,
+  MapPin,
+  Youtube,
+  Facebook,
+  Instagram,
+  Mail,
+  Shield,
+  ChevronDown,
+  ChevronRight,
+} from 'lucide-react';
 
 import blacklogo from '../assets/blacklogotr.webp';
+
+const productCategories = [
+  { name: 'Food Preparation Machines', slug: 'food-preparation-machines' },
+  { name: 'Refrigeration Items', slug: 'refrigeration-items' },
+  { name: 'Baking Equipments', slug: 'baking-equipments' },
+  { name: 'Cooking Equipments', slug: 'cooking-equipments' },
+  { name: 'Stainless Steel Fabrications', slug: 'stainless-steel-fabrications' },
+  { name: 'Industrial And Food Service', slug: 'industrial-and-food-service' },
+];
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProductsHovered, setIsProductsHovered] = useState(false);
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
+  const productsTimeoutRef = useRef(null);
   const pathname = usePathname();
+
+  const handleMouseEnterProducts = () => {
+    if (productsTimeoutRef.current) clearTimeout(productsTimeoutRef.current);
+    setIsProductsHovered(true);
+  };
+
+  const handleMouseLeaveProducts = () => {
+    productsTimeoutRef.current = setTimeout(() => {
+      setIsProductsHovered(false);
+    }, 180);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,10 +62,18 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu when route changes
+  // Close mobile menu & hover popups when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsProductsHovered(false);
   }, [pathname]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (productsTimeoutRef.current) clearTimeout(productsTimeoutRef.current);
+    };
+  }, []);
 
   // Lock scroll when mobile menu is open
   useEffect(() => {
@@ -47,8 +91,9 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'About Us', path: '/about' },
+    // { name: 'Shop', path: '/products' },
     { name: 'Products', path: '/products' },
+    { name: 'About Us', path: '/about' },
     { name: 'Services', path: '/services' },
     { name: 'Blog', path: '/blog' },
     { name: 'Careers', path: '/careers' },
@@ -105,8 +150,6 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-4">
-          
-
             <a
               href="tel:+919061782023"
               className="flex items-center gap-1.5 px-4 py-1 bg-red/10 hover:bg-accent text-[#2596be] hover:text-white text-xs font-poppins font-semibold uppercase tracking-wider rounded-full transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 animate-pulse-glow"
@@ -150,7 +193,97 @@ export default function Navbar() {
             {/* Navigation links (Desktop) */}
             <div className="hidden md:flex items-center gap-1.5 lg:gap-2">
               {navLinks.map((link) => {
-                const isActive = pathname === link.path;
+                const isActive =
+                  link.name === 'Shop'
+                    ? pathname === '/products'
+                    : link.name === 'Products'
+                    ? pathname.startsWith('/products/category')
+                    : pathname === link.path;
+
+                // Products link with category popup dropdown
+                if (link.name === 'Products') {
+                  return (
+                    <div
+                      key={link.name}
+                      className="relative"
+                      onMouseEnter={handleMouseEnterProducts}
+                      onMouseLeave={handleMouseLeaveProducts}
+                    >
+                      <Link
+                        href={link.path}
+                        prefetch={false}
+                        className={`px-4 py-2 text-[13px] font-sans font-medium uppercase tracking-wider transition-all duration-300 relative group flex items-center gap-1 ${
+                          isActive || isProductsHovered
+                            ? 'text-[#DE1D3A] font-semibold'
+                            : 'text-slate-800 hover:text-[#DE1D3A] font-medium'
+                        }`}
+                      >
+                        <span className="relative block">
+                          <span className="relative z-10 flex items-center gap-1 transition-transform duration-300 group-hover:-translate-y-[2px]">
+                            {link.name}
+                            <ChevronDown
+                              className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                                isProductsHovered
+                                  ? 'rotate-180 text-[#DE1D3A]'
+                                  : 'text-slate-400 group-hover:text-[#DE1D3A]'
+                              }`}
+                            />
+                          </span>
+                          <span
+                            className={`absolute -bottom-1 left-0 h-[2px] bg-[#DE1D3A] transition-all duration-300 ease-out ${
+                              isActive
+                                ? 'w-full opacity-100'
+                                : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-100'
+                            }`}
+                          />
+                        </span>
+                      </Link>
+
+                      {/* Categories Dropdown Popup */}
+                      {isProductsHovered && (
+                        <div
+                          className="absolute top-full -left-36 lg:-left-28 pt-3 w-[540px] lg:w-[580px] z-50 animate-fade-in"
+                          onMouseEnter={handleMouseEnterProducts}
+                          onMouseLeave={handleMouseLeaveProducts}
+                        >
+                          <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.16)] p-3.5 text-left">
+                            {/* 2-Column Categories Grid */}
+                            <div className="grid grid-cols-2 gap-1.5">
+                              {productCategories.map((cat) => (
+                                <Link
+                                  key={cat.slug}
+                                  href={`/products/category/${cat.slug}`}
+                                  onClick={() => setIsProductsHovered(false)}
+                                  className="group/item flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-red-50/80 transition-all duration-200 text-slate-700 hover:text-[#DE1D3A]"
+                                >
+                                  <span className="font-display font-medium text-[13px] transition-colors truncate">
+                                    {cat.name}
+                                  </span>
+                                  <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-200 text-[#DE1D3A] flex-shrink-0 ml-1" />
+                                </Link>
+                              ))}
+                            </div>
+
+                            {/* Dropdown Footer Callout */}
+                            <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between bg-slate-50/70 -mx-3.5 -mb-3.5 px-4 py-2.5 rounded-b-2xl">
+                              <span className="text-[11px] text-slate-500 font-sans">
+                                Need custom equipment specifications?
+                              </span>
+                              <Link
+                                href="/products"
+                                onClick={() => setIsProductsHovered(false)}
+                                className="text-[11px] font-bold text-[#DE1D3A] hover:underline flex items-center gap-1 font-sans"
+                              >
+                                View All Products →
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
                 return (
                   <Link
                     key={link.name}
@@ -181,8 +314,6 @@ export default function Navbar() {
 
             {/* Action CTA Block (Desktop) */}
             <div className="hidden md:flex items-center gap-3">
-             
-
               <Link
                 href="/contact"
                 className="relative group overflow-hidden px-6 py-2.5 rounded-full bg-[#DE1D3A] text-white font-poppins font-semibold text-xs uppercase tracking-wider shadow-lg shadow-[#DE1D3A]/25 hover:shadow-[#DE1D3A]/40 hover:bg-[#c51831] hover:-translate-y-0.5 transition-all duration-300 ease-out active:translate-y-0 text-center"
@@ -239,9 +370,78 @@ export default function Navbar() {
         </button>
 
         {/* Large Links List */}
-        <div className="space-y-2 text-left relative z-10 flex-grow mt-6">
+        <div className="space-y-2 text-left relative z-10 flex-grow mt-6 overflow-y-auto">
           {navLinks.map((link, idx) => {
-            const isActive = pathname === link.path;
+            const isActive =
+              link.name === 'Shop'
+                ? pathname === '/products'
+                : link.name === 'Products'
+                ? pathname.startsWith('/products/category')
+                : pathname === link.path;
+
+            // Mobile Products with Collapsible Categories
+            if (link.name === 'Products') {
+              return (
+                <div
+                  key={link.name}
+                  style={{ transitionDelay: `${idx * 40}ms` }}
+                  className={`transform transition-all duration-300 ${
+                    isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <Link
+                      href={link.path}
+                      prefetch={false}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex-grow py-3.5 px-4 text-xs font-poppins font-bold uppercase tracking-widest rounded-xl transition-all duration-300 ${
+                        isActive
+                          ? 'text-[#DE1D3A] bg-[#DE1D3A]/10 border-l-4 border-[#DE1D3A] pl-5'
+                          : 'text-slate-700 hover:text-[#DE1D3A] hover:bg-slate-50'
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                    <button
+                      onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                      className="p-3 text-slate-500 hover:text-[#DE1D3A] transition-colors"
+                      aria-label="Toggle categories"
+                    >
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-300 ${
+                          isMobileProductsOpen ? 'rotate-180 text-[#DE1D3A]' : ''
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {isMobileProductsOpen && (
+                    <div className="ml-4 pl-3 border-l-2 border-red-100 space-y-1 mt-1 mb-2">
+                      {productCategories.map((cat) => (
+                        <Link
+                          key={cat.slug}
+                          href={`/products/category/${cat.slug}`}
+                          prefetch={false}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block py-2 px-3 text-[12px] font-medium text-slate-600 hover:text-[#DE1D3A] hover:bg-red-50/60 rounded-lg transition-colors truncate"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
+                      <Link
+                        href="/products"
+                        prefetch={false}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block py-2 px-3 text-[12px] font-bold text-[#DE1D3A] hover:bg-red-50/60 rounded-lg transition-colors"
+                      >
+                        All Products →
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
             return (
               <div
                 key={link.name}
@@ -253,6 +453,7 @@ export default function Navbar() {
                 <Link
                   href={link.path}
                   prefetch={false}
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className={`block py-3.5 px-4 text-xs font-poppins font-bold uppercase tracking-widest rounded-xl transition-all duration-300 ${
                     isActive
                       ? 'text-[#DE1D3A] bg-[#DE1D3A]/10 border-l-4 border-[#DE1D3A] pl-5'
@@ -316,45 +517,45 @@ export default function Navbar() {
             </Link>
           </div>
 
-            {/* Social Icons for Mobile */}
-            <div className="flex justify-center gap-6 pt-2 border-t border-slate-100 mt-2">
-              <a
-                href="https://www.youtube.com/@coboltmachineries"
-                target="_blank"
-                rel="noreferrer"
-                className="text-slate-400 hover:text-accent transition-colors duration-200"
-                aria-label="YouTube"
-              >
-                <Youtube className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.facebook.com/people/Cobolt-Machineries/pfbid0gxTrWUxQHVPqtLuogLtgoc1uMcM2FDJkFQueQfYoxopVvW3wzneqV2bq1EBBWsRFl/?mibextid=ZbWKwL"
-                target="_blank"
-                rel="noreferrer"
-                className="text-slate-400 hover:text-accent transition-colors duration-200"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.instagram.com/coboltmachineries"
-                target="_blank"
-                rel="noreferrer"
-                className="text-slate-400 hover:text-accent transition-colors duration-200"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="mailto:infocobolt123@gmail.com"
-                className="text-slate-400 hover:text-accent transition-colors duration-200"
-                aria-label="Email"
-              >
-                <Mail className="w-5 h-5" />
-              </a>
-            </div>
+          {/* Social Icons for Mobile */}
+          <div className="flex justify-center gap-6 pt-2 border-t border-slate-100 mt-2">
+            <a
+              href="https://www.youtube.com/@coboltmachineries"
+              target="_blank"
+              rel="noreferrer"
+              className="text-slate-400 hover:text-accent transition-colors duration-200"
+              aria-label="YouTube"
+            >
+              <Youtube className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.facebook.com/people/Cobolt-Machineries/pfbid0gxTrWUxQHVPqtLuogLtgoc1uMcM2FDJkFQueQfYoxopVvW3wzneqV2bq1EBBWsRFl/?mibextid=ZbWKwL"
+              target="_blank"
+              rel="noreferrer"
+              className="text-slate-400 hover:text-accent transition-colors duration-200"
+              aria-label="Facebook"
+            >
+              <Facebook className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.instagram.com/coboltmachineries"
+              target="_blank"
+              rel="noreferrer"
+              className="text-slate-400 hover:text-accent transition-colors duration-200"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
+            <a
+              href="mailto:infocobolt123@gmail.com"
+              className="text-slate-400 hover:text-accent transition-colors duration-200"
+              aria-label="Email"
+            >
+              <Mail className="w-5 h-5" />
+            </a>
           </div>
         </div>
       </div>
+    </div>
   );
 }

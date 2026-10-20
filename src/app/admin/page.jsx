@@ -33,6 +33,8 @@ import {
   Phone,
   FileText,
   Table,
+  Clock,
+  Calendar,
 } from 'lucide-react';
 import {
   adminLogin,
@@ -63,6 +65,48 @@ const getSrc = (img) => {
     return s;
   }
   return img;
+};
+
+// Helper to format date and time cleanly
+const formatDateTime = (dateVal) => {
+  if (!dateVal) return { date: '—', time: '—', full: '—', isRecent: false };
+  try {
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return { date: '—', time: '—', full: '—', isRecent: false };
+
+    const dateStr = d.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    const timeStr = d.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    const isRecent = Date.now() - d.getTime() < 24 * 60 * 60 * 1000;
+
+    return {
+      date: dateStr,
+      time: timeStr,
+      full: `${dateStr} at ${timeStr}`,
+      isRecent,
+    };
+  } catch {
+    return { date: '—', time: '—', full: '—', isRecent: false };
+  }
+};
+
+// Helper to sort products with newest/recently updated at the top
+const sortProductsByLatest = (list) => {
+  if (!Array.isArray(list)) return [];
+  return [...list].sort((a, b) => {
+    const timeB = new Date(b.updatedAt || b.createdAt || 0).getTime();
+    const timeA = new Date(a.updatedAt || a.createdAt || 0).getTime();
+    return timeB - timeA;
+  });
 };
 
 export default function AdminPage() {
@@ -139,7 +183,7 @@ export default function AdminPage() {
         fetchProducts(),
         fetchCategories(),
       ]);
-      if (allProducts) setProducts(allProducts);
+      if (allProducts) setProducts(sortProductsByLatest(allProducts));
       if (allCats) setCategories(allCats);
     } catch (err) {
       showToast('Failed to load products from database', 'error');
@@ -239,10 +283,16 @@ export default function AdminPage() {
   // Quick toggle availability
   const toggleAvailability = async (product) => {
     const newStatus = !product.isAvailable;
+    const targetId = product._id || product.id;
+    const now = new Date().toISOString();
     try {
-      await updateProductStatusApi(product.id, { isAvailable: newStatus }, token);
+      await updateProductStatusApi(targetId, { isAvailable: newStatus }, token);
       setProducts((prev) =>
-        prev.map((p) => (p.id === product.id ? { ...p, isAvailable: newStatus } : p))
+        prev.map((p) =>
+          (product._id && p._id === product._id) || p.id === product.id
+            ? { ...p, isAvailable: newStatus, updatedAt: now }
+            : p
+        )
       );
       showToast(`Updated '${product.name}' availability to ${newStatus ? 'In Stock' : 'Pre-Order'}`);
     } catch (err) {
@@ -253,10 +303,16 @@ export default function AdminPage() {
   // Quick toggle featured
   const toggleFeatured = async (product) => {
     const newFeatured = !product.isFeatured;
+    const targetId = product._id || product.id;
+    const now = new Date().toISOString();
     try {
-      await updateProductStatusApi(product.id, { isFeatured: newFeatured }, token);
+      await updateProductStatusApi(targetId, { isFeatured: newFeatured }, token);
       setProducts((prev) =>
-        prev.map((p) => (p.id === product.id ? { ...p, isFeatured: newFeatured } : p))
+        prev.map((p) =>
+          (product._id && p._id === product._id) || p.id === product.id
+            ? { ...p, isFeatured: newFeatured, updatedAt: now }
+            : p
+        )
       );
       showToast(`Product ${newFeatured ? 'marked as Featured' : 'unmarked from Featured'}`);
     } catch (err) {
@@ -268,8 +324,14 @@ export default function AdminPage() {
   const confirmDelete = async () => {
     if (!deletingProduct) return;
     try {
-      await deleteProductApi(deletingProduct.id, token);
-      setProducts((prev) => prev.filter((p) => p.id !== deletingProduct.id));
+      const targetId = deletingProduct._id || deletingProduct.id;
+      await deleteProductApi(targetId, token);
+      setProducts((prev) =>
+        prev.filter((p) => {
+          if (deletingProduct._id && p._id) return p._id !== deletingProduct._id;
+          return p.id !== deletingProduct.id;
+        })
+      );
       showToast(`Product '${deletingProduct.name}' deleted successfully.`);
       setDeleteModalOpen(false);
       setDeletingProduct(null);
@@ -278,23 +340,29 @@ export default function AdminPage() {
     }
   };
 
-  // Filter products for display
-  const filteredProducts = products.filter((p) => {
-    const matchesSearch =
-      !search.trim() ||
-      p.name?.toLowerCase().includes(search.toLowerCase()) ||
-      p.id?.toLowerCase().includes(search.toLowerCase()) ||
-      p.category?.toLowerCase().includes(search.toLowerCase());
+  // Filter products for display and keep newest/recently updated at the top
+  const filteredProducts = products
+    .filter((p) => {
+      const matchesSearch =
+        !search.trim() ||
+        p.name?.toLowerCase().includes(search.toLowerCase()) ||
+        p.id?.toLowerCase().includes(search.toLowerCase()) ||
+        p.category?.toLowerCase().includes(search.toLowerCase());
 
-    const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+      const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
 
-    const matchesAvailability =
-      selectedAvailability === 'All' ||
-      (selectedAvailability === 'In Stock' && p.isAvailable !== false) ||
-      (selectedAvailability === 'Pre-Order' && p.isAvailable === false);
+      const matchesAvailability =
+        selectedAvailability === 'All' ||
+        (selectedAvailability === 'In Stock' && p.isAvailable !== false) ||
+        (selectedAvailability === 'Pre-Order' && p.isAvailable === false);
 
-    return matchesSearch && matchesCategory && matchesAvailability;
-  });
+      return matchesSearch && matchesCategory && matchesAvailability;
+    })
+    .sort((a, b) => {
+      const timeB = new Date(b.updatedAt || b.createdAt || 0).getTime();
+      const timeA = new Date(a.updatedAt || a.createdAt || 0).getTime();
+      return timeB - timeA;
+    });
 
   // Filter inquiries for display
   const filteredInquiries = inquiries.filter((inq) => {
@@ -846,6 +914,12 @@ export default function AdminPage() {
                     Category
                   </th>
                   <th className="px-5 py-3.5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                    Price / Offer
+                  </th>
+                  <th className="px-5 py-3.5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                    Date &amp; Time
+                  </th>
+                  <th className="px-5 py-3.5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
                     Availability
                   </th>
                   <th className="px-5 py-3.5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
@@ -862,7 +936,7 @@ export default function AdminPage() {
               <tbody className="divide-y divide-gray-100 bg-white">
                 {filteredProducts.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-12 text-sm text-gray-500">
+                    <td colSpan={8} className="text-center py-12 text-sm text-gray-500">
                       {loading ? (
                         <div className="flex items-center justify-center gap-2">
                           <Loader2 className="w-5 h-5 animate-spin text-[#DE1D3A]" />
@@ -914,6 +988,67 @@ export default function AdminPage() {
                           <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-100 text-gray-700">
                             {p.category}
                           </span>
+                        </td>
+
+                        {/* Price & Offer Price */}
+                        <td className="px-5 py-3 whitespace-nowrap">
+                          {p.price || p.offerPrice ? (
+                            <div>
+                              {p.offerPrice && p.price && Number(p.offerPrice) < Number(p.price) ? (
+                                <div className="space-y-0.5">
+                                  <div className="font-bold text-xs text-[#DE1D3A]">
+                                    ₹{Number(p.offerPrice).toLocaleString('en-IN')}
+                                  </div>
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[10px] text-gray-400 line-through">
+                                      ₹{Number(p.price).toLocaleString('en-IN')}
+                                    </span>
+                                    <span className="text-[9px] font-bold text-green-700 bg-green-50 px-1 rounded">
+                                      {Math.round(((Number(p.price) - Number(p.offerPrice)) / Number(p.price)) * 100)}% off
+                                    </span>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="font-bold text-xs text-gray-900">
+                                  ₹{Number(p.offerPrice || p.price).toLocaleString('en-IN')}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-gray-400 italic">On Request</span>
+                          )}
+                        </td>
+
+                        {/* Date & Time */}
+                        <td className="px-5 py-3 whitespace-nowrap">
+                          {(() => {
+                            const dt = formatDateTime(p.updatedAt || p.createdAt);
+                            const isUpdated =
+                              p.updatedAt &&
+                              p.createdAt &&
+                              new Date(p.updatedAt).getTime() > new Date(p.createdAt).getTime() + 1000;
+                            return (
+                              <div>
+                                <div className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
+                                  <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                                  <span>{dt.date}</span>
+                                </div>
+                                <div className="text-[11px] text-gray-500 flex items-center gap-1 font-mono mt-0.5">
+                                  <Clock className="w-3 h-3 text-gray-400" />
+                                  <span>{dt.time}</span>
+                                  {isUpdated ? (
+                                    <span className="text-[9px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1 py-0.2 rounded font-sans font-semibold">
+                                      Updated
+                                    </span>
+                                  ) : p.createdAt ? (
+                                    <span className="text-[9px] text-blue-700 bg-blue-50 border border-blue-200 px-1 py-0.2 rounded font-sans font-semibold">
+                                      New
+                                    </span>
+                                  ) : null}
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </td>
 
                         {/* Availability Toggle */}
@@ -1030,12 +1165,24 @@ export default function AdminPage() {
           categories={categories}
           onClose={() => setProductModalOpen(false)}
           onSuccess={(saved) => {
+            const now = new Date().toISOString();
+            const savedWithTime = {
+              ...saved,
+              updatedAt: saved?.updatedAt || now,
+              createdAt: saved?.createdAt || (currentProduct?.createdAt || now),
+            };
             if (currentProduct) {
-              setProducts((prev) => prev.map((p) => (p.id === currentProduct.id ? saved : p)));
-              showToast(`'${saved.name}' updated successfully.`);
+              setProducts((prev) => [
+                savedWithTime,
+                ...prev.filter((p) => {
+                  if (currentProduct._id && p._id) return p._id !== currentProduct._id;
+                  return p.id !== currentProduct.id;
+                }),
+              ]);
+              showToast(`'${savedWithTime.name}' updated successfully and moved to top.`);
             } else {
-              setProducts((prev) => [saved, ...prev]);
-              showToast(`'${saved.name}' created successfully.`);
+              setProducts((prev) => [savedWithTime, ...prev]);
+              showToast(`'${savedWithTime.name}' created successfully and added to top.`);
             }
             setProductModalOpen(false);
           }}
@@ -1049,9 +1196,20 @@ export default function AdminPage() {
           product={photosProduct}
           onClose={() => setPhotosModalOpen(false)}
           onUpdate={(updated) => {
-            setPhotosProduct(updated);
-            setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
-            showToast('Photos updated successfully.');
+            const now = new Date().toISOString();
+            const updatedWithTime = {
+              ...updated,
+              updatedAt: updated?.updatedAt || now,
+            };
+            setPhotosProduct(updatedWithTime);
+            setProducts((prev) => [
+              updatedWithTime,
+              ...prev.filter((p) => {
+                if (updatedWithTime._id && p._id) return p._id !== updatedWithTime._id;
+                return p.id !== updatedWithTime.id;
+              }),
+            ]);
+            showToast('Photos updated successfully and moved to top.');
           }}
         />
       )}
@@ -1116,6 +1274,12 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
   const [tagline, setTagline] = useState(product?.tagline || '');
   const [description, setDescription] = useState(product?.description || '');
   const [image, setImage] = useState(getSrc(product?.image) || '/slider1.webp');
+  const [price, setPrice] = useState(
+    product?.price !== undefined && product?.price !== null ? String(product.price) : ''
+  );
+  const [offerPrice, setOfferPrice] = useState(
+    product?.offerPrice !== undefined && product?.offerPrice !== null ? String(product.offerPrice) : ''
+  );
   const [isAvailable, setIsAvailable] = useState(product ? product.isAvailable !== false : true);
   const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
 
@@ -1259,6 +1423,8 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
       description: description.trim(),
       image,
       images: [image],
+      price: price.trim() !== '' && !isNaN(Number(price)) ? Number(price) : null,
+      offerPrice: offerPrice.trim() !== '' && !isNaN(Number(offerPrice)) ? Number(offerPrice) : null,
       specs: (
         specInputMode === 'text' ? parseSpecsText(rawSpecsText) : specs
       )
@@ -1276,7 +1442,7 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
       setSaving(true);
       let res;
       if (isEditing) {
-        res = await updateProductApi(product.id, payload, token);
+        res = await updateProductApi(product._id || product.id, payload, token);
       } else {
         res = await createProductApi(payload, token);
       }
@@ -1296,9 +1462,17 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
             <h2 className="text-lg font-bold font-display text-gray-900">
               {isEditing ? `Edit: ${product.name}` : 'Add New Machinery'}
             </h2>
-            <p className="text-xs text-gray-500">
-              {isEditing ? `Editing product with slug: ${product.id}` : 'Create a new catalog item stored in MongoDB'}
-            </p>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <span className="text-xs text-gray-500">
+                {isEditing ? `Slug: ${product.id}` : 'Create a new catalog item stored in MongoDB'}
+              </span>
+              {isEditing && (product.updatedAt || product.createdAt) && (
+                <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-emerald-600" />
+                  <span>Last modified: {formatDateTime(product.updatedAt || product.createdAt).full}</span>
+                </span>
+              )}
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -1393,6 +1567,74 @@ function ProductFormModal({ token, product, categories, onClose, onSuccess }) {
                 placeholder="e.g. Heavy Duty Stainless Steel Meat Mincer"
                 className="w-full px-3.5 py-2 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:border-[#DE1D3A]"
               />
+            </div>
+          </div>
+
+          {/* Row 2.5: Product Pricing & Offers */}
+          <div className="bg-gradient-to-br from-red-50/50 via-gray-50/60 to-white border border-gray-200 rounded-2xl p-4 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-800">
+                  Product Pricing &amp; Special Offers
+                </label>
+                <p className="text-[11px] text-gray-500">
+                  Set regular catalog price and optional discounted offer price (in INR ₹).
+                </p>
+              </div>
+              {price && offerPrice && Number(offerPrice) < Number(price) && (
+                <span className="text-[11px] font-bold text-green-700 bg-green-100 border border-green-200 px-2.5 py-1 rounded-full shadow-2xs">
+                  Save ₹{(Number(price) - Number(offerPrice)).toLocaleString('en-IN')} (
+                  {Math.round(((Number(price) - Number(offerPrice)) / Number(price)) * 100)}% OFF)
+                </span>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Regular Price (₹)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xs">
+                    ₹
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="e.g. 45000"
+                    className="w-full pl-7 pr-3.5 py-2 text-xs sm:text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#DE1D3A]"
+                  />
+                </div>
+                <p className="text-[10px] text-gray-400 mt-1">
+                  Standard list price (will be struck through if offer price is active).
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Offer / Sale Price (₹)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#DE1D3A] font-bold text-xs">
+                    ₹
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    value={offerPrice}
+                    onChange={(e) => setOfferPrice(e.target.value)}
+                    placeholder="e.g. 38000"
+                    className="w-full pl-7 pr-3.5 py-2 text-xs sm:text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#DE1D3A]"
+                  />
+                </div>
+                <p className="text-[10px] text-gray-400 mt-1">
+                  Discounted selling price displayed prominently on the website.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -1785,7 +2027,7 @@ function PhotoGalleryModal({ token, product, onClose, onUpdate }) {
       setSaving(true);
       setError('');
       const updated = await manageProductPhotosApi(
-        product.id,
+        product._id || product.id,
         {
           images,
           primaryImage,

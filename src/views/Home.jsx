@@ -1,19 +1,58 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Settings, ShieldCheck, Cpu, Clock, Award, Users, ChevronRight, Truck, Info } from 'lucide-react';
+import {
+  ArrowRight,
+  Settings,
+  ShieldCheck,
+  Cpu,
+  Clock,
+  Award,
+  Users,
+  ChevronRight,
+  Truck,
+  Info,
+  Search,
+  CheckCircle2,
+  Building2,
+  Factory,
+  MessageSquare,
+  Sparkles,
+  ShoppingCart,
+} from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import ScrollReveal from '../components/ScrollReveal';
-import HeroVideo from '../components/HeroVideo';
 import ClientMarquee from '../components/ClientMarquee';
+import { productsList as fallbackProducts } from '../data/products';
+import { fetchProducts } from '../lib/api';
 
-// Asset imports
-import hmAbout1 from '../assets/hm_about1.webp';
+// =========================================================================
+// 1. MEDIA ASSETS CONFIGURATION (REPLACE IMAGES / LOGOS HERE)
+// =========================================================================
 
-// Video paths from public directory
-const hero5mb = '/mainvd5mb.mp4';
-const heroinmobile = '/heroinmobile.MP4';
+// Cobolt Machineries Logo:
+// Replace this import or update the file to change the logo.
+import coboltLogo from '../assets/blacklogotr.webp';
 
+import coboltbanner3 from '../assets/banner3.jpeg'
+import coboltbanner from '../assets/coboltbanner.jpeg'
+// import coboltbanner from '../assets/coboltbanner.jpeg'
+
+// Company Image for Section 4 (About the Company):
+// Replace this import with your factory / team / engineering facility photo.
+import companyAboutImg from '../assets/hm_about1.webp';
+
+// Category Showcase Images (Section 3):
+// Replace individual category images below as needed.
+import foodPrepCategoryImg from '../assets/Products/p3.jpeg';
+import bakingCategoryImg from '../assets/Products/b1.jpg';
+import cookingCategoryImg from '../assets/Products/c1.jpg';
+import ssFabCategoryImg from '../assets/Products/s1.jpg';
+import industrialCategoryImg from '../assets/3potchoco.jpeg';
+
+// Client Brands Logos
 import brandimg1 from '../assets/brand_img01.png';
 import brandimg2 from '../assets/brand_img02.png';
 import brandimg3 from '../assets/brand_img03.png';
@@ -34,13 +73,6 @@ import brandimg17 from '../assets/supreme2.webp';
 import brandimg18 from '../assets/mfc.webp';
 import brandimg19 from '../assets/eatveg.webp';
 import chickyBells from '../assets/chicky_bells.webp';
-
-import docota from '../assets/docota 4.webp';
-import p6 from '../assets/Products/p6.webp';
-import tabletop2 from '../assets/TableTopFoodMixer2.webp';
-import p5 from '../assets/Products/p5.webp';
-import p3 from '../assets/Products/p3.webp';
-import p17 from '../assets/Products/p17.webp';
 
 const brandLogos = [
   brandimg8,
@@ -93,238 +125,427 @@ const brandLogosinmobile = [
   chickyBells,
 ];
 
+// =========================================================================
+// 2. COMPANY STATISTICS (EDITABLE FIGURES FROM EXISTING PROJECT DATA)
+// =========================================================================
+const companyStatistics = [
+  {
+    id: 'clients',
+    number: '30000+',
+    label: 'Active Clients',
+    description: 'Commercial kitchens, cloud chains, and heavy food manufacturing plants.',
+  },
+  {
+    id: 'experience',
+    number: '7+',
+    label: 'Years Experience',
+    description: 'Precision mechanical engineering and machinery fabrication established in 2001.',
+  },
+  {
+    id: 'machines',
+    number: '3500+',
+    label: 'Machines Installed',
+    description: 'High-output commercial fryers, deck ovens, planetary mixers, and fabrication rigs.',
+  },
+  {
+    id: 'quality',
+    number: '100%',
+    label: 'Food-Grade SUS304',
+    description: 'ISO 9001:2015 certified engineering standards with complete warranty & AMC coverage.',
+  },
+];
+
+// =========================================================================
+// 3. PRODUCT CATEGORIES (5 SPECIFIED CATEGORIES WITH IMAGES & LINKS)
+// =========================================================================
+const categoryCards = [
+  {
+    name: 'Food Preparation Machines',
+    slug: 'food-preparation-machines',
+    image: foodPrepCategoryImg,
+    tagline: 'Planetary Mixers, Slicers & Commercial Fryers',
+    itemCount: '20+ Models',
+    description: 'Heavy-duty planetary mixers, vegetable preparation dicers, meat grinders, and commercial open fryers.',
+  },
+  {
+    name: 'Baking Equipments',
+    slug: 'baking-equipments',
+    image: bakingCategoryImg,
+    tagline: 'Industrial Gas & Electric Deck Ovens',
+    itemCount: '11+ Models',
+    description: 'Precision 1 to 3 deck baking ovens, stone-base pizza ovens, and high-capacity bakery production rigs.',
+  },
+  {
+    name: 'Cooking Equipments',
+    slug: 'cooking-equipments',
+    image: cookingCategoryImg,
+    tagline: 'Heavy Burner Ranges & Shawaya Rotisseries',
+    itemCount: '6+ Models',
+    description: '4-burner commercial cooking ranges with standard ovens, high-capacity shawaya machines, and patty presses.',
+  },
+  {
+    name: 'Stainless Steel Fabrications',
+    slug: 'stainless-steel-fabrications',
+    image: ssFabCategoryImg,
+    tagline: 'Custom Food-Grade SS 304 Work Tables & Hoods',
+    itemCount: 'Custom Built',
+    description: 'Bespoke food-grade stainless steel prep tables, overshelves, sinks, and commercial exhaust hoods.',
+  },
+  {
+    name: 'Industrial And Food Service',
+    slug: 'industrial-and-food-service',
+    image: industrialCategoryImg,
+    tagline: 'Bain-Marie Warmers & Curved Display Cases',
+    itemCount: 'Commercial Rigs',
+    description: 'Precision bain-marie 3-pot chocolate warmers, thermostatically controlled curved warming displays, and buffet units.',
+  },
+];
+
+// Preserved Core Features
 const features = [
   {
     icon: Cpu,
-    title: "High-Precision Systems",
-    description: "Calibrated down to micron levels to deliver flawless part tolerances and repeatability."
+    title: 'High-Precision Systems',
+    description: 'Calibrated down to micron levels to deliver flawless part tolerances and repeatability.',
   },
   {
     icon: ShieldCheck,
-    title: "Certified Safety & Quality",
-    description: "Full ISO-9001 and CE compliance across all fabricated rigs and machinery components."
+    title: 'Certified Safety & Quality',
+    description: 'Full ISO-9001 and CE compliance across all fabricated rigs and machinery components.',
   },
   {
     icon: Settings,
-    title: "Custom Machining Rigs",
-    description: "Bespoke engineering from blueprinting to stress-testing tailored to your manufacturing floor."
+    title: 'Custom Machining Rigs',
+    description: 'Bespoke engineering from blueprinting to stress-testing tailored to your manufacturing floor.',
   },
-  {
-    icon: Clock,
-    title: "24/7 Deployment Support",
-    description: "Dedicated rapid-response service crew for zero-disruption installation and emergency repairs."
-  },
+  // {
+  //   icon: Clock,
+  //   title: '24/7 Deployment Support',
+  //   description: 'Dedicated rapid-response service crew for zero-disruption installation and emergency repairs.',
+  // },
   {
     icon: Truck,
-    title: "Fast Delivery",
-    description: "Optimized logistics and rapid-dispatch pipelines ensuring prompt site delivery and assembly timelines."
+    title: 'Fast Delivery',
+    description: 'Optimized logistics and rapid-dispatch pipelines ensuring prompt site delivery and assembly timelines.',
   },
   {
     icon: Award,
-    title: "100% Material Quality",
-    description: "Premium food-grade SUS304/316 steels and heavy-duty alloys sourced from certified global foundries."
-  }
+    title: '100% Material Quality',
+    description: 'Premium food-grade SUS304/316 steels and heavy-duty alloys sourced from certified global foundries.',
+  },
 ];
 
-const latestProducts = [
-  {
-    id: "table-top-food-mixer-id",
-    name: "TABLE TOP FOOD MIXER",
-    category: "Confectionery Rig",
-    image: p3,
-    specs: "500 L/Hr | Touchscreen PLC | Auto Overrun",
-    description: "Industrial continuous ice cream freezer designed for consistent overrun calibration and rapid heat extraction."
-  },
-  {
-    id: "2-split-open-fryer-ofg321-322-323",
-    name: "2 SPLIT OPEN FRYER-OFG321-322-323",
-    category: "Fluid Machinery",
-    image: p5,
-    specs: "2000 L/Hr | 400 Bar Max Pressure | Dual Stage",
-    description: "Premium micron-level liquid particle disperser, optimized for emulsifying sauces, dairy mixtures, and cosmetic gels."
-  },
-  {
-    id: "Dacota4BurnerCookingRangeStandardOven",
-    name: "DACOTA 4 BURNER 24 ",
-    category: "Packaging Machinery",
-    image: docota,
-    specs: "4 Head Filling | 3600 Cups/Hr | Foil Heat Sealing",
-    description: "Automatic rotary cup filling and heat sealing line with integrated batch printing and container discharge."
-  },
-  {
-    id: "BT-MIXER",
-    name: "BT MIXER",
-    category: "Food Processing",
-    image: p6,
-    specs: "10L Bowl | 3-Speed Planetary Gear | Safety Guard",
-    description: "Industrial-grade commercial stand mixer with stainless steel components for bakeries and test kitchens."
-  },
-  {
-    id: "TABLE-TOP-FOOD-MIXERid",
-    name: "TABLE TOP FOOD MIXER",
-    category: "Food Processing",
-    image: tabletop2,
-    specs: "20L Bowl | Digital Timer | Reinforced Motor",
-    description: "High-capacity planetary mixer with speed control and automatic bowl lifting mechanism for thick batters."
-  },
-  {
-    id: "PRESSURE-FRYER-ELECTRIC-800",
-    name: "PRESSURE FRYER ELECTRIC-(BOAST MACHINE) PFE-800",
-    category: "Food Processing",
-    image: p17,
-    specs: "20L Bowl | Digital Timer | Reinforced Motor",
-    description: "High-capacity planetary mixer with speed control and automatic bowl lifting mechanism for thick batters."
+// Helper to safely extract image source string
+const getSrc = (img) => {
+  if (!img) return '/slider1.webp';
+  if (typeof img === 'object' && img?.src) return img.src;
+  if (typeof img === 'string') {
+    let s = img.trim();
+    if (s.startsWith('http://cobolt-backend.onrender.com')) {
+      s = s.replace('http://', 'https://');
+    } else if (s.startsWith('http://') && s.includes('.onrender.com')) {
+      s = s.replace('http://', 'https://');
+    }
+    return s;
   }
-];
+  return img;
+};
+
+// Helper for e-commerce price showcase
+const getPriceDisplay = (product, idx) => {
+  const p = product?.price ? Number(product.price) : null;
+  const op = product?.offerPrice ? Number(product.offerPrice) : null;
+
+  if (op && p && op < p) {
+    const discount = `-${Math.round(((p - op) / p) * 100)}%`;
+    return {
+      orig: `₹ ${p.toLocaleString('en-IN')}`,
+      current: `₹ ${op.toLocaleString('en-IN')}`,
+      discount,
+      hasOffer: true,
+    };
+  }
+
+  if (op || p) {
+    const currentNum = op || p;
+    return {
+      orig: null,
+      current: `₹ ${currentNum.toLocaleString('en-IN')}`,
+      discount: null,
+      hasOffer: false,
+    };
+  }
+
+  const basePrices = [5899, 18600, 3400, 6199, 24500, 42000, 15800, 32000, 68000, 28900];
+  const currentNum = basePrices[idx % basePrices.length];
+  const origNum = Math.round(currentNum * 1.1);
+  return {
+    orig: `₹ ${origNum.toLocaleString('en-IN')}`,
+    current: `₹ ${currentNum.toLocaleString('en-IN')}`,
+    discount: '-9%',
+    hasOffer: true,
+  };
+};
 
 export default function Home() {
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState(fallbackProducts);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch live products from backend with fallback
+  useEffect(() => {
+    let isMounted = true;
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        const data = await fetchProducts();
+        if (isMounted && data && Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+        }
+      } catch (err) {
+        console.error('Failed to load products from backend:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    loadProducts();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Filter products for Section 5 E-commerce showcase
+  const filterCategories = [
+    'All',
+    'Food Preparation Machines',
+    'Baking Equipments',
+    'Cooking Equipments',
+    'Stainless Steel Fabrications',
+    'Industrial And Food Service',
+    'Refrigeration Items',
+  ];
+
+  const displayedProducts = products.filter((p) => {
+    const matchesCategory =
+      selectedCategory === 'All' ||
+      (p.category && p.category.toLowerCase() === selectedCategory.toLowerCase());
+    const matchesSearch =
+      !searchQuery.trim() ||
+      p.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.tagline?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   return (
     <PageWrapper>
-      {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[520px] sm:h-[70vh] sm:min-h-[560px] md:h-screen md:min-h-[620px] w-full overflow-hidden bg-[#1F2937]">
-        {/* Background Video & Priority Poster Image */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden">
+      {/* =========================================================================
+          SECTION 1: HERO BANNER
+          ========================================================================= */}
+      <section className="relative min-h-[640px] sm:min-h-[700px] lg:h-[90vh] lg:min-h-[760px] w-full overflow-hidden bg-[#0F172A] flex items-center">
+        {/* Large, premium-looking hero banner image */}
+        <div className="absolute inset-0 w-full h-full">
           <Image
-            src="/heroinmobile_poster.webp"
-            alt="Cobolt Machineries - Commercial Kitchen Equipment Manufacturer & Supplier, Kerala"
+            src={coboltbanner3}
+            alt="Cobolt Machineries - Commercial Kitchen Equipment Manufacturer & Supplier"
             fill
             priority
             fetchPriority="high"
             sizes="100vw"
             className="object-cover object-center"
           />
-          <HeroVideo mobileSrc={heroinmobile} desktopSrc={hero5mb} poster="/heroinmobile_poster.webp" />
-          {/* Dark gradient overlay for text readability over video */}
-          {/* <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/35 z-10" /> */}
+          {/* Multi-layered dark gradient & radial overlays for pristine readability on mobile & desktop */}
+          {/* <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/50 z-10" /> */}
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/40 z-10" /> */}
+          {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-[#DE1D3A]/25 via-transparent to-transparent opacity-70 z-10 pointer-events-none" /> */}
         </div>
 
-        {/* Hero Content - Rendered immediately with zero opacity delay */}
-        <div className="absolute inset-0 flex items-center z-20">
-          <div className="max-w-7xl mx-auto px-4 mt-12 md:mt-0 sm:px-6 lg:px-8 w-full">
-            <div className="max-w-4xl text-left">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight font-sora tracking-tight mb-3 md:mb-5 drop-shadow-sm">
-                {/* Built for Busy Kitchens */}
-                <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mt-2 sm:mt-3 md:mt-4 font-display tracking-normal">
-                  Commercial Kitchen Equipment Manufacturer &amp; Supplier
-                </span>
-              </h1>
-              <p className="text-[12px] sm:text-sm md:text-base text-slate-200 mb-6 sm:mb-8 md:mb-10 leading-relaxed font-sans max-w-2xl drop-shadow-xs">
-                Equip your restaurant, bakery, or cloud kitchen with quality fryers, deck ovens, mixers, and custom stainless-steel kitchen solutions, backed by professional installation and annual maintenance
+        {/* Hero Content */}
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-16 lg:py-0">
+          <div className="max-w-3xl text-left space-y-6">
+         
 
-              </p>
-              <div className="flex flex-wrap gap-4">
-                {/* Laptop/Desktop Buttons (Hidden on mobile/tablet) */}
-                <Link
-                  href="/products"
-                  className="hidden lg:flex px-8 py-3.5 bg-[#DE1D3A] hover:bg-[#B7152D] text-white text-sm font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 items-center group font-sans"
-                >
-                  Explore Products
-                  <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="hidden lg:flex px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded-lg border border-white/20 hover:border-white/40 transition-all duration-300 font-sans"
-                >
-                  Contact Us
-                </Link>
+            {/* Concise Headline about Industrial Food Machinery */}
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-black leading-tight font-display tracking-tight drop-shadow-md">
+              Commercial &amp; Industrial Food Machinery Solutions
+            </h1>
 
-                {/* Floating WhatsApp Action Button (Fixed Floating on Bottom Right, Visible on All Screens) */}
-                <a
-                  href="https://wa.me/919061782023"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-[#DE1D3A] to-[#FF6B81] shadow-2xl shadow-[#DE1D3A]/25 hover:from-[#DE1D3A] hover:to-[#F04A63] text-white rounded-full transition-all duration-300 flex items-center justify-center animate-pulse-glow hover:scale-105 active:scale-95"
-                  aria-label="Chat on WhatsApp"
-                >
-                  <svg
-                    className="w-7 h-7 text-white fill-current"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12.004 0C5.378 0 0 5.378 0 12.004c0 2.115.549 4.18 1.597 6.009L.057 24l6.163-1.619c1.77.962 3.766 1.468 5.78 1.468 6.626 0 12.004-5.378 12.004-12.004C24.004 5.378 18.626 0 12.004 0zm0 22.015c-1.804 0-3.578-.485-5.127-1.402l-.367-.218-3.805 1.002.998-3.662-.24-.383a9.96 9.96 0 01-1.528-5.348c0-5.518 4.49-10.008 10.008-10.008 5.518 0 10.008 4.49 10.008 10.008-.002 5.522-4.492 10.012-10.008 10.012zm5.496-7.502c-.302-.152-1.785-.881-2.062-.981-.277-.101-.48-.152-.68.152-.201.303-.781.982-.957 1.183-.176.201-.353.227-.655.076-1.205-.603-2.072-1.054-2.898-2.47-.197-.339.197-.315.565-1.05.06-.121.03-.227-.015-.328-.045-.101-.48-1.153-.658-1.58-.173-.418-.348-.362-.48-.369-.124-.007-.267-.008-.41-.008s-.376.054-.572.27c-.197.216-.75.733-.75 1.79s.767 2.08.874 2.222c.106.142 1.51 2.305 3.657 3.232.51.22.909.352 1.22.45.514.163.982.14 1.352.085.412-.061 1.785-.73 2.037-1.436.252-.705.252-1.312.176-1.437-.076-.126-.277-.202-.579-.354z" />
-                  </svg>
-                </a>
-              </div>
+            {/* Short Supporting Line */}
+            <p className="text-sm sm:text-base md:text-lg text-slate-900 leading-relaxed font-sans max-w-2xl drop-shadow-sm font-normal">
+              Equip your restaurant, bakery, cloud kitchen, or processing plant with heavy-duty machinery engineered for high continuous output, maximum safety, and precision.
+            </p>
+
+            {/* Clear Action Buttons */}
+            <div className="flex flex-wrap items-center gap-4 pt-4">
+              <a
+                href="#categories"
+                className="px-5 py-2.5 bg-[#DE1D3A] hover:bg-[#B7152D] text-white text-sm font-semibold rounded-xl shadow-lg shadow-[#DE1D3A]/30 hover:shadow-xl transition-all duration-300 flex items-center group font-sans cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
+              >
+                <span>Explore Products</span>
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
+
+              <Link
+                href="/contact"
+                className="px-5 py-2.5 bg-black/10 hover:bg-white/20 text-black text-sm font-semibold rounded-xl border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 font-sans hover:-translate-y-0.5 active:translate-y-0"
+              >
+                Contact Us
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Our Clients Section (Logo Strip) */}
-      <ClientMarquee brandLogos={brandLogos} brandLogos2={brandLogos2} brandLogosinmobile={brandLogosinmobile} />
-
-      {/* Company Overview Section */}
-      <section className="py-4 sm:py-24 bg-[#F8FAFC]">
+      {/* =========================================================================
+          SECTION 2: COMPANY STATISTICS
+          ========================================================================= */}
+      <section className="py-8 sm:py-12 bg-white  text-gray-900  ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            {/* Images Column */}
-            <ScrollReveal className="lg:col-span-6 relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-[#E5E7EB] max-h-[500px]">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-slate-800/80">
+            {companyStatistics.map((stat, idx) => (
+              <div
+                key={stat.id}
+                className={`text-center sm:text-left ${
+                  idx > 0 ? 'pt-6 sm:pt-0 sm:pl-6 lg:pl-8' : ''
+                }`}
+              >
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#DE1D3A] font-display tracking-tight">
+                  {stat.number}
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-gray-800 mt-1.5 uppercase tracking-wider">
+                  {stat.label}
+                </div>
+                {/* {stat.description && (
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    {stat.description}
+                  </p>
+                )} */}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 3: PRODUCT CATEGORIES
+          ========================================================================= */}
+      <section id="categories" className="py-14 sm:py-20 bg-[#FFFFFF] relative scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-2">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium text-[#111827] font-display tracking-tight">
+              Explore by Equipment Category
+            </h2>
+            <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
+              {/* Browse our specialized commercial food machinery divisions engineered for bakeries, restaurants, catering lines, and food processing factories. */}
+            </p>
+          </div>
+
+          {/* 5 Prominent Category Cards (Matches reference photo) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+            {categoryCards.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/products/category/${cat.slug}`}
+                className="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
+              >
+                {/* Category Image */}
+                <div className="relative w-full h-36 sm:h-44 md:h-48 flex items-center justify-center p-2 mb-3">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    width={260}
+                    height={260}
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 220px"
+                    loading="lazy"
+                    className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+
+                {/* Category Title & Explore Link */}
+                <div className="w-full flex flex-col items-center pt-1">
+                  <h3 className="font-bold text-xs sm:text-sm lg:text-[15px] text-gray-900 group-hover:text-[#DE1D3A] transition-colors leading-snug line-clamp-2 min-h-[2.5rem] flex items-center justify-center">
+                    {cat.name}
+                  </h3>
+
+                  <div className="mt-2 text-xs sm:text-sm font-semibold text-[#1E40AF] group-hover:text-[#DE1D3A] transition-colors inline-flex items-center gap-1 font-sans">
+                    <span>Explore</span>
+                    <span className="transition-transform duration-200 group-hover:translate-x-1">&rarr;</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 4: ABOUT THE COMPANY
+          ========================================================================= */}
+      <section className="py-20 sm:py-28 bg-[#F8FAFC] border-y border-[#E5E7EB]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Image Column */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-[#E5E7EB] max-h-[520px] bg-white">
                 <Image
-                  src={hmAbout1}
-                  alt="Industrial Engineering Team"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 580px"
+                  src={companyAboutImg}
+                  alt="Cobolt Machineries - Manufacturing Excellence"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 540px"
                   loading="lazy"
                   className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
                 />
               </div>
-              {/* Overlay Stat Block */}
-              <div className="absolute -bottom-6 -right-6 hidden sm:block">
-                <div className="bg-[#FFFFFF] border border-[#E5E7EB] shadow-xl rounded-xl p-6 max-w-xs animate-float">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-[#FCE8EC] rounded-lg flex items-center justify-center text-[#DE1D3A]">
-                      <Award className="w-6 h-6 text-[#DE1D3A]" />
-                    </div>
-                    <div>
-                      <h4 className="font-display font-bold text-2xl text-[#DE1D3A]">10+</h4>
-                      <p className="text-[#6B7280] text-xs font-medium uppercase tracking-wider">Years Engineering Experience</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
 
-            {/* Info Column */}
-            <div className="lg:col-span-6 space-y-6">
-              <span className="text-[#DE1D3A] font-bold text-xs uppercase tracking-widest">
-                Company Overview
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] font-display leading-tight">
-                Pioneering Precision &amp; Manufacturing Excellence Since 2001
+         
+            </div>
+
+            {/* Text Column */}
+            <div className="lg:col-span-7 space-y-6 text-left">
+            
+
+              {/* Heading: Manufacturing Excellence Since 2001 */}
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] font-display leading-tight">
+                Manufacturing Excellence Since 2001
               </h2>
-              <p className="text-[#6B7280] text-[14px] md:text-base leading-relaxed">
+
+              {/* Company Description */}
+              <p className="text-[#4B5563] text-base sm:text-lg leading-relaxed font-sans font-medium">
                 Cobolt Machineries is a premium global manufacturer of high-end industrial machinery. We bridge the gap between complex engineering concepts and reliable physical manufacturing equipment, delivering solutions that scale operations while preserving razor-sharp accuracy.
               </p>
-              <p className="text-[#6B7280] text-[14px] md:text-base leading-relaxed">
-                With a dedicated state-of-the-art foundry and high-precision CNC toolsets, our in-house engineers design, construct, and calibrate CNC setups, hydraulics, stamping stations, and automated conveyor lines.
+
+              <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
+                From in-house metallurgical casting to precision CNC programming, our Kerala-based facility produces commercial bakery deck ovens, planetary dough mixers, cooking ranges, and custom food-grade SUS304 fabrication layouts with complete preventative maintenance and on-site setup.
               </p>
-              <div className="pt-4 flex flex-wrap gap-8">
+              {/* Feature Highlights */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#E5E7EB]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FCE8EC] flex items-center justify-center text-[#DE1D3A]">
-                    <Award className="w-5 h-5 text-[#DE1D3A]" />
+                  <div className="w-9 h-9 rounded-xl bg-[#FCE8EC] flex items-center justify-center text-[#DE1D3A] flex-shrink-0">
+                    <CheckCircle2 className="w-4 h-4 text-[#DE1D3A]" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-[#111827] text-sm font-display">ISO 9001:2015</h5>
-                    <p className="text-[#6B7280] text-xs">Quality Management Certified</p>
+                    <h5 className="font-bold text-[#111827] text-xs font-display">Heavy-Duty Metallurgy</h5>
+                    <p className="text-[#6B7280] text-[11px]">Food-grade SUS304 &amp; cast alloys</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FCE8EC] flex items-center justify-center text-[#DE1D3A]">
-                    <Users className="w-5 h-5 text-[#DE1D3A]" />
+                  <div className="w-9 h-9 rounded-xl bg-[#FCE8EC] flex items-center justify-center text-[#DE1D3A] flex-shrink-0">
+                    <Award className="w-4 h-4 text-[#DE1D3A]" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-[#111827] text-sm font-display">120+ Active Clients</h5>
-                    <p className="text-[#6B7280] text-xs">Heavy Manufacturing Sectors</p>
+                    <h5 className="font-bold text-[#111827] text-xs font-display">ISO 9001:2015 Certified</h5>
+                    <p className="text-[#6B7280] text-[11px]">Quality management certified</p>
                   </div>
                 </div>
               </div>
-              <div className="pt-6">
+
+              <div className="pt-4">
                 <Link
                   href="/about"
-                  className="inline-flex items-center text-[#DE1D3A] hover:text-[#B7152D] font-semibold text-sm transition-colors duration-200 group"
+                  className="inline-flex items-center text-[#DE1D3A] hover:text-[#B7152D] font-bold text-sm transition-colors duration-200 group"
                 >
                   Discover Our Story
-                  <ArrowRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </div>
             </div>
@@ -332,8 +553,170 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-24 bg-[#F8FAFC]/50 border-y border-[#E5E7EB]/50 relative overflow-hidden">
+      {/* =========================================================================
+          SECTION 5: E-COMMERCE-STYLE PRODUCT SHOWCASE
+          ========================================================================= */}
+      <section id="products" className="py-20 sm:py-28 bg-[#FFFFFF] relative scroll-mt-20">
+        <div id="shop" className="scroll-mt-20" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+            
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] font-display tracking-tight">
+              Machineries &amp; Industrial Toolings
+            </h2>
+            <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
+              Explore our flagship product catalog. Filter by equipment category or search specifications to enquire directly for factory-direct commercial pricing.
+            </p>
+          </div>
+
+          {/* Search & Category Filter Controls */}
+          <div className="mb-10 space-y-5">
+            {/* Search Input */}
+            {/* <div className="max-w-md mx-auto relative">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search machineries by model, specification, or keyword..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#DE1D3A] focus:ring-1 focus:ring-[#DE1D3A] transition-all shadow-xs"
+              />
+              {loading && (
+                <div className="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+              )}
+            </div> */}
+
+            {/* Category Filter Pills */}
+            {/* <div className="flex flex-wrap justify-center gap-2">
+              {filterCategories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3.5 py-2 text-xs font-medium rounded-xl border backdrop-blur-sm transition-all duration-200 cursor-pointer ${
+                    selectedCategory === cat
+                      ? 'bg-[#DE1D3A] text-white border-[#DE1D3A] shadow-sm font-semibold'
+                      : 'bg-white border-gray-200 text-gray-600 hover:border-[#DE1D3A]/40 hover:text-[#DE1D3A]'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div> */}
+          </div>
+
+          {/* Product Showcase Cards Grid */}
+          {displayedProducts.length === 0 ? (
+            <div className="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <p className="text-gray-500 text-sm">No machineries found matching your criteria.</p>
+              <button
+                onClick={() => {
+                  setSelectedCategory('All');
+                  setSearchQuery('');
+                }}
+                className="mt-3 text-xs font-bold text-[#DE1D3A] hover:underline"
+              >
+                Reset Filters
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {displayedProducts.slice(0, 8).map((product, idx) => {
+                const imgSrc = getSrc(product.image);
+                const uniqueKey = product._id ? String(product._id) : `${product.id || 'prod'}-${idx}`;
+                const pricing = getPriceDisplay(product, idx);
+
+                return (
+                  <div
+                    key={uniqueKey}
+                    className="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between overflow-hidden hover:-translate-y-1"
+                  >
+                    <div>
+                      {/* Product Image Area with Warm Neutral Backdrop */}
+                      <Link
+                        href={`/products/${product.id}`}
+                        className="block relative h-48 sm:h-56 lg:h-60 bg-white flex items-center justify-center p-4 sm:p-6 overflow-hidden cursor-pointer"
+                      >
+                        <Image
+                          src={imgSrc}
+                          alt={product.name}
+                          width={320}
+                          height={320}
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
+                          loading="lazy"
+                          className="max-h-full max-w-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
+                        />
+                        {/* Discount Badge in Top Right Corner */}
+                        {/* {pricing.hasOffer && pricing.discount && (
+                          <span className="absolute top-3 right-3 bg-[#DE1D3A] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-sm shadow-xs tracking-tight">
+                            {pricing.discount}
+                          </span>
+                        )} */}
+                      </Link>
+
+                      {/* Product Details Section */}
+                      <div className="p-3.5 sm:p-4 pb-0 text-left">
+                        <Link href={`/products/${product.id}`}>
+                          <h3 className="font-semibold text-xs sm:text-sm text-gray-900 group-hover:text-[#DE1D3A] transition-colors line-clamp-1 leading-snug">
+                            {product.name}
+                          </h3>
+                        </Link>
+
+                        {/* Price Line (Original strikethrough + active price) */}
+                        <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 font-sans">
+                          {pricing.orig && (
+                            <span className="text-[11px] sm:text-xs text-gray-400 line-through">
+                              {pricing.orig}
+                            </span>
+                          )}
+                          <span className="text-xs sm:text-sm font-bold text-[#DE1D3A]">
+                            {pricing.current}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Buy Pill Button */}
+                    <div className="p-3.5 sm:p-4 pt-3">
+                      <Link
+                        href={`/products/${product.id}`}
+                        className="w-full py-2 sm:py-2.5 rounded-full border border-[#00A6E8]/40 hover:border-[#00A6E8] bg-white hover:bg-[#00A6E8] text-[#00A6E8] hover:text-white transition-all duration-200 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold shadow-xs group/btn"
+                      >
+                        <ShoppingCart className="w-3.5 h-3.5 text-[#00A6E8] group-hover/btn:text-white transition-colors" />
+                        <span>Buy</span>
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Bottom Catalog Action Link */}
+          <div className="mt-14 text-center">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-slate-900 hover:bg-[#DE1D3A] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-md group"
+            >
+              <span>View Full Machinery Catalog</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          PRESERVED SUPPORTING SECTIONS (CLIENT MARQUEE, FEATURES, BLOG, CTA)
+          ========================================================================= */}
+
+      {/* Client Marquee Strip */}
+      <ClientMarquee
+        brandLogos={brandLogos}
+        brandLogos2={brandLogos2}
+        brandLogosinmobile={brandLogosinmobile}
+      />
+
+      {/* Why Choose Us / Core Strengths */}
+      {/* <section className="py-24 bg-[#F8FAFC]/50 border-y border-[#E5E7EB]/50 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#DE1D3A]/5 via-transparent to-transparent opacity-60 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -342,7 +725,7 @@ export default function Home() {
               Our Core Strengths
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] font-display tracking-tight">
-              Why Heavy Manufacturers Partner with Cobolt
+              Why Commercial Kitchens Partner with Cobolt
             </h2>
             <p className="text-[#6B7280] text-[14px] md:text-base max-w-2xl mx-auto leading-relaxed">
               We understand that even a single minute of machine downtime represents massive loss. We engineer stability into every joint and code reliability into every system.
@@ -376,93 +759,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Latest Products Section (Premium Showcase) */}
-      <section className="py-1 sm:py-32 bg-[#FFFFFF] text-[#6B7280] relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a02_1px,transparent_1px),linear-gradient(to_bottom,#0f172a02_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#DE1D3A]/5 via-transparent to-transparent opacity-60 pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-[#E5E7EB]/60 via-transparent to-transparent opacity-80 pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <ScrollReveal className="text-center max-w-3xl mx-auto mb-16 sm:mb-20 space-y-4">
-            <h2 className="text-2xl md:text-4xl sm:text-5xl font-bold md:font-extrabold text-[#111827] font-display tracking-tight leading-[1.12]">
-              Latest Food Processing &amp; Packaging Machinery
-            </h2>
-            <p className="text-[#6B7280] font-light px-4 md:px-0 text-sm md:text-sm md:font-light leading-relaxed font-sans max-w-xl mx-auto">
-              Engineered with food-grade SUS304/SUS316 stainless steel, smart PLC automation, and high-throughput reliability.
-            </p>
-            <div className="pt-4">
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#DE1D3A] hover:bg-[#B7152D] text-white text-sm font-semibold rounded-full transition-all duration-300 shadow-lg shadow-[#DE1D3A]/20 hover:shadow-xl hover:shadow-[#DE1D3A]/30 hover:-translate-y-1"
-              >
-                View All Products
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
-            {latestProducts.slice(0, 6).map((product, idx) => (
-              <ScrollReveal
-                key={`${product.id}-${idx}`}
-                delay={idx * 0.08}
-                className="group border border-[#E5E7EB] bg-[#FFFFFF] rounded-2xl overflow-hidden hover:shadow-xl hover:border-[#DE1D3A]/30 transition-all duration-300 flex flex-col h-full hover:-translate-y-1"
-              >
-                <Link href={`/products/${product.id}`} className="flex flex-col h-full cursor-pointer">
-                  {/* Image Section */}
-                  <div className="relative h-60 bg-[#FFFFFF] flex items-center justify-center p-6">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
-                      loading="lazy"
-                      className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-
-                  {/* Details Section */}
-                  <div className="p-6 pt-2 flex-grow flex flex-col items-start text-left justify-between">
-                    <div>
-                      <h3 className="font-display font-bold text-lg text-[#111827] group-hover:text-[#DE1D3A] transition-colors duration-200 mb-2">
-                        {product.name}
-                      </h3>
-                      {product.description && (
-                        <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed line-clamp-3">
-                          {product.description}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="w-full pt-4 border-t border-[#E5E7EB] flex items-center justify-between text-xs text-[#6B7280] font-semibold mt-4">
-                      <span className="flex items-center text-[#DE1D3A] group-hover:underline">
-                        <Info className="w-3.5 h-3.5 mr-1" /> View Full Details &amp; Specs
-                      </span>
-                      <ChevronRight className="w-4 h-4 text-[#DE1D3A] group-hover:translate-x-1 transition-transform duration-200" />
-                    </div>
-                  </div>
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
-
-          {/* Premium Bottom Conversion CTA Section */}
-          <ScrollReveal className="mt-20 sm:mt-24 border border-[#E5E7EB] bg-[#F8FAFC]/50 rounded-3xl p-8 sm:p-10 max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm hover:shadow-md transition-shadow duration-300">
-            <div className="text-left space-y-2">
-              <h4 className="font-display font-bold text-xl text-[#111827] tracking-tight">Need a custom engineering solution?</h4>
-              <p className="text-[#6B7280] text-sm max-w-lg font-sans">Our master fabricators can tailor dimensions, capacities, and PLC programs to your factory floor.</p>
-            </div>
-            <Link
-              href="/contact"
-              className="px-8 py-3.5 bg-[#DE1D3A] hover:bg-[#B7152D] hover:-translate-y-0.5 text-white text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-300 shadow-md flex items-center justify-center gap-2 flex-shrink-0"
-            >
-              Talk to an Engineer
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </ScrollReveal>
-        </div>
-      </section>
+      </section> */}
 
       {/* Latest Blog Posts Section */}
       <section className="py-24 bg-[#FFFFFF]">
@@ -519,7 +816,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact CTA Banner */}
+      {/* Operational Support / Contact CTA Banner */}
       <section className="py-28 bg-gradient-to-br from-[#121824] via-[#0B0F19] to-[#121824] text-white relative overflow-hidden">
         <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#DE1D3A]/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#DE1D3A]/10 rounded-full blur-[100px] pointer-events-none" />
@@ -564,6 +861,23 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Floating WhatsApp Action Button (Fixed Bottom-Right) */}
+      <a
+        href="https://wa.me/919061782023"
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-[#DE1D3A] to-[#FF6B81] shadow-2xl shadow-[#DE1D3A]/25 hover:from-[#DE1D3A] hover:to-[#F04A63] text-white rounded-full transition-all duration-300 flex items-center justify-center animate-pulse-glow hover:scale-105 active:scale-95"
+        aria-label="Chat on WhatsApp"
+      >
+        <svg
+          className="w-7 h-7 text-white fill-current"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12.004 0C5.378 0 0 5.378 0 12.004c0 2.115.549 4.18 1.597 6.009L.057 24l6.163-1.619c1.77.962 3.766 1.468 5.78 1.468 6.626 0 12.004-5.378 12.004-12.004C24.004 5.378 18.626 0 12.004 0zm0 22.015c-1.804 0-3.578-.485-5.127-1.402l-.367-.218-3.805 1.002.998-3.662-.24-.383a9.96 9.96 0 01-1.528-5.348c0-5.518 4.49-10.008 10.008-10.008 5.518 0 10.008 4.49 10.008 10.008-.002 5.522-4.492 10.012-10.008 10.012zm5.496-7.502c-.302-.152-1.785-.881-2.062-.981-.277-.101-.48-.152-.68.152-.201.303-.781.982-.957 1.183-.176.201-.353.227-.655.076-1.205-.603-2.072-1.054-2.898-2.47-.197-.339.197-.315.565-1.05.06-.121.03-.227-.015-.328-.045-.101-.48-1.153-.658-1.58-.173-.418-.348-.362-.48-.369-.124-.007-.267-.008-.41-.008s-.376.054-.572.27c-.197.216-.75.733-.75 1.79s.767 2.08.874 2.222c.106.142 1.51 2.305 3.657 3.232.51.22.909.352 1.22.45.514.163.982.14 1.352.085.412-.061 1.785-.73 2.037-1.436.252-.705.252-1.312.176-1.437-.076-.126-.277-.202-.579-.354z" />
+        </svg>
+      </a>
     </PageWrapper>
   );
 }

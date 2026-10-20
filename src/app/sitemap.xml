@@ -124,6 +124,44 @@
     <priority>0.5</priority>
   </url>
 
+  <!-- Product Category URLs -->
+  <url>
+    <loc>https://www.coboltmachineries.com/products/category/food-preparation-machines</loc>
+    <lastmod>2026-10-19T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/products/category/refrigeration-items</loc>
+    <lastmod>2026-10-19T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/products/category/baking-equipments</loc>
+    <lastmod>2026-10-19T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/products/category/cooking-equipments</loc>
+    <lastmod>2026-10-19T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/products/category/stainless-steel-fabrications</loc>
+    <lastmod>2026-10-19T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.coboltmachineries.com/products/category/industrial-and-food-service</loc>
+    <lastmod>2026-10-19T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <!-- Product Catalog URLs -->
   <url>
     <loc>https://www.coboltmachineries.com/products/DH-F-FREQUENCY-CHANGER-DOUGH-MIXERid</loc>

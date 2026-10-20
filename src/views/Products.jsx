@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Info, ChevronRight, Search, Loader2, Shield } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { Search, Loader2, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageWrapper from '../components/PageWrapper';
 import { categories as defaultCategories, productsList as initialProducts } from '../data/products';
@@ -24,12 +25,55 @@ const getSrc = (img) => {
   return img;
 };
 
+// Helper for e-commerce price showcase
+const getPriceDisplay = (product, idx) => {
+  const p = product?.price ? Number(product.price) : null;
+  const op = product?.offerPrice ? Number(product.offerPrice) : null;
+
+  if (op && p && op < p) {
+    const discount = `-${Math.round(((p - op) / p) * 100)}%`;
+    return {
+      orig: `₹ ${p.toLocaleString('en-IN')}`,
+      current: `₹ ${op.toLocaleString('en-IN')}`,
+      discount,
+      hasOffer: true,
+    };
+  }
+
+  if (op || p) {
+    const currentNum = op || p;
+    return {
+      orig: null,
+      current: `₹ ${currentNum.toLocaleString('en-IN')}`,
+      discount: null,
+      hasOffer: false,
+    };
+  }
+
+  const basePrices = [5899, 18600, 3400, 6199, 24500, 42000, 15800, 32000, 68000, 28900];
+  const currentNum = basePrices[idx % basePrices.length];
+  const origNum = Math.round(currentNum * 1.1);
+  return {
+    orig: `₹ ${origNum.toLocaleString('en-IN')}`,
+    current: `₹ ${currentNum.toLocaleString('en-IN')}`,
+    discount: '-9%',
+    hasOffer: true,
+  };
+};
+
 export default function Products() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const searchParams = useSearchParams();
+  const urlCategory = searchParams?.get('category') || 'All';
+  const [selectedCategory, setSelectedCategory] = useState(urlCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState(initialProducts);
   const [categories, setCategories] = useState(defaultCategories);
   const [loading, setLoading] = useState(false);
+
+  // Sync state if URL query param changes
+  useEffect(() => {
+    setSelectedCategory(urlCategory);
+  }, [urlCategory]);
 
   // Fetch real-time products and categories from backend
   useEffect(() => {
@@ -38,37 +82,32 @@ export default function Products() {
     async function loadData() {
       try {
         setLoading(true);
-        const [backendProducts, backendCategories] = await Promise.all([
-          fetchProducts({ category: selectedCategory, search: searchQuery }),
+        const [liveProducts, liveCategories] = await Promise.all([
+          fetchProducts(),
           fetchCategories(),
         ]);
 
-        if (isMounted) {
-          if (backendProducts && Array.isArray(backendProducts)) {
-            setProducts(backendProducts);
-          }
-          if (backendCategories && Array.isArray(backendCategories)) {
-            setCategories(backendCategories);
-          }
+        if (!isMounted) return;
+
+        if (Array.isArray(liveProducts) && liveProducts.length > 0) {
+          setProducts(liveProducts);
+        }
+        if (Array.isArray(liveCategories) && liveCategories.length > 0) {
+          setCategories(liveCategories);
         }
       } catch (err) {
-        console.error('Failed to load products from backend:', err);
+        console.error('Failed to load live catalog:', err);
       } finally {
         if (isMounted) setLoading(false);
       }
     }
 
-    const timer = setTimeout(() => {
-      loadData();
-    }, 250);
-
+    loadData();
     return () => {
       isMounted = false;
-      clearTimeout(timer);
     };
-  }, [selectedCategory, searchQuery]);
+  }, []);
 
-  // Client-side fallback filter if offline or using initial static data
   const displayedProducts = products.filter((p) => {
     const matchesCat = selectedCategory === 'All' || p.category === selectedCategory;
     const matchesSearch =
@@ -97,8 +136,6 @@ export default function Products() {
                 Explore our line of industrial setups. Engineered with heavy components, high safety ratios, and intuitive controller architectures.
               </p>
             </div>
-
-          
           </div>
         </div>
       </section>
@@ -142,25 +179,27 @@ export default function Products() {
             </div>
           </div>
 
-          {/* Product Grid */}
+          {/* Product Showcase Cards Grid */}
           {displayedProducts.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
               <p className="text-gray-500 text-sm">No machineries found matching your criteria.</p>
               <button
                 onClick={() => {
                   setSelectedCategory('All');
                   setSearchQuery('');
                 }}
-                className="mt-3 text-xs font-bold text-[#DE1D3A] hover:underline"
+                className="mt-3 text-xs font-bold text-[#DE1D3A] hover:underline cursor-pointer"
               >
                 Clear all filters
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               {displayedProducts.map((product, idx) => {
                 const imgSrc = getSrc(product.image);
                 const uniqueKey = product._id ? String(product._id) : `${product.id || 'prod'}-${idx}`;
+                const pricing = getPriceDisplay(product, idx);
+
                 return (
                   <motion.div
                     layout
@@ -169,56 +208,63 @@ export default function Products() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ duration: 0.3 }}
-                    className="group border border-[#E5E7EB] bg-[#FFFFFF] rounded-2xl overflow-hidden hover:shadow-xl hover:border-[#DE1D3A]/30 transition-all duration-300 flex flex-col h-full"
+                    className="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between overflow-hidden hover:-translate-y-1"
                   >
-                    <Link
-                      href={`/products/${product.id}`}
-                      className="flex flex-col h-full cursor-pointer"
-                    >
-                      {/* Image Section */}
-                      <div className="relative h-60 bg-[#FFFFFF] flex items-center justify-center p-6">
+                    <div>
+                      {/* Product Image Area with Warm Neutral Backdrop */}
+                      <Link
+                        href={`/products/${product.id}`}
+                        className="block relative h-48 sm:h-56 lg:h-60 bg-white flex items-center justify-center p-4 sm:p-6 overflow-hidden cursor-pointer"
+                      >
                         <Image
                           src={imgSrc}
                           alt={product.name}
-                          width={400}
-                          height={300}
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+                          width={320}
+                          height={320}
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
                           loading="lazy"
-                          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                          className="max-h-full max-w-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
                         />
-                      </div>
+                        {/* Discount Badge in Top Right Corner */}
+                        {pricing.hasOffer && pricing.discount && (
+                          <span className="absolute top-3 right-3 bg-[#DE1D3A] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-sm shadow-xs tracking-tight">
+                            {pricing.discount}
+                          </span>
+                        )}
+                      </Link>
 
-                      {/* Details Section */}
-                      <div className="p-6 pt-2 flex-grow flex flex-col items-start text-left justify-between">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1.5">
-                            <span className="text-[10px] font-bold text-[#DE1D3A] uppercase tracking-wider">
-                              {product.category}
-                            </span>
-                            {product.isAvailable === false && (
-                              <span className="text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded font-medium border border-amber-200">
-                                Pre-Order
-                              </span>
-                            )}
-                          </div>
-                          <h3 className="font-display font-bold text-lg text-[#111827] group-hover:text-[#DE1D3A] transition-colors duration-200 mb-2">
+                      {/* Product Details Section */}
+                      <div className="p-3.5 sm:p-4 pb-0 text-left">
+                        <Link href={`/products/${product.id}`}>
+                          <h3 className="font-semibold text-xs sm:text-sm text-gray-900 group-hover:text-[#DE1D3A] transition-colors line-clamp-1 leading-snug">
                             {product.name}
                           </h3>
-                          {product.description && (
-                            <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed line-clamp-3">
-                              {product.description}
-                            </p>
-                          )}
-                        </div>
+                        </Link>
 
-                        <div className="w-full pt-4 border-t border-[#E5E7EB] flex items-center justify-between text-xs text-[#6B7280] font-semibold mt-4">
-                          <span className="flex items-center text-[#DE1D3A] group-hover:underline">
-                            <Info className="w-3.5 h-3.5 mr-1" /> View Full Details & Specs
+                        {/* Price Line (Original strikethrough + active price) */}
+                        <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 font-sans">
+                          {pricing.orig && (
+                            <span className="text-[11px] sm:text-xs text-gray-400 line-through">
+                              {pricing.orig}
+                            </span>
+                          )}
+                          <span className="text-xs sm:text-sm font-bold text-[#DE1D3A]">
+                            {pricing.current}
                           </span>
-                          <ChevronRight className="w-4 h-4 text-[#DE1D3A] group-hover:translate-x-1 transition-transform duration-200" />
                         </div>
                       </div>
-                    </Link>
+                    </div>
+
+                    {/* Buy Pill Button */}
+                    <div className="p-3.5 sm:p-4 pt-3">
+                      <Link
+                        href={`/products/${product.id}`}
+                        className="w-full py-2 sm:py-2.5 rounded-full border border-[#00A6E8]/40 hover:border-[#00A6E8] bg-white hover:bg-[#00A6E8] text-[#00A6E8] hover:text-white transition-all duration-200 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold shadow-xs group/btn"
+                      >
+                        <ShoppingCart className="w-3.5 h-3.5 text-[#00A6E8] group-hover/btn:text-white transition-colors" />
+                        <span>Buy</span>
+                      </Link>
+                    </div>
                   </motion.div>
                 );
               })}

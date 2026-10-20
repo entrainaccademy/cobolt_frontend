@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Products from '../../views/Products';
 import JsonLd from '../../components/JsonLd';
 import { catalogItemListSchema, breadcrumbs } from '../../lib/schema';
@@ -29,7 +30,9 @@ export default function ProductsPage() {
     <>
       <JsonLd data={catalogItemListSchema} />
       <JsonLd data={breadcrumbs([['Home', '/'], ['Products', '/products']])} />
-      <Products />
+      <Suspense fallback={null}>
+        <Products />
+      </Suspense>
     </>
   );
 }

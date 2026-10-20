@@ -20,7 +20,7 @@ export default function Footer() {
 
   const servicesLinks = [
     { name: 'Steel Fabrication', path: '/services/steel-fabrication' },
-    { name: 'Import & Export', path: '/services/import-export' },
+    // { name: 'Import & Export', path: '/services/import-export' },
     { name: 'Machinery Manufacturing', path: '/services/machinery-manufacturing' },
     { name: 'Engineering Consulting', path: '/services/consulting' },
     { name: 'Annual Maintenance (AMC)', path: '/services/amc' },
@@ -31,9 +31,9 @@ export default function Footer() {
     { name: 'Privacy Policy', path: '/privacy-policy' },
     { name: 'Terms of Service', path: '/terms-of-service' },
     { name: 'Warranty Policy', path: '/warranty-policy' },
-    { name: 'Return and Refund', path: '/return-refund-policy' },
+    // { name: 'Return and Refund', path: '/return-refund-policy' },
     { name: 'Shipping Policy', path: '/shipping-policy' },
-    { name: 'Partial COD Policy', path: '/partial-cod-policy' },
+    // { name: 'Partial COD Policy', path: '/partial-cod-policy' },
   ];
 
   return (
@@ -183,7 +183,7 @@ export default function Footer() {
             <div className="flex items-start gap-3">
               <MapPin className="w-4.5 h-4.5 text-[#DE1D3A] mt-0.5 flex-shrink-0" />
               <span className="text-text-light text-sm leading-relaxed">
-                Veemboor, Manjeri, Kerala - 679582
+                Veemboor, Manjeri, Kerala - 676122
               </span>
             </div>
             <div className="flex items-center gap-3">
@@ -200,7 +200,7 @@ export default function Footer() {
             </div>
             <div className="pt-2">
               <span className="inline-flex items-center px-3 py-1 rounded bg-green-50 text-green-700 text-xs font-semibold border border-green-200">
-                Mon – Sat: 9 am – 8 pm
+                Mon – Sat: 9 am – 7 pm
               </span>
             </div>
           </div>
@@ -217,8 +217,8 @@ export default function Footer() {
             <Link href="/privacy-policy" className="hover:text-accent transition-colors duration-200">Privacy Policy</Link>
             <Link href="/terms-of-service" className="hover:text-accent transition-colors duration-200">Terms of Service</Link>
             <Link href="/warranty-policy" className="hover:text-accent transition-colors duration-200">Warranty</Link>
-            <Link href="/sitemap.xml" className="hover:text-accent transition-colors duration-200">Sitemap</Link>
-            <Link href="/admin" className="hover:text-[#DE1D3A] transition-colors duration-200">Admin Portal</Link>
+            {/* <Link href="/sitemap.xml" className="hover:text-accent transition-colors duration-200">Sitemap</Link> */}
+            {/* <Link href="/admin" className="hover:text-[#DE1D3A] transition-colors duration-200">Admin Portal</Link> */}
           </div>
         </div>
       </div>

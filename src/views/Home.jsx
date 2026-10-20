@@ -397,27 +397,22 @@ export default function Home() {
       {/* =========================================================================
           SECTION 2: COMPANY STATISTICS
           ========================================================================= */}
-      <section className="py-8 sm:py-12 bg-white  text-gray-900  ">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-slate-800/80">
+      <section className="py-6 sm:py-10 md:py-12 bg-white text-gray-900 border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-4 gap-1 sm:gap-6 lg:gap-8 divide-x divide-gray-200">
             {companyStatistics.map((stat, idx) => (
               <div
                 key={stat.id}
-                className={`text-center sm:text-left ${
-                  idx > 0 ? 'pt-6 sm:pt-0 sm:pl-6 lg:pl-8' : ''
+                className={`text-center sm:text-left flex flex-col justify-center ${
+                  idx > 0 ? 'pl-2 sm:pl-6 lg:pl-8' : 'pl-0 sm:pl-0'
                 }`}
               >
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#DE1D3A] font-display tracking-tight">
+                <div className="text-base min-[380px]:text-lg sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#DE1D3A] font-display tracking-tight leading-none">
                   {stat.number}
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-gray-800 mt-1.5 uppercase tracking-wider">
+                <div className="text-[9px] min-[380px]:text-[10px] sm:text-xs md:text-sm font-bold text-gray-800 mt-1 sm:mt-2 uppercase tracking-tight sm:tracking-wider leading-tight">
                   {stat.label}
                 </div>
-                {/* {stat.description && (
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                    {stat.description}
-                  </p>
-                )} */}
               </div>
             ))}
           </div>
@@ -465,7 +460,7 @@ export default function Home() {
                     {cat.name}
                   </h3>
 
-                  <div className="mt-2 text-xs sm:text-sm font-semibold text-[#1E40AF] group-hover:text-[#DE1D3A] transition-colors inline-flex items-center gap-1 font-sans">
+                  <div className="mt-2 text-xs sm:text-sm font-semibold text-red-500 group-hover:text-[#DE1D3A] transition-colors inline-flex items-center gap-1 font-sans">
                     <span>Explore</span>
                     <span className="transition-transform duration-200 group-hover:translate-x-1">&rarr;</span>
                   </div>
@@ -676,9 +671,9 @@ export default function Home() {
                     <div className="p-3.5 sm:p-4 pt-3">
                       <Link
                         href={`/products/${product.id}`}
-                        className="w-full py-2 sm:py-2.5 rounded-full border border-[#00A6E8]/40 hover:border-[#00A6E8] bg-white hover:bg-[#00A6E8] text-[#00A6E8] hover:text-white transition-all duration-200 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold shadow-xs group/btn"
+                        className="w-full py-2 sm:py-2.5 rounded-full border border-red-500 hover:border-[#00A6E8] bg-white hover:bg-[#00A6E8] text-red-500 hover:text-white transition-all duration-200 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold shadow-xs group/btn"
                       >
-                        <ShoppingCart className="w-3.5 h-3.5 text-[#00A6E8] group-hover/btn:text-white transition-colors" />
+                        <ShoppingCart className="w-3.5 h-3.5 text-red-500 group-hover/btn:text-white transition-colors" />
                         <span>Buy</span>
                       </Link>
                     </div>

@@ -508,13 +508,13 @@ export default function Navbar() {
               <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
 
-            <Link
+            {/* <Link
               href="/admin"
               className="w-full flex items-center justify-center gap-2 py-3 border border-slate-200 text-slate-700 hover:text-[#DE1D3A] hover:border-[#DE1D3A] text-xs font-bold uppercase tracking-widest rounded-xl transition-all bg-slate-50 hover:bg-white text-center"
             >
               <Shield className="w-4 h-4 text-[#DE1D3A]" />
               <span>Admin Portal</span>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Social Icons for Mobile */}

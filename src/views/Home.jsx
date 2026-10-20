@@ -344,21 +344,18 @@ export default function Home() {
           SECTION 1: HERO BANNER
           ========================================================================= */}
       <section className="relative min-h-[640px] sm:min-h-[700px] lg:h-[90vh] lg:min-h-[760px] w-full overflow-hidden bg-[#0F172A] flex items-center">
-        {/* Large, premium-looking hero banner image */}
-        <div className="absolute inset-0 w-full h-full">
-          <Image
-            src={coboltbanner3}
-            alt="Cobolt Machineries - Commercial Kitchen Equipment Manufacturer & Supplier"
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          {/* Multi-layered dark gradient & radial overlays for pristine readability on mobile & desktop */}
-          {/* <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/50 z-10" /> */}
-          {/* <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/40 z-10" /> */}
-          {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-[#DE1D3A]/25 via-transparent to-transparent opacity-70 z-10 pointer-events-none" /> */}
+        {/* Large, premium-looking hero banner video */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/mainvd5mb_poster.webp"
+            className="w-full h-full object-cover object-center"
+          >
+            <source src="/mainvd5mb.mp4" type="video/mp4" />
+          </video>
         </div>
 
         {/* Hero Content */}
@@ -663,14 +660,14 @@ export default function Home() {
 
                         {/* Price Line (Original strikethrough + active price) */}
                         <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 font-sans">
-                          {pricing.orig && (
+                          {/* {pricing.orig && (
                             <span className="text-[11px] sm:text-xs text-gray-400 line-through">
                               {pricing.orig}
                             </span>
-                          )}
-                          <span className="text-xs sm:text-sm font-bold text-[#DE1D3A]">
+                          )} */}
+                          {/* <span className="text-xs sm:text-sm font-bold text-[#DE1D3A]">
                             {pricing.current}
-                          </span>
+                          </span> */}
                         </div>
                       </div>
                     </div>

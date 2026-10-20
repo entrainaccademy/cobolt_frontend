@@ -175,11 +175,11 @@ export default function CategoryDetail({ category }) {
                         <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 font-sans">
                           {pricing.orig && (
                             <span className="text-[11px] sm:text-xs text-gray-400 line-through">
-                              {pricing.orig}
+                              {/* {pricing.orig} */}
                             </span>
                           )}
                           <span className="text-xs sm:text-sm font-bold text-[#DE1D3A]">
-                            {pricing.current}
+                            {/* {pricing.current} */}
                           </span>
                         </div>
                       </div>

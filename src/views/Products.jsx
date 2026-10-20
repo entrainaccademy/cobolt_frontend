@@ -145,9 +145,10 @@ export default function Products() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Search & Category Filter Controls */}
+          
           <div className="mb-8 space-y-4">
             {/* Search Input */}
-            <div className="max-w-md mx-auto relative">
+            {/* <div className="max-w-md mx-auto relative">
               <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
@@ -159,10 +160,10 @@ export default function Products() {
               {loading && (
                 <Loader2 className="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 animate-spin" />
               )}
-            </div>
+            </div> */}
 
             {/* Category Filter Pills */}
-            <div className="flex flex-wrap justify-center gap-2">
+            {/* <div className="flex flex-wrap justify-center gap-2">
               {categories.map((cat) => (
                 <button
                   key={cat}
@@ -176,7 +177,7 @@ export default function Products() {
                   {cat}
                 </button>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Product Showcase Cards Grid */}
@@ -226,11 +227,11 @@ export default function Products() {
                           className="max-h-full max-w-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
                         />
                         {/* Discount Badge in Top Right Corner */}
-                        {pricing.hasOffer && pricing.discount && (
+                        {/* {pricing.hasOffer && pricing.discount && (
                           <span className="absolute top-3 right-3 bg-[#DE1D3A] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-sm shadow-xs tracking-tight">
                             {pricing.discount}
                           </span>
-                        )}
+                        )} */}
                       </Link>
 
                       {/* Product Details Section */}
@@ -245,11 +246,11 @@ export default function Products() {
                         <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 font-sans">
                           {pricing.orig && (
                             <span className="text-[11px] sm:text-xs text-gray-400 line-through">
-                              {pricing.orig}
+                              {/* {pricing.orig} */}
                             </span>
                           )}
                           <span className="text-xs sm:text-sm font-bold text-[#DE1D3A]">
-                            {pricing.current}
+                            {/* {pricing.current} */}
                           </span>
                         </div>
                       </div>

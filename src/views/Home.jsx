@@ -425,7 +425,7 @@ export default function Home() {
          
 
             {/* Concise Headline about Industrial Food Machinery */}
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-black leading-tight font-display tracking-tight drop-shadow-md">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 leading-tight font-display tracking-tight drop-shadow-md">
               Commercial &amp; Industrial Food Machinery Solutions
             </h1>
 
@@ -504,7 +504,7 @@ export default function Home() {
        {/* Client Marquee Strip */}
       <ClientMarquee
         brandLogos={brandLogos}
-        brandLogos2={brandLogos2}
+        // brandLogos2={brandLogos2}
         brandLogosinmobile={brandLogosinmobile}
       />
 

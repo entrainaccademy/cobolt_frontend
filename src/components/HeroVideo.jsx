@@ -19,9 +19,19 @@ export default function HeroVideo({
         playsInline
         preload="auto"
         poster={mobilePoster}
+        onError={(e) => {
+          const video = e.currentTarget;
+          if (video && !video.src.includes('mainvd5mb.mp4')) {
+            video.src = desktopSrc;
+            video.load();
+            video.play().catch(() => {});
+          }
+        }}
         className="w-full h-full object-cover object-center block md:hidden"
       >
-        <source src={mobileSrc} type="video/mp4" />
+        <source src={mobileSrc} type='video/mp4; codecs="hvc1,hevc"' />
+        <source src={desktopSrc} type='video/mp4; codecs="avc1.4D401F,mp4a.40.2"' />
+        <source src={desktopSrc} type="video/mp4" />
       </video>
 
       {/* Desktop / Tablet Video (>= 768px) */}

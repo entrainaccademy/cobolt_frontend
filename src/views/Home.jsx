@@ -322,17 +322,43 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Ensure autoplay starts smoothly with muted and playsinline policies on mobile & desktop
+  // Ensure autoplay starts smoothly and handles mobile browser policies (power saver, HEVC, etc.)
   useEffect(() => {
-    const activeVideo = isMobile ? mobileVideoRef.current : desktopVideoRef.current;
-    if (activeVideo) {
-      activeVideo.muted = true;
-      activeVideo.defaultMuted = true;
-      activeVideo.setAttribute('muted', '');
-      activeVideo.setAttribute('playsinline', '');
-      activeVideo.setAttribute('webkit-playsinline', '');
-      activeVideo.play().catch(() => {});
-    }
+    const startPlayback = (video) => {
+      if (!video) return;
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      const promise = video.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          // Autoplay policy or power saver mode paused it; will resume on first touch/scroll
+        });
+      }
+    };
+
+    startPlayback(mobileVideoRef.current);
+    startPlayback(desktopVideoRef.current);
+
+    // Mobile browsers (iOS Safari / Android Chrome) allow video to play on first user interaction
+    const kickstartAutoplay = () => {
+      startPlayback(mobileVideoRef.current);
+      startPlayback(desktopVideoRef.current);
+    };
+
+    window.addEventListener('touchstart', kickstartAutoplay, { once: true, passive: true });
+    window.addEventListener('touchend', kickstartAutoplay, { once: true, passive: true });
+    window.addEventListener('click', kickstartAutoplay, { once: true, passive: true });
+    window.addEventListener('scroll', kickstartAutoplay, { once: true, passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', kickstartAutoplay);
+      window.removeEventListener('touchend', kickstartAutoplay);
+      window.removeEventListener('click', kickstartAutoplay);
+      window.removeEventListener('scroll', kickstartAutoplay);
+    };
   }, [isMobile]);
 
   // Fetch live products from backend with fallback
@@ -388,19 +414,28 @@ export default function Home() {
       <section className="relative min-h-[520px] sm:min-h-[640px] lg:h-[90vh] lg:min-h-[760px] w-full overflow-hidden bg-[#0F172A] flex items-center">
         {/* Large, premium-looking hero banner video */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
-          {/* Mobile Video (< 768px) */}
+          {/* Mobile Video (< 768px) with HEVC + H.264 fallback */}
           <video
             ref={mobileVideoRef}
-            src={heroMobileVideo}
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
             poster={heroMobilePoster}
+            onError={(e) => {
+              const video = e.currentTarget;
+              if (video && !video.src.includes('mainvd5mb.mp4')) {
+                video.src = heroDesktopVideo;
+                video.load();
+                video.play().catch(() => {});
+              }
+            }}
             className="w-full h-full object-cover object-center block md:hidden"
           >
-            <source src={heroMobileVideo} type="video/mp4" />
+            <source src={heroMobileVideo} type='video/mp4; codecs="hvc1,hevc"' />
+            <source src={heroDesktopVideo} type='video/mp4; codecs="avc1.4D401F,mp4a.40.2"' />
+            <source src={heroDesktopVideo} type="video/mp4" />
           </video>
 
           {/* Desktop / Tablet Video (>= 768px) */}
@@ -511,7 +546,7 @@ export default function Home() {
       {/* =========================================================================
           SECTION 3: PRODUCT CATEGORIES
           ========================================================================= */}
-      <section id="categories" className="py-14 sm:py-20 bg-[#FFFFFF] relative scroll-mt-20">
+      <section id="categories" className="py-14 sm:py-20 bg-[#F8FAFC] relative scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-2">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium text-[#111827] font-display tracking-tight">
@@ -528,12 +563,12 @@ export default function Home() {
               <Link
                 key={cat.slug}
                 href={`/products/category/${cat.slug}`}
-                className="group bg-white rounded-3xl  border-gray-100  hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
+                className="group bg-[#F8FAFC] rounded-3xl  border border-gray-100   hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
               >
                 {/* Category Image */}
-                <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 via-gray-50/80 to-slate-100/70 group-hover:from-red-50/40 group-hover:via-white group-hover:to-red-50/30 border border-slate-100/90 group-hover:border-red-100/80 h-36 sm:h-44 md:h-48 flex items-center justify-center p-3 sm:p-4 mb-3 transition-all duration-300 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_20px_rgba(222,29,58,0.06)] overflow-hidden">
+                <div className="relative w-full rounded-2xl bg-[#F8FAFC] group-hover:from-red-50/40 group-hover:via-white group-hover:to-red-50/30 border border-gray-400/5 group-hover:border-red-100/80 h-36 sm:h-44 md:h-48 flex items-center justify-center p-3 sm:p-4 mb-3 transition-all duration-300 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_20px_rgba(222,29,58,0.06)] overflow-hidden">
                   <Image
-                    src={cat.image}
+                    src={cat.image} 
                     alt={cat.name}
                     width={260}
                     height={260}
@@ -589,8 +624,8 @@ export default function Home() {
             
 
               {/* Heading: Manufacturing Excellence Since 2001 */}
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] font-display leading-tight">
-                Manufacturing Excellence Since 2001
+              <h2 className="text-3xl sm:text-4xl md:text-4xl font-medium text-[#111827] font-clash leading-tight">
+                Manufacturing Excellence Since 2020
               </h2>
 
               {/* Company Description */}

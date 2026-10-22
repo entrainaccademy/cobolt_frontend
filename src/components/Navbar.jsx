@@ -152,13 +152,13 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <a
               href="tel:+919061782023"
-              className="flex items-center gap-1.5 px-4 py-1 bg-red/10 hover:bg-accent text-[#2596be] hover:text-white text-xs font-poppins font-semibold uppercase tracking-wider rounded-full transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 animate-pulse-glow"
+              className="flex items-center gap-2 hover:text-accent transition-colors text-slate-600 font-sans"
             >
-              <Phone className="w-3 h-3 text-[#DE1D3A]" />
-              <span className="text-[#DE1D3A]">Call Now</span>
+              <Phone className="w-3.5 h-3.5 text-[#DE1D3A]" />
+              <span className="text-xs font-semibold text-slate-700">+91 9061782023</span>
             </a>
           </div>
-        </div>
+        </div> 
       </div>
 
       <header

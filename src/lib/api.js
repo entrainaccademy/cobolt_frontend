@@ -341,3 +341,168 @@ export async function deleteInquiryApi(id, token) {
   return data;
 }
 
+/**
+ * Resilient API fetcher supporting both local backend dev server and production Render backend
+ */
+async function safeApiFetch(endpointPath, options = {}) {
+  const primaryUrl = getBackendUrl();
+  const isLocalHost =
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+  const urlsToTry = [];
+  if (isLocalHost && !primaryUrl.includes('localhost:5000')) {
+    // Try local backend on port 5000 first so local dev works seamlessly, then primary URL
+    urlsToTry.push(`http://localhost:5000${endpointPath}`);
+    urlsToTry.push(`${primaryUrl}${endpointPath}`);
+  } else {
+    urlsToTry.push(`${primaryUrl}${endpointPath}`);
+    if (isLocalHost) {
+      urlsToTry.push(`http://localhost:5000${endpointPath}`);
+    }
+  }
+
+  let lastError = null;
+  let lastRes = null;
+
+  for (const url of urlsToTry) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok) {
+        return res;
+      }
+      // If 404 (route not yet deployed on remote), try next candidate URL
+      if (res.status === 404) {
+        lastRes = res;
+        continue;
+      }
+      return res;
+    } catch (err) {
+      lastError = err;
+      continue;
+    }
+  }
+
+  if (lastRes) return lastRes;
+  throw (
+    lastError ||
+    new Error(
+      'Unable to connect to backend server. Please verify your backend server is running.'
+    )
+  );
+}
+
+/**
+ * Public: Submit career job application with resume file
+ */
+export async function submitCareerApplicationApi(formData, file) {
+  const body = new FormData();
+  body.append('fullName', (formData.fullName || '').trim());
+  body.append('email', (formData.email || '').trim());
+  body.append('phone', (formData.phone || '').trim());
+  body.append('targetPosition', (formData.targetPosition || '').trim());
+  body.append('experienceLevel', (formData.experienceLevel || 'Mid Level (3-5 Years)').trim());
+  body.append('linkedIn', (formData.linkedIn || '').trim());
+  body.append('coverNote', (formData.coverNote || '').trim());
+  if (file) {
+    body.append('resume', file);
+  }
+
+  const res = await safeApiFetch('/api/careers/apply', {
+    method: 'POST',
+    body,
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    if (res.status === 404) {
+      throw new Error(
+        'Careers API is waiting to be deployed on Render. In local development, please make sure the backend is running on port 5000.'
+      );
+    }
+    throw new Error(
+      data.message || 'Failed to submit job application. Please check your details and try again.'
+    );
+  }
+  return data;
+}
+
+/**
+ * Admin: Fetch job applications
+ */
+export async function fetchApplicationsApi(params = {}, token) {
+  const searchParams = new URLSearchParams();
+  if (params.status) searchParams.set('status', params.status);
+  if (params.search) searchParams.set('search', params.search);
+  if (params.position) searchParams.set('position', params.position);
+  const queryStr = searchParams.toString() ? `?${searchParams.toString()}` : '';
+
+  try {
+    const res = await safeApiFetch(`/api/careers/applications${queryStr}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      if (res.status === 404) {
+        return {
+          success: false,
+          notDeployed: true,
+          applications: [],
+          stats: { total: 0, new: 0, reviewing: 0, shortlisted: 0, rejected: 0, archived: 0 },
+        };
+      }
+      throw new Error(data.message || 'Failed to fetch job applications.');
+    }
+    return data;
+  } catch (err) {
+    if (err.message && err.message.includes('not exist on this API')) {
+      return {
+        success: false,
+        notDeployed: true,
+        applications: [],
+        stats: { total: 0, new: 0, reviewing: 0, shortlisted: 0, rejected: 0, archived: 0 },
+      };
+    }
+    throw err;
+  }
+}
+
+/**
+ * Admin: Update application status or recruiter notes
+ */
+export async function updateApplicationStatusApi(id, updateData, token) {
+  const res = await safeApiFetch(`/api/careers/applications/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updateData),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to update job application.');
+  }
+  return data.application;
+}
+
+/**
+ * Admin: Delete job application
+ */
+export async function deleteApplicationApi(id, token) {
+  const res = await safeApiFetch(`/api/careers/applications/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to delete job application.');
+  }
+  return data;
+}
+
+
+

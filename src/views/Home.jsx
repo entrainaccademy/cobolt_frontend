@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -11,7 +11,6 @@ import {
   Clock,
   Award,
   Users,
-  ChevronRight,
   Truck,
   Info,
   Search,
@@ -21,6 +20,7 @@ import {
   MessageSquare,
   Sparkles,
   ShoppingCart,
+  Headphones,
 } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 import ScrollReveal from '../components/ScrollReveal';
@@ -36,9 +36,13 @@ import { fetchProducts } from '../lib/api';
 // Replace this import or update the file to change the logo.
 import coboltLogo from '../assets/blacklogotr.webp';
 
-import coboltbanner3 from '../assets/banner3.jpeg'
-import coboltbanner from '../assets/coboltbanner.jpeg'
-// import coboltbanner from '../assets/coboltbanner.jpeg'
+// Hero Videos Configuration:
+// Mobile video: /heroinmobile.MP4 (portrait 9:16 optimized for mobile devices)
+// Desktop video: /mainvd5mb.mp4 (widescreen 16:9 for tablets and desktops)
+const heroMobileVideo = '/heroinmobile.MP4';
+const heroDesktopVideo = '/mainvd5mb.mp4';
+const heroMobilePoster = '/heroinmobile_poster.webp';
+const heroDesktopPoster = '/mainvd5mb_poster.webp';
 
 // Company Image for Section 4 (About the Company):
 // Replace this import with your factory / team / engineering facility photo.
@@ -46,11 +50,11 @@ import companyAboutImg from '../assets/hm_about1.webp';
 
 // Category Showcase Images (Section 3):
 // Replace individual category images below as needed.
-import foodPrepCategoryImg from '../assets/Products/p3.jpeg';
-import bakingCategoryImg from '../assets/Products/b1.jpg';
-import cookingCategoryImg from '../assets/Products/c1.jpg';
-import ssFabCategoryImg from '../assets/Products/s1.jpg';
-import industrialCategoryImg from '../assets/3potchoco.jpeg';
+import foodPrepCategoryImg from '../../public/category/food.png';
+import bakingCategoryImg from '../../public/category/baking.png';
+import cookingCategoryImg from '../../public/category/cooking.png';
+import ssFabCategoryImg from '../../public/category/stain.png';
+import industrialCategoryImg from '../../public/category/service.png';
 
 // Client Brands Logos
 import brandimg1 from '../assets/brand_img01.png';
@@ -59,37 +63,37 @@ import brandimg3 from '../assets/brand_img03.png';
 import brandimg4 from '../assets/brand_img04.png';
 import brandimg5 from '../assets/brand_img05.png';
 import brandimg6 from '../assets/brand_img06.png';
-import brandimg7 from '../assets/brand_img07.png';
+
 import brandimg8 from '../assets/brand_img08.png';
 import brandimg9 from '../assets/brand_img09.png';
-import brandimg10 from '../assets/brand_img10.png';
+// import brandimg10 from '../assets/brand_img10.png';
 import brandimg11 from '../assets/brand_img11.png';
 import brandimg12 from '../assets/brand_img12.png';
 import brandimg13 from '../assets/brand_img13.png';
-import brandimg14 from '../assets/icon_sml2.webp';
-import brandimg15 from '../assets/neva2.webp';
-import brandimg16 from '../assets/sattara2n.webp';
+// import brandimg14 from '../assets/icon_sml2.webp';
+// import brandimg15 from '../assets/neva2.webp';
+import brandimg16 from '../assets/sattara2n.png';
 import brandimg17 from '../assets/supreme2.webp';
 import brandimg18 from '../assets/mfc.webp';
 import brandimg19 from '../assets/eatveg.webp';
-import chickyBells from '../assets/chicky_bells.webp';
+// import chickyBells from '../assets/chicky_bells.webp';
 
 const brandLogos = [
   brandimg8,
   brandimg6,
-  brandimg10,
+  // brandimg10,
   brandimg11,
   brandimg12,
-  brandimg13,
-  brandimg14,
-  brandimg15,
+  // brandimg13,
+  // brandimg14,
+  // brandimg15,
   brandimg16,
   brandimg9,
   brandimg17,
   brandimg18,
   brandimg19,
-  chickyBells,
-  brandimg7,
+  // chickyBells,
+
 ];
 
 const brandLogos2 = [
@@ -97,21 +101,21 @@ const brandLogos2 = [
   brandimg1,
   brandimg2,
   brandimg3,
-  chickyBells,
+  // chickyBells,
   brandimg4,
   brandimg5,
-  brandimg7,
+ 
 ];
 
 const brandLogosinmobile = [
   brandimg8,
   brandimg6,
-  brandimg10,
+  // brandimg10,
   brandimg11,
   brandimg12,
   brandimg13,
-  brandimg14,
-  brandimg15,
+  // brandimg14,
+  // brandimg15,
   brandimg16,
   brandimg9,
   brandimg1,
@@ -119,10 +123,10 @@ const brandLogosinmobile = [
   brandimg3,
   brandimg4,
   brandimg5,
-  brandimg7,
+
   brandimg18,
   brandimg19,
-  chickyBells,
+  // chickyBells,
 ];
 
 // =========================================================================
@@ -130,28 +134,39 @@ const brandLogosinmobile = [
 // =========================================================================
 const companyStatistics = [
   {
-    id: 'clients',
-    number: '30000+',
-    label: 'Active Clients',
-    description: 'Commercial kitchens, cloud chains, and heavy food manufacturing plants.',
-  },
-  {
     id: 'experience',
     number: '7+',
     label: 'Years Experience',
-    description: 'Precision mechanical engineering and machinery fabrication established in 2001.',
+    title: '7+ Years Experience',
+    description: 'Serving food businesses since 2020',
+    icon: Settings,
+    iconColor: 'text-slate-700',
   },
   {
-    id: 'machines',
-    number: '3500+',
-    label: 'Machines Installed',
-    description: 'High-output commercial fryers, deck ovens, planetary mixers, and fabrication rigs.',
+    id: 'customers',
+    number: '3000+',
+    label: 'Customers Served',
+    title: '3000+ Customers Served',
+    description: 'Trusted by food businesses across India',
+    icon: Users,
+    iconColor: 'text-slate-700',
   },
   {
-    id: 'quality',
-    number: '100%',
-    label: 'Food-Grade SUS304',
-    description: 'ISO 9001:2015 certified engineering standards with complete warranty & AMC coverage.',
+    id: 'installed',
+    number: '40,000+',
+    label: 'Items Installed',
+    title: '40,000+ Items Installed',
+    description: 'Commercial equipment deployed across India',
+    icon: Truck,
+    iconColor: 'text-slate-800',
+  },
+  {
+    id: 'support',
+    label: 'After-Sales Support',
+    title: 'After-Sales Support',
+    description: 'Technical assistance available',
+    icon: Headphones,
+    iconColor: 'text-slate-800',
   },
 ];
 
@@ -292,6 +307,33 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState(fallbackProducts);
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const mobileVideoRef = useRef(null);
+  const desktopVideoRef = useRef(null);
+
+  // Detect mobile viewport (< 768px) for responsive video playback
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Ensure autoplay starts smoothly with muted and playsinline policies on mobile & desktop
+  useEffect(() => {
+    const activeVideo = isMobile ? mobileVideoRef.current : desktopVideoRef.current;
+    if (activeVideo) {
+      activeVideo.muted = true;
+      activeVideo.defaultMuted = true;
+      activeVideo.setAttribute('muted', '');
+      activeVideo.setAttribute('playsinline', '');
+      activeVideo.setAttribute('webkit-playsinline', '');
+      activeVideo.play().catch(() => {});
+    }
+  }, [isMobile]);
 
   // Fetch live products from backend with fallback
   useEffect(() => {
@@ -341,20 +383,39 @@ export default function Home() {
   return (
     <PageWrapper>
       {/* =========================================================================
-          SECTION 1: HERO BANNER
+          SECTION 1: HERO BANNER VIDEO
           ========================================================================= */}
-      <section className="relative min-h-[640px] sm:min-h-[700px] lg:h-[90vh] lg:min-h-[760px] w-full overflow-hidden bg-[#0F172A] flex items-center">
+      <section className="relative min-h-[520px] sm:min-h-[640px] lg:h-[90vh] lg:min-h-[760px] w-full overflow-hidden bg-[#0F172A] flex items-center">
         {/* Large, premium-looking hero banner video */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
+          {/* Mobile Video (< 768px) */}
           <video
+            ref={mobileVideoRef}
+            src={heroMobileVideo}
             autoPlay
             loop
             muted
             playsInline
-            poster="/mainvd5mb_poster.webp"
-            className="w-full h-full object-cover object-center"
+            preload="auto"
+            poster={heroMobilePoster}
+            className="w-full h-full object-cover object-center block md:hidden"
           >
-            <source src="/mainvd5mb.mp4" type="video/mp4" />
+            <source src={heroMobileVideo} type="video/mp4" />
+          </video>
+
+          {/* Desktop / Tablet Video (>= 768px) */}
+          <video
+            ref={desktopVideoRef}
+            src={heroDesktopVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster={heroDesktopPoster}
+            className="w-full h-full object-cover object-center hidden md:block"
+          >
+            <source src={heroDesktopVideo} type="video/mp4" />
           </video>
         </div>
 
@@ -395,29 +456,57 @@ export default function Home() {
       </section>
 
       {/* =========================================================================
-          SECTION 2: COMPANY STATISTICS
+          SECTION 2: COMPANY STATISTICS / TRUST BAR
           ========================================================================= */}
-      <section className="py-6 sm:py-10 md:py-12 bg-white text-gray-900 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-4 gap-1 sm:gap-6 lg:gap-8 divide-x divide-gray-200">
-            {companyStatistics.map((stat, idx) => (
-              <div
-                key={stat.id}
-                className={`text-center sm:text-left flex flex-col justify-center ${
-                  idx > 0 ? 'pl-2 sm:pl-6 lg:pl-8' : 'pl-0 sm:pl-0'
-                }`}
-              >
-                <div className="text-base min-[380px]:text-lg sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#DE1D3A] font-display tracking-tight leading-none">
-                  {stat.number}
+      <section className="py-5 sm:py-7 lg:py-8 bg-[#F8FAFC]  border-gray-200 text-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-gray-200">
+            {companyStatistics.map((stat, idx) => {
+              const IconComponent = stat.icon;
+              return (
+                <div
+                  key={stat.id}
+                  className={`py-3.5 sm:py-3 lg:py-1 ${
+                    idx === 0
+                      ? 'lg:pr-6 xl:pr-8'
+                      : idx === companyStatistics.length - 1
+                      ? 'lg:pl-6 xl:pl-8 sm:pl-6'
+                      : 'lg:px-6 xl:px-8 sm:px-4'
+                  }`}
+                >
+                  <div className="flex items-center gap-3.5 sm:gap-4">
+                    {IconComponent && (
+                      <div className="shrink-0 flex items-center justify-center">
+                        <IconComponent
+                          className={`w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 ${stat.iconColor || 'text-slate-700'}`}
+                          strokeWidth={1.75}
+                        />
+                      </div>
+                    )}
+                    <div className="min-w-0 flex flex-col justify-center text-left">
+                      <h3 className="font-bold text-sm sm:text-base lg:text-[15px] xl:text-base text-gray-900 tracking-tight leading-snug">
+                        {stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
+                      </h3>
+                      {stat.description && (
+                        <p className="text-xs sm:text-[13px] text-gray-500 font-normal leading-normal mt-0.5 sm:mt-1 line-clamp-2">
+                          {stat.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div className="text-[9px] min-[380px]:text-[10px] sm:text-xs md:text-sm font-bold text-gray-800 mt-1 sm:mt-2 uppercase tracking-tight sm:tracking-wider leading-tight">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
+
+       {/* Client Marquee Strip */}
+      <ClientMarquee
+        brandLogos={brandLogos}
+        brandLogos2={brandLogos2}
+        brandLogosinmobile={brandLogosinmobile}
+      />
 
       {/* =========================================================================
           SECTION 3: PRODUCT CATEGORIES
@@ -439,10 +528,10 @@ export default function Home() {
               <Link
                 key={cat.slug}
                 href={`/products/category/${cat.slug}`}
-                className="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
+                className="group bg-white rounded-3xl  border-gray-100  hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
               >
                 {/* Category Image */}
-                <div className="relative w-full h-36 sm:h-44 md:h-48 flex items-center justify-center p-2 mb-3">
+                <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 via-gray-50/80 to-slate-100/70 group-hover:from-red-50/40 group-hover:via-white group-hover:to-red-50/30 border border-slate-100/90 group-hover:border-red-100/80 h-36 sm:h-44 md:h-48 flex items-center justify-center p-3 sm:p-4 mb-3 transition-all duration-300 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_20px_rgba(222,29,58,0.06)] overflow-hidden">
                   <Image
                     src={cat.image}
                     alt={cat.name}
@@ -450,7 +539,7 @@ export default function Home() {
                     height={260}
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 220px"
                     loading="lazy"
-                    className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                    className="max-h-full max-w-full object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.08)] group-hover:drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] group-hover:scale-105 transition-all duration-300"
                   />
                 </div>
 
@@ -470,6 +559,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+
+      
 
       {/* =========================================================================
           SECTION 4: ABOUT THE COMPANY
@@ -545,167 +637,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* =========================================================================
-          SECTION 5: E-COMMERCE-STYLE PRODUCT SHOWCASE
-          ========================================================================= */}
-      <section id="products" className="py-20 sm:py-28 bg-[#FFFFFF] relative scroll-mt-20">
-        <div id="shop" className="scroll-mt-20" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-            
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] font-display tracking-tight">
-              Machineries &amp; Industrial Toolings
-            </h2>
-            <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
-              Explore our flagship product catalog. Filter by equipment category or search specifications to enquire directly for factory-direct commercial pricing.
-            </p>
-          </div>
-
-          {/* Search & Category Filter Controls */}
-          <div className="mb-10 space-y-5">
-            {/* Search Input */}
-            {/* <div className="max-w-md mx-auto relative">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search machineries by model, specification, or keyword..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#DE1D3A] focus:ring-1 focus:ring-[#DE1D3A] transition-all shadow-xs"
-              />
-              {loading && (
-                <div className="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
-              )}
-            </div> */}
-
-            {/* Category Filter Pills */}
-            {/* <div className="flex flex-wrap justify-center gap-2">
-              {filterCategories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-2 text-xs font-medium rounded-xl border backdrop-blur-sm transition-all duration-200 cursor-pointer ${
-                    selectedCategory === cat
-                      ? 'bg-[#DE1D3A] text-white border-[#DE1D3A] shadow-sm font-semibold'
-                      : 'bg-white border-gray-200 text-gray-600 hover:border-[#DE1D3A]/40 hover:text-[#DE1D3A]'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div> */}
-          </div>
-
-          {/* Product Showcase Cards Grid */}
-          {displayedProducts.length === 0 ? (
-            <div className="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-              <p className="text-gray-500 text-sm">No machineries found matching your criteria.</p>
-              <button
-                onClick={() => {
-                  setSelectedCategory('All');
-                  setSearchQuery('');
-                }}
-                className="mt-3 text-xs font-bold text-[#DE1D3A] hover:underline"
-              >
-                Reset Filters
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-              {displayedProducts.slice(0, 8).map((product, idx) => {
-                const imgSrc = getSrc(product.image);
-                const uniqueKey = product._id ? String(product._id) : `${product.id || 'prod'}-${idx}`;
-                const pricing = getPriceDisplay(product, idx);
-
-                return (
-                  <div
-                    key={uniqueKey}
-                    className="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between overflow-hidden hover:-translate-y-1"
-                  >
-                    <div>
-                      {/* Product Image Area with Warm Neutral Backdrop */}
-                      <Link
-                        href={`/products/${product.id}`}
-                        className="block relative h-48 sm:h-56 lg:h-60 bg-white flex items-center justify-center p-4 sm:p-6 overflow-hidden cursor-pointer"
-                      >
-                        <Image
-                          src={imgSrc}
-                          alt={product.name}
-                          width={320}
-                          height={320}
-                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
-                          loading="lazy"
-                          className="max-h-full max-w-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
-                        />
-                        {/* Discount Badge in Top Right Corner */}
-                        {/* {pricing.hasOffer && pricing.discount && (
-                          <span className="absolute top-3 right-3 bg-[#DE1D3A] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-sm shadow-xs tracking-tight">
-                            {pricing.discount}
-                          </span>
-                        )} */}
-                      </Link>
-
-                      {/* Product Details Section */}
-                      <div className="p-3.5 sm:p-4 pb-0 text-left">
-                        <Link href={`/products/${product.id}`}>
-                          <h3 className="font-semibold text-xs sm:text-sm text-gray-900 group-hover:text-[#DE1D3A] transition-colors line-clamp-1 leading-snug">
-                            {product.name}
-                          </h3>
-                        </Link>
-
-                        {/* Price Line (Original strikethrough + active price) */}
-                        <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 font-sans">
-                          {/* {pricing.orig && (
-                            <span className="text-[11px] sm:text-xs text-gray-400 line-through">
-                              {pricing.orig}
-                            </span>
-                          )} */}
-                          {/* <span className="text-xs sm:text-sm font-bold text-[#DE1D3A]">
-                            {pricing.current}
-                          </span> */}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Buy Pill Button */}
-                    <div className="p-3.5 sm:p-4 pt-3">
-                      <Link
-                        href={`/products/${product.id}`}
-                        className="w-full py-2 sm:py-2.5 rounded-full border border-red-500 hover:border-[#00A6E8] bg-white hover:bg-[#00A6E8] text-red-500 hover:text-white transition-all duration-200 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold shadow-xs group/btn"
-                      >
-                        <ShoppingCart className="w-3.5 h-3.5 text-red-500 group-hover/btn:text-white transition-colors" />
-                        <span>Buy</span>
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Bottom Catalog Action Link */}
-          <div className="mt-14 text-center">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-slate-900 hover:bg-[#DE1D3A] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-md group"
-            >
-              <span>View Full Machinery Catalog</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
-      </section>
+    
 
       {/* =========================================================================
           PRESERVED SUPPORTING SECTIONS (CLIENT MARQUEE, FEATURES, BLOG, CTA)
           ========================================================================= */}
 
-      {/* Client Marquee Strip */}
-      <ClientMarquee
-        brandLogos={brandLogos}
-        brandLogos2={brandLogos2}
-        brandLogosinmobile={brandLogosinmobile}
-      />
+     
 
       {/* Why Choose Us / Core Strengths */}
       {/* <section className="py-24 bg-[#F8FAFC]/50 border-y border-[#E5E7EB]/50 relative overflow-hidden">

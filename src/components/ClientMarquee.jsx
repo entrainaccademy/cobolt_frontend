@@ -16,8 +16,7 @@ export default function ClientMarquee({ brandLogos, brandLogos2, brandLogosinmob
 
         {/* Logo Marquee Wrapper 1 (Desktop/Tablet) */}
         <div className="relative w-full hidden md:block">
-          <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-r from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-l from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
+
 
           <div className="flex w-max items-center gap-0 sm:gap-16 animate-marquee py-2 select-none">
             {brandLogos.map((logo, idx) => (
@@ -32,7 +31,7 @@ export default function ClientMarquee({ brandLogos, brandLogos2, brandLogosinmob
                   height={getHeight(logo)}
                   loading="lazy"
                   decoding="async"
-                  className="max-w-full max-h-full object-contain filter grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-pointer"
+                  className="max-w-full max-h-full object-contain transition-all duration-300 cursor-pointer"
                 />
               </div>
             ))}
@@ -48,7 +47,7 @@ export default function ClientMarquee({ brandLogos, brandLogos2, brandLogosinmob
                   height={getHeight(logo)}
                   loading="lazy"
                   decoding="async"
-                  className="max-w-full max-h-full object-contain filter grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-pointer"
+                  className="max-w-full max-h-full object-contain transition-all duration-300 cursor-pointer"
                 />
               </div>
             ))}
@@ -57,8 +56,8 @@ export default function ClientMarquee({ brandLogos, brandLogos2, brandLogosinmob
 
         {/* Logo Marquee Wrapper Mobile (Mobile only) */}
         <div className="relative w-full md:hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
+          {/* <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#F8FAFC] to-transparent z-10 pointer-events-none" /> */}
+          {/* <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#F8FAFC] to-transparent z-10 pointer-events-none" /> */}
 
           <div className="flex w-max items-center gap-0 animate-marquee py-2 select-none">
             {brandLogosinmobile.map((logo, idx) => (
@@ -73,7 +72,7 @@ export default function ClientMarquee({ brandLogos, brandLogos2, brandLogosinmob
                   height={getHeight(logo)}
                   loading="lazy"
                   decoding="async"
-                  className="max-w-full max-h-full object-contain filter grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-pointer"
+                  className="max-w-12  max-h-12 object-contain transition-all duration-300 cursor-pointer"
                 />
               </div>
             ))}
@@ -89,7 +88,7 @@ export default function ClientMarquee({ brandLogos, brandLogos2, brandLogosinmob
                   height={getHeight(logo)}
                   loading="lazy"
                   decoding="async"
-                  className="max-w-full max-h-full object-contain filter grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-pointer"
+                  className="max-w-full max-h-full object-contain transition-all duration-300 cursor-pointer"
                 />
               </div>
             ))}
@@ -114,7 +113,7 @@ export default function ClientMarquee({ brandLogos, brandLogos2, brandLogosinmob
                   height={getHeight(logo)}
                   loading="lazy"
                   decoding="async"
-                  className="max-w-full max-h-full object-contain filter grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-pointer"
+                  className="max-w-full max-h-full object-contain transition-all duration-300 cursor-pointer"
                 />
               </div>
             ))}
@@ -130,7 +129,7 @@ export default function ClientMarquee({ brandLogos, brandLogos2, brandLogosinmob
                   height={getHeight(logo)}
                   loading="lazy"
                   decoding="async"
-                  className="max-w-full max-h-full object-contain filter grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all duration-300 cursor-pointer"
+                  className="max-w-full max-h-full object-contain transition-all duration-300 cursor-pointer"
                 />
               </div>
             ))}

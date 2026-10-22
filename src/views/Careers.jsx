@@ -9,9 +9,11 @@ import {
   ChevronDown,
   X,
   Send,
-  ArrowRight
+  ArrowRight,
+  AlertCircle
 } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
+import { submitCareerApplicationApi } from '../lib/api';
 
 // Mock Job Openings Data
 const JOB_OPENINGS = [
@@ -101,6 +103,7 @@ export default function Careers() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedRefCode, setSubmittedRefCode] = useState(null);
+  const [submitError, setSubmitError] = useState('');
 
   const handleApplyForRole = (roleTitle) => {
     setFormData((prev) => ({
@@ -125,6 +128,7 @@ export default function Careers() {
       }
       setSelectedFile(file);
       setFormErrors((prev) => ({ ...prev, file: '' }));
+      setSubmitError('');
     }
   };
 
@@ -150,8 +154,9 @@ export default function Careers() {
     return errors;
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError('');
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -159,12 +164,17 @@ export default function Careers() {
     }
 
     setIsSubmitting(true);
-    // Simulate submission delay
-    setTimeout(() => {
+    try {
+      const res = await submitCareerApplicationApi(formData, selectedFile);
+      setSubmittedRefCode(res.refCode || `CBL-JOB-${Math.floor(100000 + Math.random() * 900000)}`);
+    } catch (err) {
+      console.error('Job application submission error:', err);
+      setSubmitError(
+        err.message || 'Failed to submit application. Please check your network and try again.'
+      );
+    } finally {
       setIsSubmitting(false);
-      const randomRef = `CBL-JOB-${Math.floor(100000 + Math.random() * 900000)}`;
-      setSubmittedRefCode(randomRef);
-    }, 1200);
+    }
   };
 
   const resetForm = () => {
@@ -180,6 +190,7 @@ export default function Careers() {
     setSelectedFile(null);
     setSubmittedRefCode(null);
     setFormErrors({});
+    setSubmitError('');
   };
 
   return (
@@ -383,6 +394,13 @@ export default function Careers() {
               </motion.div>
             ) : (
               <form onSubmit={handleFormSubmit} className="space-y-6 text-left">
+                {submitError && (
+                  <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5 shadow-xs">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-500" />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Full Name */}
                   <div className="space-y-1.5">

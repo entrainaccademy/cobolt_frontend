@@ -258,13 +258,13 @@ export default function Products() {
 
                     {/* Buy Pill Button */}
                     <div className="p-3.5 sm:p-4 pt-3">
-                      <Link
+                      {/* <Link
                         href={`/products/${product.id}`}
                         className="w-full py-2 sm:py-2.5 rounded-full border border-[#00A6E8]/40 hover:border-[#00A6E8] bg-white hover:bg-[#00A6E8] text-[#00A6E8] hover:text-white transition-all duration-200 flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold shadow-xs group/btn"
                       >
                         <ShoppingCart className="w-3.5 h-3.5 text-[#00A6E8] group-hover/btn:text-white transition-colors" />
                         <span>Buy</span>
-                      </Link>
+                      </Link> */}
                     </div>
                   </motion.div>
                 );

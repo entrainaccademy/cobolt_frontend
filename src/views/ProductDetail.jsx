@@ -181,43 +181,6 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
                 )}
               </div>
 
-              {/* Pricing Showcase Block */}
-              {(product.price || product.offerPrice) ? (
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-red-50/70 via-gray-50/40 to-white border border-red-100/80 flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider block mb-0.5">
-                      Commercial Machinery Pricing
-                    </span>
-                    <div className="flex items-baseline gap-2.5 font-sans">
-                      {product.offerPrice && product.price && Number(product.offerPrice) < Number(product.price) ? (
-                        <>
-                          <span className="text-2xl sm:text-3xl font-extrabold text-[#DE1D3A]">
-                            ₹{Number(product.offerPrice).toLocaleString('en-IN')}
-                          </span>
-                          <span className="text-sm sm:text-base text-gray-400 line-through">
-                            ₹{Number(product.price).toLocaleString('en-IN')}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-                          ₹{Number(product.offerPrice || product.price).toLocaleString('en-IN')}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {product.offerPrice && product.price && Number(product.offerPrice) < Number(product.price) && (
-                    <div className="text-right">
-                      <span className="inline-block text-xs font-bold text-green-700 bg-green-100 border border-green-200 px-3 py-1 rounded-full uppercase tracking-wider">
-                        {Math.round(((Number(product.price) - Number(product.offerPrice)) / Number(product.price)) * 100)}% OFF
-                      </span>
-                      <p className="text-[10px] text-gray-500 mt-1">
-                        Save ₹{(Number(product.price) - Number(product.offerPrice)).toLocaleString('en-IN')}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ) : null}
 
               {/* Description */}
               {product.description && (

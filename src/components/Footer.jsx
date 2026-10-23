@@ -9,11 +9,11 @@ import { SITE_CONFIG } from '../lib/siteConfig';
 
 export default function Footer() {
   const quickLinks = [
-    { name: 'Home', path: '/' },
+    // { name: 'Home', path: '/' },
     { name: 'Products', path: '/products' },
     { name: 'About Us', path: '/about' },
     { name: 'Services', path: '/services' },
-    { name: 'Blog', path: '/blog' },
+    // { name: 'Blog', path: '/blog' },
     { name: 'Careers', path: '/careers' },
     { name: 'Contact Us', path: '/contact' },
   ];

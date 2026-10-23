@@ -17,48 +17,17 @@ import {
   Shield,
   ChevronDown,
   ChevronRight,
-  UtensilsCrossed,
-  Snowflake,
-  Flame,
-  CookingPot,
-  Layers,
-  Factory,
-  Sparkles,
 } from 'lucide-react';
 
 import blacklogo from '../assets/blacklogotr.webp';
 
 const productCategories = [
-  {
-    name: 'Food Preparation Machines',
-    slug: 'food-preparation-machines',
-    image: '/category/food.png',
-  },
-  {
-    name: 'Refrigeration Items',
-    slug: 'refrigeration-items',
-    image: '/images/products/r3.jpg',
-  },
-  {
-    name: 'Baking Equipments',
-    slug: 'baking-equipments',
-    image: '/category/baking.png',
-  },
-  {
-    name: 'Cooking Equipments',
-    slug: 'cooking-equipments',
-    image: '/category/cooking.png',
-  },
-  {
-    name: 'Stainless Steel Fabrications',
-    slug: 'stainless-steel-fabrications',
-    image: '/category/stain.png',
-  },
-  {
-    name: 'Industrial And Food Service',
-    slug: 'industrial-and-food-service',
-    image: '/category/service.png',
-  },
+  { name: 'Food Preparation Machines', slug: 'food-preparation-machines' },
+  { name: 'Refrigeration Items', slug: 'refrigeration-items' },
+  { name: 'Baking Equipments', slug: 'baking-equipments' },
+  { name: 'Cooking Equipments', slug: 'cooking-equipments' },
+  { name: 'Stainless Steel Fabrications', slug: 'stainless-steel-fabrications' },
+  { name: 'Industrial And Food Service', slug: 'industrial-and-food-service' },
 ];
 
 export default function Navbar() {
@@ -270,37 +239,43 @@ export default function Navbar() {
                         </span>
                       </Link>
 
-                      {/* Categories Dropdown Popup - Visual Showcase Grid */}
+                      {/* Categories Dropdown Popup */}
                       {isProductsHovered && (
                         <div
-                          className="absolute top-full -left-28 lg:-left-44 pt-3.5 w-[620px] lg:w-[680px] z-50 animate-fade-in"
+                          className="absolute top-full -left-36 lg:-left-28 pt-3 w-[540px] lg:w-[580px] z-50 animate-fade-in"
                           onMouseEnter={handleMouseEnterProducts}
                           onMouseLeave={handleMouseLeaveProducts}
                         >
-                          <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-[0_25px_60px_-15px_rgba(15,23,42,0.18)] p-4 text-left ring-1 ring-black/[0.04]">
-                            {/* 3-Column Visual Machinery Grid */}
-                            <div className="grid grid-cols-3 gap-3">
+                          <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.16)] p-3.5 text-left">
+                            {/* 2-Column Categories Grid */}
+                            <div className="grid grid-cols-2 gap-1.5">
                               {productCategories.map((cat) => (
                                 <Link
                                   key={cat.slug}
                                   href={`/products/category/${cat.slug}`}
                                   onClick={() => setIsProductsHovered(false)}
-                                  className="group/item flex flex-col items-center p-3 rounded-xl bg-slate-50/70 hover:bg-white border border-slate-200/60 hover:border-[#DE1D3A]/40 hover:shadow-md transition-all duration-300 text-center"
+                                  className="group/item flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-red-50/80 transition-all duration-200 text-slate-700 hover:text-[#DE1D3A]"
                                 >
-                                  {/* Machinery Image Thumbnail */}
-                                  <div className="w-full h-24 rounded-lg bg-white flex items-center justify-center p-2 mb-2 overflow-hidden transition-transform duration-300 group-hover/item:scale-105">
-                                    <img
-                                      src={cat.image}
-                                      alt={cat.name}
-                                      className="max-h-full max-w-full object-contain"
-                                      loading="lazy"
-                                    />
-                                  </div>
-                                  <span className="font-semibold text-xs sm:text-[12.5px] text-slate-800 group-hover/item:text-[#DE1D3A] transition-colors leading-snug line-clamp-2">
+                                  <span className="font-display font-medium text-[13px] transition-colors truncate">
                                     {cat.name}
                                   </span>
+                                  <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-200 text-[#DE1D3A] flex-shrink-0 ml-1" />
                                 </Link>
                               ))}
+                            </div>
+
+                            {/* Dropdown Footer Callout */}
+                            <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between bg-slate-50/70 -mx-3.5 -mb-3.5 px-4 py-2.5 rounded-b-2xl">
+                              <span className="text-[11px] text-slate-500 font-sans">
+                                Need custom equipment specifications?
+                              </span>
+                              <Link
+                                href="/products"
+                                onClick={() => setIsProductsHovered(false)}
+                                className="text-[11px] font-bold text-[#DE1D3A] hover:underline flex items-center gap-1 font-sans"
+                              >
+                                View All Products →
+                              </Link>
                             </div>
                           </div>
                         </div>
@@ -441,38 +416,25 @@ export default function Navbar() {
                   </div>
 
                   {isMobileProductsOpen && (
-                    <div className="ml-3 pl-3 border-l-2 border-red-200/70 space-y-1.5 mt-2 mb-3">
+                    <div className="ml-4 pl-3 border-l-2 border-red-100 space-y-1 mt-1 mb-2">
                       {productCategories.map((cat) => (
                         <Link
                           key={cat.slug}
                           href={`/products/category/${cat.slug}`}
                           prefetch={false}
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex items-center gap-2.5 py-2 px-3 text-[12px] font-medium text-slate-700 hover:text-[#DE1D3A] hover:bg-red-50/80 rounded-xl transition-all"
+                          className="block py-2 px-3 text-[12px] font-medium text-slate-600 hover:text-[#DE1D3A] hover:bg-red-50/60 rounded-lg transition-colors truncate"
                         >
-                          {cat.image && (
-                            <div className="w-8 h-8 rounded-lg bg-white border border-slate-200/70 p-1 flex items-center justify-center shrink-0">
-                              <img
-                                src={cat.image}
-                                alt={cat.name}
-                                className="max-h-full max-w-full object-contain"
-                                loading="lazy"
-                              />
-                            </div>
-                          )}
-                          <span className="font-semibold text-slate-800 text-[12.5px] leading-tight truncate">
-                            {cat.name}
-                          </span>
+                          {cat.name}
                         </Link>
                       ))}
                       <Link
                         href="/products"
                         prefetch={false}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center justify-between py-2 px-3 text-[12px] font-bold text-[#DE1D3A] hover:bg-red-50 rounded-xl transition-colors mt-1"
+                        className="block py-2 px-3 text-[12px] font-bold text-[#DE1D3A] hover:bg-red-50/60 rounded-lg transition-colors"
                       >
-                        <span>View All Products</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
+                        All Products →
                       </Link>
                     </div>
                   )}

@@ -153,7 +153,7 @@ const companyStatistics = [
   },
   {
     id: 'installed',
-    number: '4000+',
+    number: '40,000+',
     label: 'Items Installed',
     title: '40,000+ Items Installed',
     description: 'Commercial equipment deployed across India',
@@ -459,9 +459,13 @@ export default function Home() {
           <div className="max-w-3xl text-left space-y-6">
          
 
-            {/* Concise Headline about Industrial Food Machinery */}
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#0F2B5C] leading-tight font-display tracking-tight drop-shadow-sm">
-              Commercial &amp; Industrial Food Machinery Solutions
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight font-display tracking-tight">
+              <span className="text-gray-900 [text-shadow:_0_2px_12px_rgba(0,0,0,0.22)]">
+                Commercial &amp; Industrial
+              </span>{' '}
+              <span className="text-[#DE1D3A] [text-shadow:_0_2px_12px_rgba(222,29,58,0.2)]">
+                Food Machinery Solutions
+              </span>
             </h1>
 
             {/* Short Supporting Line */}
@@ -473,7 +477,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-4 pt-4">
               <a
                 href="#categories"
-                className="px-5 py-2.5 bg-[#DE1D3A] hover:bg-[#B7152D] text-white text-sm font-semibold rounded-xl shadow-lg shadow-[#DE1D3A]/30 hover:shadow-xl transition-all duration-300 flex items-center group font-sans cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
+                className="px-5 py-2.5 bg-[#DE1D3A] hover:bg-[#B7152D] text-white text-sm font-semibold rounded-md shadow-lg shadow-[#DE1D3A]/30 hover:shadow-xl transition-all duration-300 flex items-center group font-sans cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
               >
                 <span>Explore Products</span>
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
@@ -481,7 +485,7 @@ export default function Home() {
 
               <Link
                 href="/contact"
-                className="px-5 py-2.5 bg-black/10 hover:bg-white/20 text-black text-sm font-semibold rounded-xl border border-white/30 hover:border-white/50 backdrop-blur-md transition-all duration-300 font-sans hover:-translate-y-0.5 active:translate-y-0"
+                className="px-5 py-2.5 bg-black/10 hover:bg-white/20 text-black text-sm font-semibold rounded-md  border-white/30 hover:border-white/50  transition-all duration-300 font-sans hover:-translate-y-0.5 active:translate-y-0"
               >
                 Contact Us
               </Link>
@@ -637,7 +641,7 @@ export default function Home() {
               <Link
                 key={cat.slug}
                 href={`/products/category/${cat.slug}`}
-                className="group bg-[#F8FAFC] rounded-3xl border border-gray-200/70 hover:border-red-200 hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
+                className="group bg-[#F8FAFC] rounded-3xl   border-gray-900   hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
               >
                 {/* Category Image */}
                 <div className="relative w-full rounded-2xl bg-[#F8FAFC] group-hover:from-red-50/40 group-hover:via-white group-hover:to-red-50/30 border border-gray-400/5 group-hover:border-red-100/80 h-36 sm:h-44 md:h-48 flex items-center justify-center p-3 sm:p-4 mb-3 transition-all duration-300 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_20px_rgba(222,29,58,0.06)] overflow-hidden">

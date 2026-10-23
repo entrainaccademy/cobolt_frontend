@@ -485,7 +485,7 @@ export default function Home() {
 
               <Link
                 href="/contact"
-                className="px-5 py-2.5 bg-black/10 hover:bg-white/20 text-black text-sm font-semibold rounded-md  border-white/30 hover:border-white/50  transition-all duration-300 font-sans hover:-translate-y-0.5 active:translate-y-0"
+                className="px-5 py-2.5 bg-white/30 md:bg-white/40 backdrop-blur-lg hover:bg-white/60 text-slate-800 hover:text-[#DE1D3A] text-sm font-semibold rounded-md  border-white/50 hover:border-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.04)] transition-all duration-300 font-sans hover:-translate-y-0.5 active:translate-y-0"
               >
                 Contact Us
               </Link>

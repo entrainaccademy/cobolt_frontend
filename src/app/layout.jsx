@@ -98,7 +98,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} ${sora.variable} ${poppins.variable} bg-white text-text font-sans antialiased selection:bg-accent/20 selection:text-primary overflow-x-hidden min-h-screen flex flex-col`}>
         <Navbar />
         <main className="flex-grow flex flex-col">

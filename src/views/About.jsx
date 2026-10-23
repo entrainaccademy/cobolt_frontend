@@ -62,11 +62,11 @@ export default function About() {
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 border-t border-[#E5E7EB]">
                 <div>
-                  <h4 className="font-display font-bold text-3xl text-[#DE1D3A]">2001</h4>
+                  <h4 className="font-display font-bold text-3xl text-[#DE1D3A]">2020</h4>
                   <p className="text-[#6B7280] text-xs mt-1 font-semibold uppercase tracking-wider">Inception Year</p>
                 </div>
                 <div>
-                  <h4 className="font-display font-bold text-3xl text-[#DE1D3A]">350+</h4>
+                  <h4 className="font-display font-bold text-3xl text-[#DE1D3A]">4000+</h4>
                   <p className="text-[#6B7280] text-xs mt-1 font-semibold uppercase tracking-wider">Machines Installed</p>
                 </div>
                 <div>
@@ -89,13 +89,7 @@ export default function About() {
                   className="w-full h-full object-cover object-center"
                 />
               </div>
-              <div className="absolute -top-6 -left-6 bg-[#FFFFFF] p-6 rounded-xl shadow-lg hidden sm:flex items-center gap-4 border border-[#E5E7EB]">
-                <Factory className="w-8 h-8 text-[#DE1D3A] flex-shrink-0" />
-                <div className="text-left">
-                  <h5 className="font-bold text-sm text-[#111827]">Industrial Hub</h5>
-                  <p className="text-[#6B7280] text-xs">Veemboor, Manjeri, Kerala</p>
-                </div>
-              </div>
+           
             </div>
           </div>
         </div>

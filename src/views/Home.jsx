@@ -153,7 +153,7 @@ const companyStatistics = [
   },
   {
     id: 'installed',
-    number: '40,000+',
+    number: '4000+',
     label: 'Items Installed',
     title: '40,000+ Items Installed',
     description: 'Commercial equipment deployed across India',
@@ -460,7 +460,7 @@ export default function Home() {
          
 
             {/* Concise Headline about Industrial Food Machinery */}
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 leading-tight font-display tracking-tight drop-shadow-md">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#0F2B5C] leading-tight font-display tracking-tight drop-shadow-sm">
               Commercial &amp; Industrial Food Machinery Solutions
             </h1>
 
@@ -493,8 +493,82 @@ export default function Home() {
       {/* =========================================================================
           SECTION 2: COMPANY STATISTICS / TRUST BAR
           ========================================================================= */}
-      <section className="py-5 sm:py-7 lg:py-8 bg-[#F8FAFC]  border-gray-200 text-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-5 sm:py-7 lg:py-8 bg-[#F8FAFC] border-gray-200 text-gray-900 overflow-hidden">
+        {/* Mobile View: Smooth Auto-Scrolling Marquee Animation (Same design, no card bg) */}
+        <div className="relative w-full sm:hidden overflow-hidden">
+          {/* Subtle edge fade gradients */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#F8FAFC] to-transparent z-10" />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#F8FAFC] to-transparent z-10" />
+
+          <div className="flex w-max animate-marquee will-change-transform py-1 select-none [animation-duration:22s] hover:[animation-play-state:paused] active:[animation-play-state:paused]">
+            {/* Primary Track */}
+            <div className="flex items-center flex-shrink-0">
+              {companyStatistics.map((stat) => {
+                const IconComponent = stat.icon;
+                return (
+                  <div
+                    key={`mobile-stat-${stat.id}`}
+                    className="flex-shrink-0 flex items-center gap-3.5 px-6"
+                  >
+                    {IconComponent && (
+                      <div className="shrink-0 flex items-center justify-center">
+                        <IconComponent
+                          className={`w-8 h-8 ${stat.iconColor || 'text-slate-700'}`}
+                          strokeWidth={1.75}
+                        />
+                      </div>
+                    )}
+                    <div className="min-w-0 flex flex-col justify-center text-left">
+                      <h3 className="font-bold text-sm text-gray-900 tracking-tight leading-snug whitespace-nowrap">
+                        {stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
+                      </h3>
+                      {stat.description && (
+                        <p className="text-xs text-gray-500 font-normal leading-normal mt-0.5 whitespace-nowrap">
+                          {stat.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Duplicate Track for Seamless Infinite Loop */}
+            <div className="flex items-center flex-shrink-0" aria-hidden="true">
+              {companyStatistics.map((stat) => {
+                const IconComponent = stat.icon;
+                return (
+                  <div
+                    key={`mobile-stat-dup-${stat.id}`}
+                    className="flex-shrink-0 flex items-center gap-3.5 px-6"
+                  >
+                    {IconComponent && (
+                      <div className="shrink-0 flex items-center justify-center">
+                        <IconComponent
+                          className={`w-8 h-8 ${stat.iconColor || 'text-slate-700'}`}
+                          strokeWidth={1.75}
+                        />
+                      </div>
+                    )}
+                    <div className="min-w-0 flex flex-col justify-center text-left">
+                      <h3 className="font-bold text-sm text-gray-900 tracking-tight leading-snug whitespace-nowrap">
+                        {stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
+                      </h3>
+                      {stat.description && (
+                        <p className="text-xs text-gray-500 font-normal leading-normal mt-0.5 whitespace-nowrap">
+                          {stat.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop / Tablet View: Grid Layout */}
+        <div className="hidden sm:block max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-gray-200">
             {companyStatistics.map((stat, idx) => {
               const IconComponent = stat.icon;
@@ -563,7 +637,7 @@ export default function Home() {
               <Link
                 key={cat.slug}
                 href={`/products/category/${cat.slug}`}
-                className="group bg-[#F8FAFC] rounded-3xl  border border-gray-100   hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
+                className="group bg-[#F8FAFC] rounded-3xl border border-gray-200/70 hover:border-red-200 hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 p-5 sm:p-6 flex flex-col items-center justify-between text-center hover:-translate-y-1.5 cursor-pointer"
               >
                 {/* Category Image */}
                 <div className="relative w-full rounded-2xl bg-[#F8FAFC] group-hover:from-red-50/40 group-hover:via-white group-hover:to-red-50/30 border border-gray-400/5 group-hover:border-red-100/80 h-36 sm:h-44 md:h-48 flex items-center justify-center p-3 sm:p-4 mb-3 transition-all duration-300 shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] group-hover:shadow-[0_8px_20px_rgba(222,29,58,0.06)] overflow-hidden">

@@ -31,10 +31,10 @@ export default function NotFound() {
             <Home className="w-4 h-4" /> Return to Home
           </Link>
           <Link
-            href="/products"
+            href="/#categories"
             className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2"
           >
-            <Search className="w-4 h-4" /> Browse Catalog
+            <Search className="w-4 h-4" /> Browse Categories
           </Link>
         </div>
       </div>

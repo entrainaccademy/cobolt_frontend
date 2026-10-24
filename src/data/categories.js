@@ -2,6 +2,7 @@ export const categoryDefinitions = [
   {
     name: 'Food Preparation Machines',
     slug: 'food-preparation-machines',
+    image: '/category/food.png',
     tagline: 'Precision Food Processing & Preparation Rigs',
     description: 'High-performance commercial food preparation machinery engineered for restaurants, bakeries, and food processing plants. Featuring heavy-duty planetary mixers, automatic dough dividers, potato cutters, kabab slicers, and commercial broast fryers.',
     metaDescription: 'Explore commercial food preparation machinery at Cobolt Machineries. Heavy-duty planetary mixers, dough dividers, slicers, and automatic fryers for restaurants and bakeries.',
@@ -15,6 +16,7 @@ export const categoryDefinitions = [
   {
     name: 'Refrigeration Items',
     slug: 'refrigeration-items',
+    image: '/images/products/r3.jpg',
     tagline: 'Heavy-Duty Commercial Cooling & Freezing Systems',
     description: 'Reliable commercial refrigeration equipment engineered for high-ambient tropical environments. Discover commercial soft serve ice cream machines, heavy-duty ice crushers, visi coolers, and snow ice machines with rapid temperature pull-down.',
     metaDescription: 'Commercial refrigeration systems by Cobolt Machineries in Kerala. Soft-serve ice cream machines, visi coolers, ice makers, and cold storage machinery.',
@@ -28,6 +30,7 @@ export const categoryDefinitions = [
   {
     name: 'Baking Equipments',
     slug: 'baking-equipments',
+    image: '/category/baking.png',
     tagline: 'Industrial Deck Ovens & Professional Bakery Machines',
     description: 'High-output commercial baking setups engineered for bakeries, pizzerias, and confectionery lines. Includes 1-deck to 3-deck gas baking ovens, stone-base pizza ovens, and electric deck ovens with digital heat control.',
     metaDescription: 'Industrial bakery machinery and commercial gas baking deck ovens by Cobolt Machineries. Gas ovens, electric pizza ovens, and precision temperature baking equipment.',
@@ -41,6 +44,7 @@ export const categoryDefinitions = [
   {
     name: 'Cooking Equipments',
     slug: 'cooking-equipments',
+    image: '/category/cooking.png',
     tagline: 'High-Output Ranges, Rotisseries & Commercial Fryers',
     description: 'Heavy-duty commercial cooking equipment built to withstand extreme production hours. Featuring multi-burner cooking ranges with standard ovens, high-capacity shawaya rotisserie machines, hamburger patty presses, and carnival equipment.',
     metaDescription: 'Commercial cooking equipment from Cobolt Machineries Kerala. 4-burner ranges with ovens, shawaya rotisserie machines, patty presses, and commercial kitchen setups.',
@@ -54,6 +58,7 @@ export const categoryDefinitions = [
   {
     name: 'Stainless Steel Fabrications',
     slug: 'stainless-steel-fabrications',
+    image: '/category/stain.png',
     tagline: 'Custom Food-Grade Stainless Steel Kitchen Infrastructure',
     description: 'Bespoke stainless steel commercial kitchen fabrications customized to your floorplan. Heavy-duty prep work tables with undershelves and overshelves, commercial exhaust hoods with grease filters, and breading tables with sifters.',
     metaDescription: 'Custom stainless steel commercial kitchen fabrications in Kerala. SS work tables, overshelves, exhaust hoods, sinks, and custom fabrication by Cobolt Machineries.',
@@ -67,6 +72,7 @@ export const categoryDefinitions = [
   {
     name: 'Industrial And Food Service',
     slug: 'industrial-and-food-service',
+    image: '/category/service.png',
     tagline: 'Commercial Warming Displays & Food Service Buffets',
     description: 'Commercial heating and food service presentation equipment. Precision bain-marie 3-pot chocolate warmers, thermostatically controlled commercial curved-glass warming displays, and buffet counter installations.',
     metaDescription: 'Commercial food warming displays and bain-marie warming equipment by Cobolt Machineries. Keep food hot, fresh, and appetizing for catering and bakeries.',

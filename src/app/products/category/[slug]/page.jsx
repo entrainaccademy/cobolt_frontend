@@ -2,10 +2,12 @@ import { notFound } from 'next/navigation';
 import CategoryDetail from '../../../../views/CategoryDetail';
 import JsonLd from '../../../../components/JsonLd';
 import { categoryDefinitions, getCategoryBySlug } from '../../../../data/categories';
+import { productsList } from '../../../../data/products';
+import { fetchProducts } from '../../../../lib/api';
 import { breadcrumbs } from '../../../../lib/schema';
 import { SITE_URL } from '../../../../lib/siteConfig';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   return categoryDefinitions.map((cat) => ({
@@ -65,6 +67,20 @@ export default async function CategoryPage({ params }) {
     notFound();
   }
 
+  // Fetch live products on the server so the definitive list is rendered on first paint
+  let products = null;
+  try {
+    products = await fetchProducts({ category: category.name });
+  } catch (e) {
+    // fallback
+  }
+
+  if (!products || products.length === 0) {
+    products = productsList.filter(
+      (p) => p.category?.toLowerCase() === category.name.toLowerCase()
+    );
+  }
+
   const categorySchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -79,11 +95,10 @@ export default async function CategoryPage({ params }) {
       <JsonLd
         data={breadcrumbs([
           ['Home', '/'],
-          ['Products', '/products'],
           [category.name, `/products/category/${category.slug}`],
         ])}
       />
-      <CategoryDetail category={category} />
+      <CategoryDetail key={category.slug} category={category} initialProducts={products} />
     </>
   );
 }

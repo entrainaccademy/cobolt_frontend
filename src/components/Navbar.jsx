@@ -22,12 +22,30 @@ import {
 import blacklogo from '../assets/blacklogotr.webp';
 
 const productCategories = [
-  { name: 'Food Preparation Machines', slug: 'food-preparation-machines' },
-  { name: 'Refrigeration Items', slug: 'refrigeration-items' },
-  { name: 'Baking Equipments', slug: 'baking-equipments' },
-  { name: 'Cooking Equipments', slug: 'cooking-equipments' },
-  { name: 'Stainless Steel Fabrications', slug: 'stainless-steel-fabrications' },
-  { name: 'Industrial And Food Service', slug: 'industrial-and-food-service' },
+  {
+    name: 'Food Preparation Machines',
+    slug: 'food-preparation-machines',
+  },
+  {
+    name: 'Refrigeration Items',
+    slug: 'refrigeration-items',
+  },
+  {
+    name: 'Baking Equipments',
+    slug: 'baking-equipments',
+  },
+  {
+    name: 'Cooking Equipments',
+    slug: 'cooking-equipments',
+  },
+  {
+    name: 'Stainless Steel Fabrications',
+    slug: 'stainless-steel-fabrications',
+  },
+  {
+    name: 'Industrial And Food Service',
+    slug: 'industrial-and-food-service',
+  },
 ];
 
 export default function Navbar() {
@@ -92,7 +110,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', path: '/' },
     // { name: 'Shop', path: '/products' },
-    { name: 'Products', path: '/products' },
+    { name: 'Products', path: '/#categories' },
     { name: 'About Us', path: '/about' },
     { name: 'Services', path: '/services' },
     { name: 'Blog', path: '/blog' },
@@ -194,10 +212,8 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-1.5 lg:gap-2">
               {navLinks.map((link) => {
                 const isActive =
-                  link.name === 'Shop'
-                    ? pathname === '/products'
-                    : link.name === 'Products'
-                    ? pathname.startsWith('/products/category')
+                  link.name === 'Products'
+                    ? pathname.startsWith('/products/category') || pathname.startsWith('/products/')
                     : pathname === link.path;
 
                 // Products link with category popup dropdown
@@ -211,8 +227,17 @@ export default function Navbar() {
                     >
                       <Link
                         href={link.path}
-                        prefetch={false}
-                        className={`px-4 py-2 text-[13px] font-sans font-medium uppercase tracking-wider transition-all duration-300 relative group flex items-center gap-1 ${
+                        onClick={(e) => {
+                          setIsProductsHovered(false);
+                          if (pathname === '/') {
+                            e.preventDefault();
+                            const el = document.getElementById('categories');
+                            if (el) {
+                              el.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }
+                        }}
+                        className={`px-4 py-2 text-[13px] font-sans font-medium uppercase tracking-wider transition-all duration-300 relative group flex items-center gap-1 cursor-pointer ${
                           isActive || isProductsHovered
                             ? 'text-[#DE1D3A] font-semibold'
                             : 'text-slate-800 hover:text-[#DE1D3A] font-medium'
@@ -242,11 +267,11 @@ export default function Navbar() {
                       {/* Categories Dropdown Popup */}
                       {isProductsHovered && (
                         <div
-                          className="absolute top-full -left-36 lg:-left-28 pt-3 w-[540px] lg:w-[580px] z-50 animate-fade-in"
+                          className="absolute top-full -left-28 lg:-left-24 pt-3.5 w-[520px] lg:w-[560px] z-50 animate-fade-in"
                           onMouseEnter={handleMouseEnterProducts}
                           onMouseLeave={handleMouseLeaveProducts}
                         >
-                          <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.16)] p-3.5 text-left">
+                          <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-[0_20px_50px_rgba(15,23,42,0.16)] p-3.5 text-left ring-1 ring-black/[0.04]">
                             {/* 2-Column Categories Grid */}
                             <div className="grid grid-cols-2 gap-1.5">
                               {productCategories.map((cat) => (
@@ -263,20 +288,6 @@ export default function Navbar() {
                                 </Link>
                               ))}
                             </div>
-
-                            {/* Dropdown Footer Callout */}
-                            <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between bg-slate-50/70 -mx-3.5 -mb-3.5 px-4 py-2.5 rounded-b-2xl">
-                              <span className="text-[11px] text-slate-500 font-sans">
-                                Need custom equipment specifications?
-                              </span>
-                              <Link
-                                href="/products"
-                                onClick={() => setIsProductsHovered(false)}
-                                className="text-[11px] font-bold text-[#DE1D3A] hover:underline flex items-center gap-1 font-sans"
-                              >
-                                View All Products →
-                              </Link>
-                            </div>
                           </div>
                         </div>
                       )}
@@ -288,7 +299,6 @@ export default function Navbar() {
                   <Link
                     key={link.name}
                     href={link.path}
-                    prefetch={false}
                     className={`px-4 py-2 text-[13px] font-sans font-medium uppercase tracking-wider transition-all duration-300 relative group block ${
                       isActive
                         ? 'text-[#DE1D3A] font-semibold'
@@ -373,10 +383,8 @@ export default function Navbar() {
         <div className="space-y-2 text-left relative z-10 flex-grow mt-6 overflow-y-auto">
           {navLinks.map((link, idx) => {
             const isActive =
-              link.name === 'Shop'
-                ? pathname === '/products'
-                : link.name === 'Products'
-                ? pathname.startsWith('/products/category')
+              link.name === 'Products'
+                ? pathname.startsWith('/products/category') || pathname.startsWith('/products/')
                 : pathname === link.path;
 
             // Mobile Products with Collapsible Categories
@@ -390,21 +398,20 @@ export default function Navbar() {
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <Link
-                      href={link.path}
-                      prefetch={false}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex-grow py-3.5 px-4 text-xs font-poppins font-bold uppercase tracking-widest rounded-xl transition-all duration-300 ${
+                    <button
+                      type="button"
+                      onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                      className={`flex-grow text-left py-3.5 px-4 text-xs font-poppins font-bold uppercase tracking-widest rounded-xl transition-all duration-300 cursor-pointer ${
                         isActive
                           ? 'text-[#DE1D3A] bg-[#DE1D3A]/10 border-l-4 border-[#DE1D3A] pl-5'
                           : 'text-slate-700 hover:text-[#DE1D3A] hover:bg-slate-50'
                       }`}
                     >
                       {link.name}
-                    </Link>
+                    </button>
                     <button
                       onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
-                      className="p-3 text-slate-500 hover:text-[#DE1D3A] transition-colors"
+                      className="p-3 text-slate-500 hover:text-[#DE1D3A] transition-colors cursor-pointer"
                       aria-label="Toggle categories"
                     >
                       <ChevronDown
@@ -421,21 +428,12 @@ export default function Navbar() {
                         <Link
                           key={cat.slug}
                           href={`/products/category/${cat.slug}`}
-                          prefetch={false}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className="block py-2 px-3 text-[12px] font-medium text-slate-600 hover:text-[#DE1D3A] hover:bg-red-50/60 rounded-lg transition-colors truncate"
                         >
                           {cat.name}
                         </Link>
                       ))}
-                      <Link
-                        href="/products"
-                        prefetch={false}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block py-2 px-3 text-[12px] font-bold text-[#DE1D3A] hover:bg-red-50/60 rounded-lg transition-colors"
-                      >
-                        All Products →
-                      </Link>
                     </div>
                   )}
                 </div>
@@ -452,7 +450,6 @@ export default function Navbar() {
               >
                 <Link
                   href={link.path}
-                  prefetch={false}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`block py-3.5 px-4 text-xs font-poppins font-bold uppercase tracking-widest rounded-xl transition-all duration-300 ${
                     isActive

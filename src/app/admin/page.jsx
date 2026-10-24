@@ -593,11 +593,11 @@ export default function AdminPage() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/products"
+              href="/#categories"
               target="_blank"
               className="hidden sm:inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-[#DE1D3A] font-medium transition-colors"
             >
-              <span>View Public Catalog</span>
+              <span>View Machinery Categories</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </Link>
 

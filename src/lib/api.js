@@ -2,13 +2,19 @@ const DEFAULT_BACKEND_URL = 'https://cobolt-backend.onrender.com';
 
 export const getBackendUrl = () => {
   if (typeof window !== 'undefined') {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    }
     return process.env.NEXT_PUBLIC_API_URL || DEFAULT_BACKEND_URL;
+  }
+  if (process.env.NODE_ENV === 'development') {
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   }
   return process.env.NEXT_PUBLIC_API_URL || DEFAULT_BACKEND_URL;
 };
 
 /**
- * Fetch list of products with optional query parameters
+ * Fetch list of products with optional query parameters with fast timeout fallback
  */
 export async function fetchProducts({ search = '', category = '', isAvailable, isFeatured } = {}) {
   try {
@@ -21,34 +27,43 @@ export async function fetchProducts({ search = '', category = '', isAvailable, i
     const backendUrl = getBackendUrl();
     const url = `${backendUrl}/api/products${params.toString() ? `?${params.toString()}` : ''}`;
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+
     const res = await fetch(url, {
-      cache: 'no-store',
+      signal: controller.signal,
+      next: { revalidate: 60 },
       headers: { Accept: 'application/json' },
     });
+    clearTimeout(timeoutId);
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch products: ${res.statusText}`);
+      return null;
     }
 
     const data = await res.json();
     return data.products || [];
   } catch (error) {
-    console.error('Error fetching products from backend:', error.message);
     return null;
   }
 }
 
 /**
- * Fetch a single product by its slug id or MongoDB _id
+ * Fetch a single product by its slug id or MongoDB _id with fast timeout fallback
  */
 export async function fetchProductById(id) {
   try {
     if (!id) return null;
     const backendUrl = getBackendUrl();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+
     const res = await fetch(`${backendUrl}/api/products/${encodeURIComponent(id)}`, {
-      cache: 'no-store',
+      signal: controller.signal,
+      next: { revalidate: 60 },
       headers: { Accept: 'application/json' },
     });
+    clearTimeout(timeoutId);
 
     if (!res.ok) {
       return null;
@@ -60,7 +75,6 @@ export async function fetchProductById(id) {
       relatedProducts: data.relatedProducts || [],
     };
   } catch (error) {
-    console.error(`Error fetching product '${id}' from backend:`, error.message);
     return null;
   }
 }

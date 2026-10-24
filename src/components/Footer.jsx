@@ -10,7 +10,7 @@ import { SITE_CONFIG } from '../lib/siteConfig';
 export default function Footer() {
   const quickLinks = [
     // { name: 'Home', path: '/' },
-    { name: 'Products', path: '/products' },
+    { name: 'Products', path: '/#categories' },
     { name: 'About Us', path: '/about' },
     { name: 'Services', path: '/services' },
     // { name: 'Blog', path: '/blog' },

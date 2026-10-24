@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import ProductDetail from '../../../views/ProductDetail';
 import JsonLd from '../../../components/JsonLd';
@@ -5,8 +6,41 @@ import { productsList, getProductById, getRelatedProducts } from '../../../data/
 import { fetchProductById, fetchProducts } from '../../../lib/api';
 import { productSchema, breadcrumbs } from '../../../lib/schema';
 import { SITE_CONFIG, SITE_URL } from '../../../lib/siteConfig';
+import { categoryDefinitions } from '../../../data/categories';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
+/**
+ * Deduplicated, cached product loader
+ * 1. Checks local static catalog for instant 0ms retrieval
+ * 2. If not found in local catalog (e.g. added dynamically via admin MongoDB), queries backend
+ */
+const loadProductData = cache(async (id) => {
+  if (!id) return { product: null, relatedProducts: [] };
+
+  // 1. Instant local lookup
+  const localProduct = getProductById(id);
+  if (localProduct) {
+    const related = getRelatedProducts(localProduct.id, localProduct.category, 3);
+    return { product: localProduct, relatedProducts: related };
+  }
+
+  // 2. Dynamic product from backend API
+  try {
+    const res = await fetchProductById(id);
+    if (res?.product) {
+      const related =
+        res.relatedProducts && res.relatedProducts.length > 0
+          ? res.relatedProducts
+          : getRelatedProducts(res.product.id || id, res.product.category, 3);
+      return { product: res.product, relatedProducts: related };
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return { product: null, relatedProducts: [] };
+});
 
 export async function generateStaticParams() {
   try {
@@ -24,20 +58,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  let product = null;
-
-  try {
-    const res = await fetchProductById(id);
-    if (res?.product) {
-      product = res.product;
-    }
-  } catch (e) {
-    // fallback
-  }
-
-  if (!product) {
-    product = getProductById(id);
-  }
+  const { product } = await loadProductData(id);
 
   if (!product) {
     return {
@@ -88,38 +109,21 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductDetailPage({ params }) {
   const { id } = await params;
-  let product = null;
-  let relatedProducts = [];
-
-  try {
-    const res = await fetchProductById(id);
-    if (res?.product) {
-      product = res.product;
-      relatedProducts = res.relatedProducts || [];
-    }
-  } catch (e) {
-    // fallback
-  }
-
-  if (!product) {
-    product = getProductById(id);
-    if (product) {
-      relatedProducts = getRelatedProducts(product.id, product.category, 3);
-    }
-  }
+  const { product, relatedProducts } = await loadProductData(id);
 
   if (!product) {
     notFound();
   }
 
-  if (relatedProducts.length === 0) {
-    relatedProducts = getRelatedProducts(product.id, product.category, 3);
-  }
+  const catSlug = categoryDefinitions.find(
+    (c) => c.name.toLowerCase() === product.category?.toLowerCase()
+  )?.slug;
+  const categoryPath = catSlug ? `/products/category/${catSlug}` : '/#categories';
 
   const jsonLdProduct = productSchema(product);
   const jsonLdBreadcrumb = breadcrumbs([
     ['Home', '/'],
-    ['Products', '/products'],
+    [product.category || 'Machineries', categoryPath],
     [product.name, `/products/${product.id}`],
   ]);
 

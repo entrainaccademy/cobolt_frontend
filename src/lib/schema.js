@@ -140,7 +140,7 @@ export const catalogItemListSchema = {
   '@type': 'ItemList',
   name: 'Cobolt Machineries Product Catalog',
   description: 'Industrial machinery, commercial food processing equipment, and stainless steel fabrication catalog.',
-  url: `${SITE}/products`,
+  url: `${SITE}/#categories`,
   numberOfItems: productsList.length,
   itemListElement: productsList.map((p, i) => ({
     '@type': 'ListItem',

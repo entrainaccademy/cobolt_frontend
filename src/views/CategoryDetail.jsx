@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight, Home as HomeIcon, ShoppingCart, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageWrapper from '../components/PageWrapper';
 import { productsList } from '../data/products';
-import { fetchProducts } from '../lib/api';
 
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
@@ -60,67 +59,67 @@ const getPriceDisplay = (product, idx) => {
   };
 };
 
-export default function CategoryDetail({ category }) {
-  const fallback = productsList.filter(
-    (p) => p.category?.toLowerCase() === category.name.toLowerCase()
-  );
-  const [products, setProducts] = useState(fallback);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-    async function load() {
-      try {
-        const live = await fetchProducts({ category: category.name });
-        if (isMounted && Array.isArray(live) && live.length > 0) {
-          setProducts(live);
-        }
-      } catch (err) {
-        console.error('Failed to load category products:', err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
+export default function CategoryDetail({ category, initialProducts = [] }) {
+  const products = React.useMemo(() => {
+    if (Array.isArray(initialProducts) && initialProducts.length > 0) {
+      return initialProducts;
     }
-    load();
-    return () => {
-      isMounted = false;
-    };
-  }, [category.name]);
+    return productsList.filter(
+      (p) => p.category?.toLowerCase() === category?.name?.toLowerCase()
+    );
+  }, [category?.name, initialProducts]);
 
   return (
     <PageWrapper>
       {/* Category Hero / Header */}
-      
+      <section className="relative pt-32 pb-12 sm:pt-36 sm:pb-14 bg-[#F8FAFC] border-b border-[#E5E7EB]/60 overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000004_1px,transparent_1px),linear-gradient(to_bottom,#00000004_1px,transparent_1px)] bg-[size:3rem_3rem]" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-left">
+          {/* Breadcrumb */}
+          <nav className="flex items-center space-x-2 text-xs text-slate-500 mb-2 font-sans">
+            <Link href="/" className="hover:text-[#DE1D3A] transition-colors">
+              Home
+            </Link>
+            <ChevronRight className="w-3 h-3 text-slate-400" />
+            <span className="text-slate-900 font-semibold truncate max-w-[200px] sm:max-w-none">
+              {category.name}
+            </span>
+          </nav>
+
+         
+        </div>
+      </section>
 
       {/* Category Products Grid */}
-      <section className="py-12 sm:py-16 mt-10 bg-[#FFFFFF] min-h-[500px]">
+      <section className="py-10 sm:py-14 bg-[#F8FAFC] min-h-[500px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100 text-left">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-[#111827] font-display">
-                Available Models & Equipment
+                Available Models &amp; Equipment
               </h2>
               <p className="text-xs sm:text-sm text-gray-500 mt-1">
                 Showing {products.length} {products.length === 1 ? 'machinery' : 'machineries'} in this category
               </p>
             </div>
             <Link
-              href="/products"
-              className="text-xs font-bold text-[#DE1D3A] hover:underline flex items-center gap-1"
+              href="/#categories"
+              className="text-xs font-bold text-[#DE1D3A] hover:underline flex items-center gap-1 font-sans"
             >
               <span>View All Categories</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          {products.length === 0 && !loading ? (
+          {products.length === 0 ? (
             <div className="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
               <p className="text-gray-500 text-sm">No machineries currently listed under this category.</p>
               <Link
-                href="/products"
-                className="mt-3 inline-block text-xs font-bold text-[#DE1D3A] hover:underline"
+                href="/#categories"
+                className="mt-3 inline-block text-xs font-bold text-[#DE1D3A] hover:underline font-sans"
               >
-                Browse all catalog items
+                Browse all categories
               </Link>
             </div>
           ) : (
@@ -134,10 +133,9 @@ export default function CategoryDetail({ category }) {
                   <motion.div
                     layout
                     key={uniqueKey}
-                    initial={{ opacity: 0, scale: 0.98 }}
+                    initial={false}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.2 }}
                     className="group bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between overflow-hidden hover:-translate-y-1"
                   >
                     <div>

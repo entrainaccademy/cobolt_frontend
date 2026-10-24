@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
+import { categoryDefinitions } from '../data/categories';
 
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
@@ -23,6 +24,11 @@ const getSrc = (img) => {
 
 export default function ProductDetail({ product, relatedProducts = [] }) {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  // Reset photo thumbnail selection whenever product ID changes
+  React.useEffect(() => {
+    setSelectedPhoto(null);
+  }, [product?.id]);
 
   const formattedSpecs = useMemo(() => {
     if (!product?.specs) return [];
@@ -68,6 +74,18 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
     return [];
   }, [product?.specs]);
   
+  const categoryInfo = useMemo(() => {
+    if (!product?.category) return null;
+    const catName = product.category.toLowerCase().trim();
+    return (
+      categoryDefinitions.find(
+        (c) => c.slug === catName || c.name.toLowerCase() === catName
+      ) || null
+    );
+  }, [product?.category]);
+
+  const categoryUrl = categoryInfo ? `/products/category/${categoryInfo.slug}` : '/#categories';
+
   if (!product) {
     return (
       <PageWrapper>
@@ -77,10 +95,10 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
             The requested machinery does not exist in our catalog.
           </p>
           <Link
-            href="/products"
+            href="/#categories"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#DE1D3A] text-white font-medium text-sm rounded-lg hover:bg-[#B7152D] transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Products
+            <ArrowLeft className="w-4 h-4" /> Back to Categories
           </Link>
         </div>
       </PageWrapper>
@@ -99,8 +117,8 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
                 Home
               </Link>
               <ChevronRight className="w-3 h-3 text-gray-400" />
-              <Link href="/products" className="hover:text-[#DE1D3A] transition-colors">
-                Products
+              <Link href={categoryUrl} className="hover:text-[#DE1D3A] transition-colors">
+                {product.category || 'Machineries'}
               </Link>
               <ChevronRight className="w-3 h-3 text-gray-400" />
               <span className="text-gray-900 font-medium truncate max-w-[180px] sm:max-w-xs">
@@ -109,10 +127,10 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
             </nav>
 
             <Link
-              href="/products"
+              href={categoryUrl}
               className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-[#DE1D3A] transition-colors"
             >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to Catalog
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to {categoryInfo ? categoryInfo.name : 'Categories'}
             </Link>
           </div>
 
@@ -243,7 +261,7 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
                   Related Products
                 </h2>
                 <Link
-                  href="/products"
+                  href={categoryUrl}
                   className="text-xs font-semibold text-[#DE1D3A] hover:underline"
                 >
                   View All

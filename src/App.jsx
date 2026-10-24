@@ -9,7 +9,6 @@ import Footer from './components/Footer';
 // Pages
 import Home from './pages/Home';
 import About from './pages/About';
-import Products from './pages/Products';
 import Services from './pages/Services';
 import Blog from './pages/Blog';
 import Gallery from './pages/Gallery';
@@ -39,7 +38,6 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/products" element={<Products />} />
         <Route path="/services" element={<Services />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/gallery" element={<Gallery />} />

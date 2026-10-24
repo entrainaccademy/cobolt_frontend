@@ -38,6 +38,20 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/products',
+        destination: '/#categories',
+        permanent: false,
+      },
+      {
+        source: '/categories',
+        destination: '/#categories',
+        permanent: false,
+      },
+    ];
+  },
   async rewrites() {
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://cobolt-backend.onrender.com';
     return [

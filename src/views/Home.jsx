@@ -163,6 +163,7 @@ const companyStatistics = [
   {
     id: 'support',
     label: 'After-Sales Support',
+    
     title: 'After-Sales Support',
     description: 'Technical assistance available',
     icon: Headphones,
@@ -236,6 +237,7 @@ function getInitialAnimatedNumbers(stats) {
   stats.forEach((stat) => {
     const parsed = parseStatNumber(stat.number);
     if (!parsed) {
+      
       initial[stat.id] = null;
     } else {
       initial[stat.id] = formatCounterValue(parsed, 0);
@@ -680,16 +682,16 @@ export default function Home() {
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight font-display tracking-tight">
               <span className="text-gray-900 [text-shadow:_0_2px_12px_rgba(0,0,0,0.22)]">
-                Commercial &amp; Industrial
+                Commercial Kitchen Equipment
               </span>{' '}
               <span className="text-[#DE1D3A] [text-shadow:_0_2px_12px_rgba(222,29,58,0.2)]">
-                Food Machinery Solutions
+                Manufacturer &amp; Supplier
               </span>
             </h1>
 
             {/* Short Supporting Line */}
             <p className="text-sm sm:text-base md:text-lg text-slate-900 leading-relaxed font-sans max-w-2xl drop-shadow-sm font-normal">
-              Equip your restaurant, bakery, cloud kitchen, or processing plant with heavy-duty machinery engineered for high continuous output, maximum safety, and precision.
+              Equip your kitchen, restaurant, hotel, café, or bakery with professional cooking, refrigeration, food preparation, and stainless steel equipment from Cobolt Machineries.
             </p>
 
             {/* Clear Action Buttons */}

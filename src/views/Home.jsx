@@ -171,6 +171,108 @@ const companyStatistics = [
 ];
 
 // =========================================================================
+// COMPANY STATISTICS ANIMATION HELPERS
+// =========================================================================
+
+// Parses raw number strings like '7+', '3000+', '40,000+', preserving prefix, commas, and suffixes
+function parseStatNumber(numStr) {
+  if (numStr === undefined || numStr === null) return null;
+  const str = String(numStr).trim();
+  if (!str) return null;
+
+  const match = str.match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
+  if (!match) return null;
+
+  const prefix = match[1] || '';
+  const numRaw = match[2];
+  const suffix = match[3] || '';
+  const hasComma = numRaw.includes(',');
+  const decimalParts = numRaw.split('.');
+  const decimalPlaces = decimalParts.length > 1 ? decimalParts[1].length : 0;
+  const numericValue = parseFloat(numRaw.replace(/,/g, ''));
+
+  if (Number.isNaN(numericValue)) return null;
+
+  return {
+    raw: str,
+    prefix,
+    numericValue,
+    hasComma,
+    decimalPlaces,
+    suffix,
+  };
+}
+
+// Formats counter value during animation (starts at 0, counts smoothly up to target, attaches suffix on finish)
+function formatCounterValue(parsed, progress) {
+  if (!parsed) return '';
+  if (progress >= 1) {
+    return parsed.raw;
+  }
+
+  const current = progress * parsed.numericValue;
+
+  if (parsed.decimalPlaces > 0) {
+    const formatted = parsed.hasComma
+      ? current.toLocaleString('en-US', {
+          minimumFractionDigits: parsed.decimalPlaces,
+          maximumFractionDigits: parsed.decimalPlaces,
+        })
+      : current.toFixed(parsed.decimalPlaces);
+    return `${parsed.prefix}${formatted}`;
+  }
+
+  const intVal = Math.min(Math.round(current), parsed.numericValue);
+  const formatted = parsed.hasComma
+    ? intVal.toLocaleString('en-US')
+    : String(intVal);
+
+  return `${parsed.prefix}${formatted}`;
+}
+
+// Generates initial state starting at 0 for numeric statistics
+function getInitialAnimatedNumbers(stats) {
+  const initial = {};
+  stats.forEach((stat) => {
+    const parsed = parseStatNumber(stat.number);
+    if (!parsed) {
+      initial[stat.id] = null;
+    } else {
+      initial[stat.id] = formatCounterValue(parsed, 0);
+    }
+  });
+  return initial;
+}
+
+// Renders the statistic title with the animated number while preserving all surrounding text/label
+function renderStatisticTitle(stat, currentDisplayNumber, isFinished) {
+  if (!stat.number) {
+    return stat.title || stat.label || '';
+  }
+
+  const numToDisplay = isFinished ? stat.number : (currentDisplayNumber ?? stat.number);
+
+  if (stat.title && stat.title.includes(stat.number)) {
+    const parts = stat.title.split(stat.number);
+    return (
+      <>
+        {parts[0]}
+        <span className="tabular-nums">{numToDisplay}</span>
+        {parts.slice(1).join(stat.number)}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <span className="tabular-nums">{numToDisplay}</span>
+      {stat.label ? ` ${stat.label}` : ''}
+    </>
+  );
+}
+
+
+// =========================================================================
 // 3. PRODUCT CATEGORIES (5 SPECIFIED CATEGORIES WITH IMAGES & LINKS)
 // =========================================================================
 const categoryCards = [
@@ -309,6 +411,14 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Company Statistics Counting Animation State
+  const statsSectionRef = useRef(null);
+  const [hasStatsAnimated, setHasStatsAnimated] = useState(false);
+  const [isStatsFinished, setIsStatsFinished] = useState(false);
+  const [animatedNumbers, setAnimatedNumbers] = useState(() =>
+    getInitialAnimatedNumbers(companyStatistics)
+  );
+
   const mobileVideoRef = useRef(null);
   const desktopVideoRef = useRef(null);
 
@@ -321,6 +431,115 @@ export default function Home() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Listen for reduced motion preference changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      setHasStatsAnimated(true);
+      setIsStatsFinished(true);
+    }
+    const handleMotionChange = (e) => {
+      if (e.matches) {
+        setHasStatsAnimated(true);
+        setIsStatsFinished(true);
+      }
+    };
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleMotionChange);
+      return () => mediaQuery.removeEventListener('change', handleMotionChange);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handleMotionChange);
+      return () => mediaQuery.removeListener(handleMotionChange);
+    }
+  }, []);
+
+  // IntersectionObserver: trigger counting animation once when statistics section enters viewport
+  useEffect(() => {
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      setHasStatsAnimated(true);
+      setIsStatsFinished(true);
+      return;
+    }
+
+    const element = statsSectionRef.current;
+    if (!element) return;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setHasStatsAnimated(true);
+      setIsStatsFinished(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasStatsAnimated(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.15,
+      }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  // Smooth counting animation (1.5 seconds with ease-out cubic curve)
+  useEffect(() => {
+    if (!hasStatsAnimated || isStatsFinished) return;
+
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      setIsStatsFinished(true);
+      return;
+    }
+
+    let startTime = null;
+    let rafId = null;
+    const duration = 1500; // 1.5 seconds
+
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const rawProgress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic: smooth deceleration into final figure
+      const easedProgress = 1 - Math.pow(1 - rawProgress, 3);
+
+      const updated = {};
+      companyStatistics.forEach((stat) => {
+        const parsed = parseStatNumber(stat.number);
+        if (!parsed) {
+          updated[stat.id] = null;
+        } else if (rawProgress >= 1) {
+          updated[stat.id] = parsed.raw;
+        } else {
+          updated[stat.id] = formatCounterValue(parsed, easedProgress);
+        }
+      });
+
+      setAnimatedNumbers(updated);
+
+      if (rawProgress < 1) {
+        rafId = requestAnimationFrame(step);
+      } else {
+        setIsStatsFinished(true);
+      }
+    };
+
+    rafId = requestAnimationFrame(step);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [hasStatsAnimated, isStatsFinished]);
 
   // Ensure autoplay starts smoothly and handles mobile browser policies (power saver, HEVC, etc.)
   useEffect(() => {
@@ -497,83 +716,35 @@ export default function Home() {
       {/* =========================================================================
           SECTION 2: COMPANY STATISTICS / TRUST BAR
           ========================================================================= */}
-      <section className="py-5 sm:py-7 lg:py-8 bg-[#F8FAFC] border-gray-200 text-gray-900 overflow-hidden">
-        {/* Mobile View: Smooth Auto-Scrolling Marquee Animation (Same design, no card bg) */}
-        <div className="relative w-full sm:hidden overflow-hidden">
-          {/* Subtle edge fade gradients */}
-          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#F8FAFC] to-transparent z-10" />
-          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#F8FAFC] to-transparent z-10" />
-
-          <div className="flex w-max animate-marquee will-change-transform py-1 select-none [animation-duration:22s] hover:[animation-play-state:paused] active:[animation-play-state:paused]">
-            {/* Primary Track */}
-            <div className="flex items-center flex-shrink-0">
-              {companyStatistics.map((stat) => {
-                const IconComponent = stat.icon;
-                return (
-                  <div
-                    key={`mobile-stat-${stat.id}`}
-                    className="flex-shrink-0 flex items-center gap-3.5 px-6"
-                  >
-                    {IconComponent && (
-                      <div className="shrink-0 flex items-center justify-center">
-                        <IconComponent
-                          className={`w-8 h-8 ${stat.iconColor || 'text-slate-700'}`}
-                          strokeWidth={1.75}
-                        />
-                      </div>
-                    )}
-                    <div className="min-w-0 flex flex-col justify-center text-left">
-                      <h3 className="font-bold text-sm text-gray-900 tracking-tight leading-snug whitespace-nowrap">
-                        {stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
-                      </h3>
-                      {stat.description && (
-                        <p className="text-xs text-gray-500 font-normal leading-normal mt-0.5 whitespace-nowrap">
-                          {stat.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Duplicate Track for Seamless Infinite Loop */}
-            <div className="flex items-center flex-shrink-0" aria-hidden="true">
-              {companyStatistics.map((stat) => {
-                const IconComponent = stat.icon;
-                return (
-                  <div
-                    key={`mobile-stat-dup-${stat.id}`}
-                    className="flex-shrink-0 flex items-center gap-3.5 px-6"
-                  >
-                    {IconComponent && (
-                      <div className="shrink-0 flex items-center justify-center">
-                        <IconComponent
-                          className={`w-8 h-8 ${stat.iconColor || 'text-slate-700'}`}
-                          strokeWidth={1.75}
-                        />
-                      </div>
-                    )}
-                    <div className="min-w-0 flex flex-col justify-center text-left">
-                      <h3 className="font-bold text-sm text-gray-900 tracking-tight leading-snug whitespace-nowrap">
-                        {stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
-                      </h3>
-                      {stat.description && (
-                        <p className="text-xs text-gray-500 font-normal leading-normal mt-0.5 whitespace-nowrap">
-                          {stat.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+      <section
+        ref={statsSectionRef}
+        className="py-3 sm:py-7 lg:py-8 bg-[#F8FAFC] border-gray-200 text-gray-900 overflow-hidden"
+      >
+        {/* Mobile View: Clean single flex-row with count and title (no bg, no borders, no icons) */}
+        <div className="sm:hidden px-3 py-2 flex flex-row items-center justify-between text-center max-w-md mx-auto">
+          {companyStatistics
+            .filter((stat) => stat.id !== 'support')
+            .map((stat) => (
+              <div
+                key={`mobile-stat-${stat.id}`}
+                className="flex-1 flex flex-col items-center justify-center text-center px-1"
+              >
+                <span className="font-medium text-lg xs:text-xl text-slate-900 tracking-tight leading-none tabular-nums">
+                  {animatedNumbers[stat.id] ?? stat.number}
+                </span>
+                <h3
+                  className="font-normal text-[11px] xs:text-xs text-slate-600 tracking-tight leading-tight mt-1 text-center"
+                  aria-label={stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
+                >
+                  {stat.label || stat.title}
+                </h3>
+              </div>
+            ))}
         </div>
 
-        {/* Desktop / Tablet View: Grid Layout */}
+        {/* Tablet & Desktop View: 4-Column Divider Bar */}
         <div className="hidden sm:block max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-gray-200">
+          <div className="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-gray-200">
             {companyStatistics.map((stat, idx) => {
               const IconComponent = stat.icon;
               return (
@@ -591,14 +762,17 @@ export default function Home() {
                     {IconComponent && (
                       <div className="shrink-0 flex items-center justify-center">
                         <IconComponent
-                          className={`w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 ${stat.iconColor || 'text-slate-700'}`}
+                          className={`sm:w-8 sm:h-8 lg:w-10 lg:h-10 ${stat.iconColor || 'text-slate-700'}`}
                           strokeWidth={1.75}
                         />
                       </div>
                     )}
                     <div className="min-w-0 flex flex-col justify-center text-left">
-                      <h3 className="font-bold text-sm sm:text-base lg:text-[15px] xl:text-base text-gray-900 tracking-tight leading-snug">
-                        {stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
+                      <h3
+                        className="font-medium sm:text-sm lg:text-[15px] xl:text-base text-gray-900 tracking-tight leading-snug"
+                        aria-label={stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
+                      >
+                        {renderStatisticTitle(stat, animatedNumbers[stat.id], isStatsFinished)}
                       </h3>
                       {stat.description && (
                         <p className="text-xs sm:text-[13px] text-gray-500 font-normal leading-normal mt-0.5 sm:mt-1 line-clamp-2">

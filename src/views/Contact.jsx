@@ -217,96 +217,7 @@ export default function Contact() {
                 ))}
               </div>
 
-              {/* Branch Locations Cards */}
-              <div className="space-y-4 pt-6 border-t border-[#E5E7EB]/60">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-display font-bold text-base text-[#111827]">Our Facilities & Branches</h4>
-                  <span className="text-[11px] font-medium text-[#6B7280]">1 Active Facility</span>
-                </div>
-
-                {/* Veepoor Kerala Facility Card - Interactive Design Navigates to Map */}
-                <div
-                  id="loc-veepoor"
-                  className={`group relative p-6 border rounded-2xl bg-[#FFFFFF] transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 ${
-                    highlightedLoc === 'veepoor'
-                      ? 'border-l-4 border-l-[#DE1D3A] border-y-[#E5E7EB] border-r-[#E5E7EB] bg-gradient-to-r from-[#FCE8EC]/40 to-[#FFFFFF] ring-2 ring-[#DE1D3A]/20'
-                      : 'border-[#E5E7EB] hover:border-[#DE1D3A]/40'
-                  }`}
-                >
-                  {/* Status header with live indicator */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      Open for Technical Visits
-                    </span>
-                    <a
-                      href="https://maps.app.goo.gl/MAA1nccyeE7M7RBh8"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[11px] font-semibold text-[#DE1D3A] flex items-center gap-1 group-hover:underline"
-                    >
-                      <span>Navigate Map</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </a>
-                  </div>
-
-                  <a
-                    href="https://maps.app.goo.gl/MAA1nccyeE7M7RBh8"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="block cursor-pointer"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-xl bg-gradient-to-br from-[#F8FAFC] to-[#FCE8EC]/40 text-[#DE1D3A] border border-[#DE1D3A]/20 flex-shrink-0 group-hover:scale-105 group-hover:bg-[#DE1D3A] group-hover:text-white transition-all duration-300 shadow-sm">
-                        <MapPin className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h5 className="font-display font-bold text-base text-[#111827] group-hover:text-[#DE1D3A] transition-colors flex items-center gap-1.5">
-                          Cobolt Machineries Headquarters
-                        </h5>
-                        <p className="text-[#4B5563] text-xs font-medium mt-0.5">
-                          Commercial Kitchen Equipment & Heavy Fabrication
-                        </p>
-                        <p className="text-[#6B7280] text-xs leading-relaxed mt-1.5">
-                          Veemboor Industrial Zone, Manjeri, Malappuram, Kerala 676122, India
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-
-                  <div className="flex items-center gap-2 pl-14 text-[11px] text-[#6B7280] mt-3">
-                    <Clock className="w-3.5 h-3.5 text-[#6B7280]/80 flex-shrink-0" />
-                    <span>Mon - Sat: 9:00 AM – 7:00 PM IST (Visits by Technical Appointment)</span>
-                  </div>
-
-                  {/* Navigation CTA Buttons */}
-                  <div className="pt-4 mt-4 border-t border-[#E5E7EB]/70 flex flex-wrap items-center gap-2.5">
-                    <a
-                      href="https://maps.app.goo.gl/MAA1nccyeE7M7RBh8"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#DE1D3A] to-[#B7152D] hover:from-[#B7152D] hover:to-[#DE1D3A] text-white text-xs font-bold shadow-md shadow-[#DE1D3A]/20 hover:shadow-lg hover:shadow-[#DE1D3A]/30 transition-all duration-200"
-                    >
-                      <Navigation className="w-3.5 h-3.5" />
-                      <span>Navigate on Maps</span>
-                      <ExternalLink className="w-3 h-3 opacity-80" />
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const mapSection = document.getElementById('facility-map');
-                        if (mapSection) {
-                          mapSection.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
-                      className="px-3.5 py-2.5 rounded-xl border border-[#E5E7EB] hover:border-[#DE1D3A]/30 hover:bg-[#F8FAFC] text-[#374151] hover:text-[#DE1D3A] text-xs font-semibold transition-all duration-200 flex items-center gap-1.5"
-                    >
-                      <Compass className="w-3.5 h-3.5 text-[#DE1D3A]" />
-                      <span>View Map Below</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+             
             </div>
 
             {/* Right: Contact Form */}
@@ -540,10 +451,7 @@ export default function Contact() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section Header */}
           <div className="space-y-3 mb-12 text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#DE1D3A]/10 text-[#DE1D3A] border border-[#DE1D3A]/20">
-              <MapPin className="w-3.5 h-3.5" />
-              <span>Plant Location & GPS Navigation</span>
-            </div>
+          
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-[#111827] tracking-tight">
               Visit Cobolt Machineries Headquarters
             </h2>
@@ -576,9 +484,12 @@ export default function Contact() {
                       <MapPin className="w-4.5 h-4.5" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[#111827] uppercase tracking-wider">Physical Address</p>
+                      <p className="text-xs font-bold text-[#111827] uppercase tracking-wider"> Address</p>
                       <p className="text-xs text-[#6B7280] leading-relaxed mt-0.5">
-                        Veemboor Industrial Zone, Manjeri, Malappuram, Kerala 676122, India
+                        
+                        Entrain Academy, Veemboor<br />
+                  Narukara, Ernad, Malappuram-<br />
+                  676122, Kerala, India
                       </p>
                     </div>
                   </div>
@@ -603,11 +514,11 @@ export default function Contact() {
                     <div>
                       <p className="text-xs font-bold text-[#111827] uppercase tracking-wider">Transit & Proximity</p>
                       <div className="grid grid-cols-2 gap-2 mt-1.5">
-                        <div className="p-2 rounded-lg bg-[#F8FAFC] border border-[#E5E7EB]/60">
+                        <div className="p-2 rounded-lg  border border-[#E5E7EB]/60">
                           <span className="block text-[10px] text-[#6B7280]">Manjeri Town</span>
                           <span className="font-semibold text-xs text-[#111827]">4.5 km (~10 mins)</span>
                         </div>
-                        <div className="p-2 rounded-lg bg-[#F8FAFC] border border-[#E5E7EB]/60">
+                        <div className="p-2 rounded-lg  border border-[#E5E7EB]/60">
                           <span className="block text-[10px] text-[#6B7280]">Calicut Airport (CCJ)</span>
                           <span className="font-semibold text-xs text-[#111827]">24 km (~40 mins)</span>
                         </div>
@@ -621,37 +532,7 @@ export default function Contact() {
               </div>
 
               {/* Click Design / Action to Navigate to Map */}
-              <div className="pt-6 mt-6 border-t border-[#E5E7EB] space-y-3">
-                <a
-                  href="https://maps.app.goo.gl/MAA1nccyeE7M7RBh8"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl bg-gradient-to-r from-[#DE1D3A] to-[#B7152D] hover:from-[#B7152D] hover:to-[#DE1D3A] text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-[#DE1D3A]/25 hover:shadow-xl hover:shadow-[#DE1D3A]/30 hover:scale-[1.01] active:scale-95 transition-all duration-300 group"
-                >
-                  <Navigation className="w-4 h-4 transition-transform group-hover:rotate-45" />
-                  <span>Navigate with Google Maps</span>
-                  <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <a
-                    href="tel:+919061782023"
-                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-[#E5E7EB] hover:bg-[#F8FAFC] text-xs font-semibold text-[#111827] transition-all duration-200"
-                  >
-                    <Phone className="w-3.5 h-3.5 text-[#DE1D3A]" />
-                    <span>Call Plant Desk</span>
-                  </a>
-                  <a
-                    href="https://wa.me/919061782023?text=Hi%20Cobolt%20Machineries%2C%20I%20am%20planning%20a%20visit%20to%20your%20Veemboor%20factory."
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border border-[#E5E7EB] hover:bg-[#F8FAFC] text-xs font-semibold text-[#111827] transition-all duration-200"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>WhatsApp Us</span>
-                  </a>
-                </div>
-              </div>
+             
             </div>
 
             {/* Right: Interactive Map Container with Header & Navigation Overlay */}

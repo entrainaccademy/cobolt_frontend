@@ -73,7 +73,7 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://cobolt-backend.onrender.com http://cobolt-backend.onrender.com http://localhost:5000 http://127.0.0.1:5000 https://res.cloudinary.com; img-src 'self' data: blob: https://placehold.co https://res.cloudinary.com https://cobolt-backend.onrender.com http://cobolt-backend.onrender.com http://localhost:5000 http://127.0.0.1:5000; media-src 'self' data: blob:; font-src 'self' data:;",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://cobolt-backend.onrender.com http://cobolt-backend.onrender.com http://localhost:5000 http://127.0.0.1:5000 https://res.cloudinary.com https://*.googleapis.com; img-src 'self' data: blob: https://placehold.co https://res.cloudinary.com https://cobolt-backend.onrender.com http://cobolt-backend.onrender.com http://localhost:5000 http://127.0.0.1:5000 https://*.googleapis.com https://*.gstatic.com https://*.google.com; media-src 'self' data: blob:; font-src 'self' data:; frame-src 'self' https://www.google.com https://maps.google.com https://*.google.com;",
           },
         ],
       },

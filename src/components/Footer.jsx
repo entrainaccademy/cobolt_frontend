@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Youtube, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Youtube, Instagram, ExternalLink } from 'lucide-react';
 import NewsletterForm from './NewsletterForm';
 
 import logo from '../assets/blacklogotr.webp';
@@ -182,9 +182,22 @@ export default function Footer() {
             </h4>
             <div className="flex items-start gap-3">
               <MapPin className="w-4.5 h-4.5 text-[#DE1D3A] mt-0.5 flex-shrink-0" />
-              <span className="text-text-light text-sm leading-relaxed">
-                Veemboor, Manjeri, Kerala - 676122
-              </span>
+              <div className="space-y-1.5">
+                <p className="text-text-light text-sm leading-relaxed">
+                  Entrain Academy, Veemboor<br />
+                  Narukara, Ernad, Malappuram-<br />
+                  676122, Kerala, India
+                </p>
+                <a
+                  href="https://maps.app.goo.gl/MAA1nccyeE7M7RBh8"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-accent hover:text-accent-hover transition-colors duration-200"
+                >
+                  <span>OPEN IN GOOGLE MAPS</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Phone className="w-4.5 h-4.5 text-[#DE1D3A] flex-shrink-0" />

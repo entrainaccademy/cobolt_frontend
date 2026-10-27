@@ -1,25 +1,38 @@
-async function testSeo() {
-  try {
-    const res = await fetch('http://localhost:3000');
-    const html = await res.text();
+const fs = require('fs');
+const path = require('path');
 
-    const titleMatches = Array.from(html.matchAll(/<title[^>]*>([^<]*)<\/title>/gi)).map(m => m[1].trim());
-    const descMatches = Array.from(html.matchAll(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/gi)).map(m => m[1].trim());
-    const ogTitleMatches = Array.from(html.matchAll(/<meta[^>]*property=["']og:title["'][^>]*content=["']([^"']*)["']/gi)).map(m => m[1].trim());
-    const ogDescMatches = Array.from(html.matchAll(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']*)["']/gi)).map(m => m[1].trim());
-    const canonicalMatches = Array.from(html.matchAll(/<link[^>]*rel=["']canonical["'][^>]*href=["']([^"']*)["']/gi)).map(m => m[1].trim());
-
-    console.log(JSON.stringify({
-      status: res.status,
-      titles: titleMatches,
-      descriptions: descMatches,
-      ogTitles: ogTitleMatches,
-      ogDescriptions: ogDescMatches,
-      canonicals: canonicalMatches
-    }, null, 2));
-  } catch (err) {
-    console.error('Fetch error:', err.message);
+function checkFile(filePath) {
+  if (!fs.existsSync(filePath)) {
+    console.log('File does not exist:', filePath);
+    return;
   }
+  const html = fs.readFileSync(filePath, 'utf8');
+  const title = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+  const desc = html.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i);
+  const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']*)["']/i);
+  const ogTitle = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']*)["']/i);
+  const ogDesc = html.match(/<meta\s+property=["']og:description["']\s+content=["']([^"']*)["']/i);
+  
+  console.log('=== ' + filePath + ' ===');
+  console.log('Title:         ', title ? title[1] : 'NOT FOUND');
+  console.log('Description:   ', desc ? desc[1] : 'NOT FOUND');
+  console.log('Canonical:     ', canonical ? canonical[1] : 'NOT FOUND');
+  console.log('og:title:      ', ogTitle ? ogTitle[1] : 'NOT FOUND');
+  console.log('og:description:', ogDesc ? ogDesc[1] : 'NOT FOUND');
 }
 
-testSeo();
+// Check index.html
+checkFile('index.html');
+
+// Check build output
+function findFiles(dir) {
+  if (!fs.existsSync(dir)) return;
+  fs.readdirSync(dir, { withFileTypes: true }).forEach(e => {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) findFiles(p);
+    else if (e.name === 'index.html' || e.name === 'page.html' || e.name === '(index).html') {
+      checkFile(p);
+    }
+  });
+}
+findFiles('.next/server');

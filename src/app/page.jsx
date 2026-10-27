@@ -4,9 +4,11 @@ import { organization, website } from '../lib/schema';
 import { SITE_CONFIG, SITE_URL } from '../lib/siteConfig';
 
 export const metadata = {
-  title: 'Commercial Kitchen Equipment Manufacturer & Supplier, Kerala | Cobolt Machineries',
+  title: {
+    absolute: 'Kitchen Equipment Supplier in Kerala | Cobolt Machineries',
+  },
   description:
-    'Explore commercial kitchen equipment at Cobolt Machineries in kerala. Discover cooking, refrigeration, bakery and stainless steel equipment for your business',
+    'Explore commercial kitchen equipment from Cobolt Machineries in Kerala, including cooking, refrigeration, bakery and stainless steel solutions.',
   keywords: [
     ...SITE_CONFIG.keywords,
     'commercial kitchen equipment Kerala',
@@ -18,9 +20,9 @@ export const metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: 'Commercial Kitchen Equipment Manufacturer & Supplier, Kerala | Cobolt Machineries',
+    title: 'Kitchen Equipment Supplier in Kerala | Cobolt Machineries',
     description:
-      'Explore commercial kitchen equipment at Cobolt Machineries in kerala. Discover cooking, refrigeration, bakery and stainless steel equipment for your business',
+      'Explore commercial kitchen equipment from Cobolt Machineries in Kerala, including cooking, refrigeration, bakery and stainless steel solutions.',
     url: SITE_URL,
     type: 'website',
     images: [
@@ -28,15 +30,15 @@ export const metadata = {
         url: '/blacklogotr.png',
         width: 1200,
         height: 630,
-        alt: 'Cobolt Machineries - Commercial Kitchen Equipment Manufacturer & Supplier',
+        alt: 'Cobolt Machineries - Kitchen Equipment Supplier in Kerala',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Commercial Kitchen Equipment Manufacturer & Supplier, Kerala | Cobolt Machineries',
+    title: 'Kitchen Equipment Supplier in Kerala | Cobolt Machineries',
     description:
-      'Explore commercial kitchen equipment at Cobolt Machineries in kerala. Discover cooking, refrigeration, bakery and stainless steel equipment for your business',
+      'Explore commercial kitchen equipment from Cobolt Machineries in Kerala, including cooking, refrigeration, bakery and stainless steel solutions.',
     images: ['/blacklogotr.png'],
   },
 };

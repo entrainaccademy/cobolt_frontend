@@ -184,7 +184,7 @@ export default function Footer() {
               <MapPin className="w-4.5 h-4.5 text-[#DE1D3A] mt-0.5 flex-shrink-0" />
               <div className="space-y-1.5">
                 <p className="text-text-light text-sm leading-relaxed">
-                  Entrain Academy, Veemboor<br />
+                  Cobolt Machineries , Veemboor<br />
                   Narukara, Ernad, Malappuram-<br />
                   676122, Kerala, India
                 </p>
@@ -192,7 +192,7 @@ export default function Footer() {
                   href="https://maps.app.goo.gl/MAA1nccyeE7M7RBh8"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-accent hover:text-accent-hover transition-colors duration-200"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-[#DE1D3A] hover:text-accent-hover transition-colors duration-200"
                 >
                   <span>OPEN IN GOOGLE MAPS</span>
                   <ExternalLink className="w-3 h-3" />

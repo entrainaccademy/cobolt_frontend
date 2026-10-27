@@ -682,10 +682,10 @@ export default function Home() {
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight font-display tracking-tight">
               <span className="text-white/60   [text-shadow:_0_2px_12px_rgba(0,0,0,0.22)]">
-                Best Commercial Kitchen 
+                Commercial Kitchen 
               </span>{' '}
               <span className="text-[#ec3d57] [text-shadow:_0_2px_12px_rgba(222,29,58,0.2)]">
-              Equipment manufacturer &amp; Supplier , Kerala
+              Equipment manufacturer &amp; Supplier
               </span>
             </h1>
  

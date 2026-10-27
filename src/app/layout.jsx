@@ -34,7 +34,7 @@ const poppins = Poppins({
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Kitchen Equipment Supplier in Kerala | Cobolt Machineries',
+    default: 'Best Commercial Kitchen Equipment Manufacturer & Supplier, Kerala | Cobolt Machineries',
     template: '%s | Cobolt Machineries',
   },
   description: SITE_CONFIG.description,

@@ -12,20 +12,13 @@ export const revalidate = 60;
 
 /**
  * Deduplicated, cached product loader
- * 1. Checks local static catalog for instant 0ms retrieval
- * 2. If not found in local catalog (e.g. added dynamically via admin MongoDB), queries backend
+ * 1. Checks backend API first so live admin edits (pricing, availability, description) are rendered
+ * 2. Seamlessly falls back to local static catalog if product is not in backend or during backend cold-starts
  */
 const loadProductData = cache(async (id) => {
   if (!id) return { product: null, relatedProducts: [] };
 
-  // 1. Instant local lookup
-  const localProduct = getProductById(id);
-  if (localProduct) {
-    const related = getRelatedProducts(localProduct.id, localProduct.category, 3);
-    return { product: localProduct, relatedProducts: related };
-  }
-
-  // 2. Dynamic product from backend API
+  // 1. Live dynamic product from backend API (reflects admin updates)
   try {
     const res = await fetchProductById(id);
     if (res?.product) {
@@ -36,24 +29,45 @@ const loadProductData = cache(async (id) => {
       return { product: res.product, relatedProducts: related };
     }
   } catch (e) {
-    // ignore
+    // Backend offline / error - fallback to local catalog
+  }
+
+  // 2. Fallback to local static catalog
+  const localProduct = getProductById(id);
+  if (localProduct) {
+    const related = getRelatedProducts(localProduct.id, localProduct.category, 3);
+    return { product: localProduct, relatedProducts: related };
   }
 
   return { product: null, relatedProducts: [] };
 });
 
 export async function generateStaticParams() {
+  const ids = new Set();
+  const params = [];
+
   try {
     const backendProducts = await fetchProducts();
-    if (backendProducts && backendProducts.length > 0) {
-      return backendProducts.map((p) => ({ id: p.id }));
+    if (Array.isArray(backendProducts)) {
+      for (const p of backendProducts) {
+        if (p?.id && !ids.has(p.id.toLowerCase())) {
+          ids.add(p.id.toLowerCase());
+          params.push({ id: p.id });
+        }
+      }
     }
   } catch (e) {
     // ignore, fall back
   }
-  return productsList.map((product) => ({
-    id: product.id,
-  }));
+
+  for (const product of productsList) {
+    if (product?.id && !ids.has(product.id.toLowerCase())) {
+      ids.add(product.id.toLowerCase());
+      params.push({ id: product.id });
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({ params }) {

@@ -28,7 +28,7 @@ export async function fetchProducts({ search = '', category = '', isAvailable, i
     const url = `${backendUrl}/api/products${params.toString() ? `?${params.toString()}` : ''}`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     const res = await fetch(url, {
       signal: controller.signal,
@@ -56,7 +56,7 @@ export async function fetchProductById(id) {
     if (!id) return null;
     const backendUrl = getBackendUrl();
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     const res = await fetch(`${backendUrl}/api/products/${encodeURIComponent(id)}`, {
       signal: controller.signal,

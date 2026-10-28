@@ -590,7 +590,17 @@ export default function Home() {
         setLoading(true);
         const data = await fetchProducts();
         if (isMounted && data && Array.isArray(data) && data.length > 0) {
-          setProducts(data);
+          const dbIds = new Set(data.map((p) => p.id?.toLowerCase().trim()));
+          const dbNames = new Set(data.map((p) => p.name?.toLowerCase().trim()));
+          const merged = [...data];
+          for (const sp of fallbackProducts) {
+            const sId = sp.id?.toLowerCase().trim();
+            const sName = sp.name?.toLowerCase().trim();
+            if (!dbIds.has(sId) && !dbNames.has(sName)) {
+              merged.push(sp);
+            }
+          }
+          setProducts(merged);
         }
       } catch (err) {
         console.error('Failed to load products from backend:', err);

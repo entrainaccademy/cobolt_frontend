@@ -57,6 +57,7 @@ import {
   updateApplicationStatusApi,
   deleteApplicationApi,
 } from '../../lib/api';
+import { productsList } from '../../data/products';
 
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
@@ -198,7 +199,40 @@ export default function AdminPage() {
         fetchProducts(),
         fetchCategories(),
       ]);
-      if (allProducts) setProducts(sortProductsByLatest(allProducts));
+
+      const dbProducts = Array.isArray(allProducts) ? allProducts : [];
+      const dbIdSet = new Set(dbProducts.map((p) => p.id?.toLowerCase().trim()));
+      const dbNameSet = new Set(dbProducts.map((p) => p.name?.toLowerCase().trim()));
+
+      const mergedProducts = [...dbProducts];
+      for (const staticProd of productsList) {
+        const staticId = staticProd.id?.toLowerCase().trim();
+        const staticName = staticProd.name?.toLowerCase().trim();
+        if (dbIdSet.has(staticId) || dbNameSet.has(staticName)) {
+          continue;
+        }
+
+        const rawImg = staticProd.image;
+        const imgSrc =
+          typeof rawImg === 'object' && rawImg?.src
+            ? rawImg.src
+            : typeof rawImg === 'string'
+            ? rawImg
+            : '/slider1.webp';
+
+        mergedProducts.push({
+          ...staticProd,
+          image: imgSrc,
+          images: [imgSrc],
+          isAvailable: true,
+          isFeatured: false,
+          isStaticFallback: true,
+          price: null,
+          offerPrice: null,
+        });
+      }
+
+      setProducts(sortProductsByLatest(mergedProducts));
       if (allCats) setCategories(allCats);
     } catch (err) {
       showToast('Failed to load products from database', 'error');

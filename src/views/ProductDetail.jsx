@@ -197,6 +197,28 @@ export default function ProductDetail({ product, relatedProducts = [] }) {
                     {product.tagline}
                   </p>
                 )}
+
+                {(product.price || product.offerPrice) && (
+                  <div className="flex items-baseline gap-2.5 mt-2.5">
+                    {product.offerPrice && product.price && Number(product.offerPrice) < Number(product.price) ? (
+                      <>
+                        <span className="text-lg sm:text-xl font-bold text-[#DE1D3A]">
+                          ₹{Number(product.offerPrice).toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-xs text-gray-400 line-through">
+                          ₹{Number(product.price).toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded">
+                          {Math.round(((Number(product.price) - Number(product.offerPrice)) / Number(product.price)) * 100)}% off
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-lg sm:text-xl font-bold text-gray-900">
+                        ₹{Number(product.offerPrice || product.price).toLocaleString('en-IN')}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
 
 

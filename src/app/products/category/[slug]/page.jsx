@@ -68,18 +68,30 @@ export default async function CategoryPage({ params }) {
   }
 
   // Fetch live products on the server so the definitive list is rendered on first paint
-  let products = null;
+  let liveProducts = [];
   try {
-    products = await fetchProducts({ category: category.name });
+    liveProducts = (await fetchProducts({ category: category.name })) || [];
   } catch (e) {
-    // fallback
+    liveProducts = [];
   }
 
-  if (!products || products.length === 0) {
-    products = productsList.filter(
-      (p) => p.category?.toLowerCase() === category.name.toLowerCase()
-    );
+  // Merge live backend products with static fallback to preserve all catalog products cleanly
+  const seenIds = new Set(liveProducts.map((p) => p.id?.toLowerCase().trim()));
+  const seenNames = new Set(liveProducts.map((p) => p.name?.toLowerCase().trim()));
+  const mergedProducts = [...liveProducts];
+
+  const staticForCat = productsList.filter(
+    (p) => p.category?.toLowerCase() === category.name.toLowerCase()
+  );
+  for (const sp of staticForCat) {
+    const sId = sp.id?.toLowerCase().trim();
+    const sName = sp.name?.toLowerCase().trim();
+    if (!seenIds.has(sId) && !seenNames.has(sName)) {
+      mergedProducts.push(sp);
+    }
   }
+
+  const products = mergedProducts;
 
   const categorySchema = {
     '@context': 'https://schema.org',

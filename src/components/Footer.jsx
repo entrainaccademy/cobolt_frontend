@@ -80,7 +80,7 @@ export default function Footer() {
                 href={SITE_CONFIG.social.youtube}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-text-light hover:text-white hover:bg-accent hover:border-accent transition-all duration-300"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-[#DE1D3A] hover:bg-[#DE1D3A] hover:text-white hover:border-[#DE1D3A] transition-all duration-300"
                 aria-label="YouTube"
               >
                 <Youtube className="w-4 h-4" />
@@ -89,7 +89,7 @@ export default function Footer() {
                 href={SITE_CONFIG.social.facebook}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-text-light hover:text-white hover:bg-accent hover:border-accent transition-all duration-300"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-[#DE1D3A] hover:bg-[#DE1D3A] hover:text-white hover:border-[#DE1D3A] transition-all duration-300"
                 aria-label="Facebook"
               >
                 <Facebook className="w-4 h-4" />
@@ -98,7 +98,7 @@ export default function Footer() {
                 href={SITE_CONFIG.social.instagram}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-text-light hover:text-white hover:bg-accent hover:border-accent transition-all duration-300"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-[#DE1D3A] hover:bg-[#DE1D3A] hover:text-white hover:border-[#DE1D3A] transition-all duration-300"
                 aria-label="Instagram"
               >
                 <Instagram className="w-4 h-4" />
@@ -107,7 +107,7 @@ export default function Footer() {
                 href={SITE_CONFIG.social.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-text-light hover:text-white hover:bg-accent hover:border-accent transition-all duration-300"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-[#DE1D3A] hover:bg-[#DE1D3A] hover:text-white hover:border-[#DE1D3A] transition-all duration-300"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
@@ -126,7 +126,7 @@ export default function Footer() {
                   <Link
                     href={link.path}
                     prefetch={false}
-                    className="text-text-light hover:text-accent text-sm transition-colors duration-200"
+                    className="text-text-light hover:text-[#DE1D3A] text-sm transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -146,7 +146,7 @@ export default function Footer() {
                   <Link
                     href={link.path}
                     prefetch={false}
-                    className="text-text-light hover:text-accent text-sm transition-colors duration-200"
+                    className="text-text-light hover:text-[#DE1D3A] text-sm transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -166,7 +166,7 @@ export default function Footer() {
                   <Link
                     href={link.path}
                     prefetch={false}
-                    className="text-text-light hover:text-accent text-sm transition-colors duration-200"
+                    className="text-text-light hover:text-[#DE1D3A] text-sm transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -192,7 +192,7 @@ export default function Footer() {
                   href="https://maps.app.goo.gl/MAA1nccyeE7M7RBh8"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-[#DE1D3A] hover:text-accent-hover transition-colors duration-200"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-[#DE1D3A] hover:text-[#c2152e] transition-colors duration-200"
                 >
                   <span>OPEN IN GOOGLE MAPS</span>
                   <ExternalLink className="w-3 h-3" />
@@ -201,13 +201,13 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-3">
               <Phone className="w-4.5 h-4.5 text-[#DE1D3A] flex-shrink-0" />
-              <a href="tel:+919061782023" className="text-text-light hover:text-accent text-sm transition-colors duration-200">
+              <a href="tel:+919061782023" className="text-text-light hover:text-[#DE1D3A] text-sm transition-colors duration-200">
                 +91 9061782023
               </a>
             </div>
             <div className="flex items-center gap-3">
               <Mail className="w-4.5 h-4.5 text-[#DE1D3A] flex-shrink-0" />
-              <a href="mailto:infocobolt123@gmail.com" className="text-text-light hover:text-accent text-sm transition-colors duration-200">
+              <a href="mailto:infocobolt123@gmail.com" className="text-text-light hover:text-[#DE1D3A] text-sm transition-colors duration-200">
                 infocobolt123@gmail.com
               </a>
             </div>
@@ -227,10 +227,10 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Cobolt Machineries Private Limited. All rights reserved.
           </p>
           <div className="flex flex-wrap gap-4 sm:gap-6 text-xs text-text-light justify-center md:justify-end">
-            <Link href="/privacy-policy" className="hover:text-accent transition-colors duration-200">Privacy Policy</Link>
-            <Link href="/terms-of-service" className="hover:text-accent transition-colors duration-200">Terms of Service</Link>
-            <Link href="/warranty-policy" className="hover:text-accent transition-colors duration-200">Warranty</Link>
-            {/* <Link href="/sitemap.xml" className="hover:text-accent transition-colors duration-200">Sitemap</Link> */}
+            <Link href="/privacy-policy" className="hover:text-[#DE1D3A] transition-colors duration-200">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="hover:text-[#DE1D3A] transition-colors duration-200">Terms of Service</Link>
+            <Link href="/warranty-policy" className="hover:text-[#DE1D3A] transition-colors duration-200">Warranty</Link>
+            {/* <Link href="/sitemap.xml" className="hover:text-[#DE1D3A] transition-colors duration-200">Sitemap</Link> */}
             {/* <Link href="/admin" className="hover:text-[#DE1D3A] transition-colors duration-200">Admin Portal</Link> */}
           </div>
         </div>

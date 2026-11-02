@@ -17,6 +17,14 @@ Disallow: /api/
 Disallow: /admin/
 Disallow: /private/
 
+User-agent: Googlebot-Image
+Allow: /
+Allow: /favicon.ico
+Allow: /favicon.png
+Allow: /apple-touch-icon.png
+Allow: /favicon.svg
+Disallow: /private/
+
 User-agent: Bingbot
 Allow: /
 Disallow: /api/

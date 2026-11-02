@@ -135,9 +135,9 @@ const brandLogosinmobile = [
 const companyStatistics = [
   {
     id: 'experience',
-    number: '7+',
+    number: '6+',
     label: 'Years Experience',
-    title: '7+ Years Experience',
+    title: '6+ Years Experience',
     description: 'Serving food businesses since 2020',
     icon: Settings,
     iconColor: 'text-slate-700',
@@ -153,7 +153,7 @@ const companyStatistics = [
   },
   {
     id: 'installed',
-    number: '40,000+',
+    number: '4000+',
     label: 'Items Installed',
     title: '40,000+ Items Installed',
     description: 'Commercial equipment deployed across India',
@@ -745,7 +745,7 @@ export default function Home() {
                   {animatedNumbers[stat.id] ?? stat.number}
                 </span>
                 <h3
-                  className="font-normal text-[11px] xs:text-xs text-slate-600 tracking-tight leading-tight mt-1 text-center"
+                  className=" font-semibold text-[11px] xs:text-xs text-slate-600 tracking-tight leading-tight mt-1 text-center"
                   aria-label={stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
                 >
                   {stat.label || stat.title}
@@ -781,7 +781,7 @@ export default function Home() {
                     )}
                     <div className="min-w-0 flex flex-col justify-center text-left">
                       <h3
-                        className="font-medium sm:text-sm lg:text-[15px] xl:text-base text-gray-900 tracking-tight leading-snug"
+                        className="font-medium  sm:text-sm lg:text-[15px] xl:text-base text-gray-900 tracking-tight leading-snug"
                         aria-label={stat.title || [stat.number, stat.label].filter(Boolean).join(' ')}
                       >
                         {renderStatisticTitle(stat, animatedNumbers[stat.id], isStatsFinished)}

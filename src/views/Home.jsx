@@ -893,35 +893,25 @@ export default function Home() {
               </h2>
 
               {/* Company Description */}
-              <p className="text-[#4B5563] text-base sm:text-lg leading-relaxed font-sans font-medium">
-                Cobolt Machineries is a premium global manufacturer of high-end industrial machinery. We bridge the gap between complex engineering concepts and reliable physical manufacturing equipment, delivering solutions that scale operations while preserving razor-sharp accuracy.
-              </p>
+              <div className="space-y-4">
+                <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
+                  Since 2020, Cobolt Machineries has been a commercial kitchen equipment manufacturer and supplier based in Malappuram, Kerala. We combine modern manufacturing techniques with quality materials to deliver durable and reliable equipment for professional kitchens.
+                </p>
 
-              <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
-                From in-house metallurgical casting to precision CNC programming, our Kerala-based facility produces commercial bakery deck ovens, planetary dough mixers, cooking ranges, and custom food-grade SUS304 fabrication layouts with complete preventative maintenance and on-site setup.
-              </p>
-              {/* Feature Highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#E5E7EB]">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#FCE8EC] flex items-center justify-center text-[#DE1D3A] flex-shrink-0">
-                    <CheckCircle2 className="w-4 h-4 text-[#DE1D3A]" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-[#111827] text-xs font-display">Heavy-Duty Metallurgy</h5>
-                    <p className="text-[#6B7280] text-[11px]">Food-grade SUS304 &amp; cast alloys</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#FCE8EC] flex items-center justify-center text-[#DE1D3A] flex-shrink-0">
-                    <Award className="w-4 h-4 text-[#DE1D3A]" />
-                  </div>
-                  <div>
-                    <h5 className="font-bold text-[#111827] text-xs font-display">ISO 9001:2015 Certified</h5>
-                    <p className="text-[#6B7280] text-[11px]">Quality management certified</p>
-                  </div>
-                </div>
+                <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
+                  Our product range includes bakery equipment, commercial cooking ranges, shawarma machines, stainless steel workstations, and customized kitchen solutions. We use SS304 and SS202 stainless steel based on specific equipment requirements.
+                </p>
+
+                <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
+                  From kitchen planning and equipment customization to delivery, installation, and after-sales support, we help businesses build efficient commercial kitchens.
+                </p>
+
+                <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
+                  Serving restaurants, hotels, cafés, bakeries, and food businesses, we offer all-India delivery with a focus on practical designs, competitive pricing, and long-term customer satisfaction.
+                </p>
               </div>
-
+              
+            
               <div className="pt-4">
                 <Link
                   href="/about"

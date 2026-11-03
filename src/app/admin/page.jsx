@@ -38,6 +38,7 @@ import {
   Briefcase,
   User,
   Download,
+  BarChart3,
 } from 'lucide-react';
 import {
   adminLogin,
@@ -58,6 +59,7 @@ import {
   deleteApplicationApi,
 } from '../../lib/api';
 import { productsList } from '../../data/products';
+import ProductReportsTab from '../../components/admin/ProductReportsTab';
 
 const getSrc = (img) => {
   if (!img) return '/slider1.webp';
@@ -713,6 +715,19 @@ export default function AdminPage() {
               </span>
             )}
           </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('reports')}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer relative ${
+              activeTab === 'reports'
+                ? 'bg-[#DE1D3A] text-white shadow-md shadow-[#DE1D3A]/20'
+                : 'bg-white text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-300'
+            }`}
+          >
+            <BarChart3 className="w-4 h-4" />
+            <span>Product Reports</span>
+          </button>
         </div>
 
         {activeTab === 'inquiries' ? (
@@ -1198,6 +1213,13 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
+        ) : activeTab === 'reports' ? (
+          <ProductReportsTab
+            token={token}
+            admin={admin}
+            categories={categories}
+            showToast={showToast}
+          />
         ) : (
           <div>
             {/* Stats Row */}

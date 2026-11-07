@@ -49,7 +49,9 @@ export const metadata = {
   },
   icons: {
     icon: [
+      { url: '/favicon.ico' },
       { url: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
+      { url: '/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
       { url: '/favicon.png', type: 'image/png', sizes: '192x192' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
@@ -58,6 +60,7 @@ export const metadata = {
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
+  manifest: '/site.webmanifest',
   openGraph: {
     type: 'website',
     locale: 'en_US',

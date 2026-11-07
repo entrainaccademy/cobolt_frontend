@@ -19,7 +19,7 @@ export const organization = {
   name: 'Cobolt Machineries',
   legalName: 'Cobolt Machineries Private Limited',
   url: SITE,
-  logo: `${SITE}/blacklogotr.png`,
+  logo: `${SITE}/favicon-512x512.png`,
   image: `${SITE}/blacklogotr.png`,
   description:
     'Industrial machinery, commercial food processing equipment, stainless steel fabrication and engineering solutions from Manjeri, Kerala.',

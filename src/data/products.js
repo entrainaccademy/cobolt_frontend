@@ -946,22 +946,7 @@ export const productsList = [
     ],
     accessories: ["3 Stainless Steel Pots", "3 Notched Lids (for Ladles)", "Drain Valve"]
   },
-  {
-    id: "TTS-81-",
-    name: "TTS-81 COMMERCIAL WARMING DISPLAY",
-    category: "Industrial And Food Service",
-    image: i2,
-    tagline: "Curved Glass Heated Food Showcase",
-    description: "Premium countertop heated display showcase featuring curved front glass, multiple tiered adjustable wire shelves, and gentle moisture humidity tray to keep hot food fresh.",
-    specs: [
-      { label: "Temperature Range", value: "30°C - 85°C Adjustable" },
-      { label: "Glass", value: "Toughened Curved Front Glass" },
-      { label: "Lighting", value: "Warm LED Showcase Illumination" },
-      { label: "Shelving", value: "3 Stainless Steel Tier Shelves" },
-      { label: "Humidity Control", value: "Built-in Water Reservoir" }
-    ],
-    accessories: ["3 Chromium Plated Shelves", "Removable Crumb Tray", "Water Humidity Pan"]
-  }
+  
 ];
 
 // Helper functions

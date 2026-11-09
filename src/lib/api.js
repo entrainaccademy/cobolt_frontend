@@ -520,3 +520,54 @@ export async function deleteApplicationApi(id, token) {
 
 
 
+
+
+/**
+ * Admin Get Product Activity Report
+ */
+export async function fetchProductActivityReportApi(
+  { year, month, category = '', action = '', search = '', page = 1, limit = 50 } = {},
+  token
+) {
+  const backendUrl = getBackendUrl();
+  const params = new URLSearchParams();
+  if (year) params.append('year', String(year));
+  if (month) params.append('month', String(month));
+  if (category && category !== 'All') params.append('category', category);
+  if (action && action !== 'ALL') params.append('action', action);
+  if (search) params.append('search', search);
+  if (page) params.append('page', String(page));
+  if (typeof limit !== 'undefined') params.append('limit', String(limit));
+
+  const res = await fetch(`${backendUrl}/api/reports/product-activity?${params.toString()}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+    },
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to fetch product activity report.');
+  }
+  return data;
+}
+
+/**
+ * Admin Get Available Report Months
+ */
+export async function fetchAvailableReportMonthsApi(token) {
+  const backendUrl = getBackendUrl();
+  const res = await fetch(`${backendUrl}/api/reports/product-activity/available-months`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+    },
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'Failed to fetch available report months.');
+  }
+  return data;
+}

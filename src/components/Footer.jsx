@@ -184,9 +184,9 @@ export default function Footer() {
               <MapPin className="w-4.5 h-4.5 text-[#DE1D3A] mt-0.5 flex-shrink-0" />
               <div className="space-y-1.5">
                 <p className="text-text-light text-sm leading-relaxed">
-                  Cobolt Machineries , Veemboor<br />
-                  Narukara, Ernad, Malappuram-<br />
-                  676122, Kerala, India
+                  Cobolt Machineries <br />Veemboor
+                  Mariyad School Rd , Manjeri, Keralam 676122
+
                 </p>
                 <a
                   href="https://maps.app.goo.gl/MAA1nccyeE7M7RBh8"

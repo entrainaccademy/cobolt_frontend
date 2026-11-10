@@ -813,9 +813,9 @@ export default function Home() {
       <section id="categories" className="py-14 sm:py-20 bg-[#F8FAFC] relative scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-2">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium text-[#111827] font-display tracking-tight">
-              Explore by Equipment Category
-            </h2>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-medium text-[#111827] font-display capitalize tracking-tight">
+              commercial kitchen equipments
+            </h1>
             <p className="text-[#6B7280] text-sm sm:text-base leading-relaxed">
               {/* Browse our specialized commercial food machinery divisions engineered for bakeries, restaurants, catering lines, and food processing factories. */}
             </p>

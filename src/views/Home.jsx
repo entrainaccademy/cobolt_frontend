@@ -690,14 +690,14 @@ export default function Home() {
           <div className="max-w-3xl text-left space-y-6">
          
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight font-display tracking-tight">
+            <h className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight font-display tracking-tight">
               <span className="text-white/60   [text-shadow:_0_2px_12px_rgba(0,0,0,0.22)]">
                 Commercial Kitchen 
               </span>{' '}
               <span className="text-[#ec3d57] [text-shadow:_0_2px_12px_rgba(222,29,58,0.2)]">
               Equipment manufacturer &amp; Supplier
               </span>
-            </h1>
+            </h>
  
             {/* Short Supporting Line */}
             <p className="text-sm sm:text-base md:text-lg text-slate-900 leading-relaxed font-sans max-w-2xl drop-shadow-sm font-normal">

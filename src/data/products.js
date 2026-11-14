@@ -117,23 +117,7 @@ export const productsList = [
     ],
     accessories: ["20L Stainless Steel Bowl", "Stainless Steel Wire Whip", "Flat Beater", "Spiral Dough Hook"]
   },
-  {
-    id: "bh-food-mixer-classic",
-    name: "BH FOOD MIXER CLASSIC SERIES ",
-    category: "Food Preparation Machines",
-    image: p4,
-    tagline: "12-Inch Professional Gravity-Feed Meat Slicer",
-    description: "Precision-engineered commercial deli slicer featuring a premium chrome-plated carbon steel blade and integrated sharpener. Designed for slicing cured meats, cheeses, and vegetables with consistent thickness.",
-    specs: [
-      { label: "Blade Diameter", value: "300 mm (12 inches)" },
-      { label: "Slice Thickness", value: "0 - 15 mm (Adjustable)" },
-      { label: "Motor Power", value: "250W (Heavy Duty)" },
-      { label: "Blade Material", value: "Hardened Chrome-Plated Carbon Steel" },
-      { label: "Max Slice Width", value: "220 mm" },
-      { label: "Sharpener Type", value: "Built-in Dual Stone Sharpener" }
-    ],
-    accessories: ["Removable Blade Sharpener", "Blade Removal Tool", "Lubrication Oil", "Sanitation Cover"]
-  },
+ 
   {
     id: "2-split-open-fryer-ofg321-322-323",
     name: "2 SPLIT OPEN FRYER-OFG321-322-323",
@@ -151,57 +135,9 @@ export const productsList = [
     ],
     accessories: ["500mm Stainless Steel Shaft", "Wall Mount Bracket", "Durable Blade Guard Tool"]
   },
-  {
-    id: "BT-MIXER",
-    name: "BT MIXER",
-    category: "Food Preparation Machines",
-    image: p6,
-    tagline: "Double-Seal Commercial Chamber Sealer",
-    description: "High-vacuum chamber sealer designed to extend the shelf life of food products, prevent freezer burn, and prepare items for sous vide cooking. Ideal for restaurants, catering, and food laboratories.",
-    specs: [
-      { label: "Chamber Dimensions", value: "400 x 400 x 120 mm" },
-      { label: "Seal Bar Length", value: "400 mm (Double Sealing)" },
-      { label: "Vacuum Pump Capacity", value: "20 m³/hr" },
-      { label: "Cycle Time", value: "15 - 30 seconds" },
-      { label: "Material", value: "Full Stainless Steel Cabinet & Acrylic Lid" },
-      { label: "Voltage", value: "220V - 240V / 50Hz" }
-    ],
-    accessories: ["High-performance Vacuum Pump Oil", "Spare Heating Elements", "Teflon Tape", "Chamber Filler Plates"]
-  },
-  {
-    id: "BH-FOOT-MIXER",
-    name: "BH FOOD MIXER",
-    category: "Food Preparation Machines",
-    image: p7,
-    tagline: "Digital Control Glasswasher & Dishwasher Station",
-    description: "Heavy-duty undercounter commercial dishwasher designed for rapid cleanup in bars, cafes, and small restaurants. Stainless steel double-skin body with quick wash cycles.",
-    specs: [
-      { label: "Rack Size", value: "500 x 500 mm" },
-      { label: "Washing Capacity", value: "Up to 30 Racks/hr" },
-      { label: "Cycle Times", value: "90 / 120 / 180 seconds" },
-      { label: "Material", value: "AISI 304 Stainless Steel" },
-      { label: "Wash Tank Capacity", value: "25 Liters" },
-      { label: "Power Load", value: "3.6 kW (Single/Triple Phase)" }
-    ],
-    accessories: ["Dish Rack", "Glass Rack", "Cutlery Holder", "Inlet & Drain Hoses"]
-  },
-  {
-    id: "J-FOOD-MIXER",
-    name: "J FOOD MIXER",
-    category: "Food Preparation Machines",
-    image: p8,
-    tagline: "Countertop Stainless Steel Meat Grinder",
-    description: "Compact yet powerful countertop commercial meat mincer. Precision-engineered gears and high-torque motor deliver clean cuts without crushing the meat.",
-    specs: [
-      { label: "Production Capacity", value: "150 kg/hr" },
-      { label: "Motor Power", value: "850W" },
-      { label: "Worm Speed", value: "170 RPM" },
-      { label: "Feeding Throat", value: "Diameter 50 mm" },
-      { label: "Material", value: "Food-Grade Polished Stainless Steel" },
-      { label: "Dimensions", value: "250 x 410 x 420 mm" }
-    ],
-    accessories: ["Cutting Knives (x2)", "Grinding Plates (4.5mm & 8mm)", "Removable Feed Tray", "Meat Pusher"]
-  },
+  
+ 
+  
   {
     id: "FREQUENCY-CHANGER-FOOD-MIXER",
     name: "FREQUENCY CHANGER FOOD MIXER",
@@ -852,23 +788,7 @@ export const productsList = [
     ],
     accessories: ["500mm Stainless Steel Shaft", "Wall Mount Bracket", "Durable Blade Guard Tool"]
   },
-  {
-    id: "A130",
-    name: "A130 COMMERCIAL EQUIPMENT",
-    category: "Cooking Equipments",
-    image: c6,
-    tagline: "Double-Seal Commercial Chamber Sealer",
-    description: "High-vacuum chamber sealer designed to extend the shelf life of food products, prevent freezer burn, and prepare items for sous vide cooking. Ideal for restaurants, catering, and food laboratories.",
-    specs: [
-      { label: "Chamber Dimensions", value: "400 x 400 x 120 mm" },
-      { label: "Seal Bar Length", value: "400 mm (Double Sealing)" },
-      { label: "Vacuum Pump Capacity", value: "20 m³/hr" },
-      { label: "Cycle Time", value: "15 - 30 seconds" },
-      { label: "Material", value: "Full Stainless Steel Cabinet & Acrylic Lid" },
-      { label: "Voltage", value: "220V - 240V / 50Hz" }
-    ],
-    accessories: ["High-performance Vacuum Pump Oil", "Spare Heating Elements", "Teflon Tape", "Chamber Filler Plates"]
-  },
+ 
   {
     id: "WORK-TABLE-WITH-OVERSHELF",
     name: "WORK TABLE WITH OVERSHELF",

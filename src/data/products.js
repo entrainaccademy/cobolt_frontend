@@ -438,28 +438,7 @@ export const productsList = [
   //  baking 
 
 
-  {
-    id: "2Deck4Trays8TraysProoferGasDeckOven",
-    name: " M GAS BAKING OVEN 1D2T",
-    category: "Baking Equipments",
-    image: b4new,
-    
-    description: "220V  .015KW  TRAY SIZE:40X60CM  WITH FLAMOUT PROCTED FUNCTION,ALUMUIUM MAIN GAS PIPE,PURE COPPER BRANCH PIPE,ALUSTEEL INSIDE BAKING CHAMBER,CHAMBER SIZE:87X67X18.5CM,PLASTIC DOOR HANDLE,UNIFORM BAKING EFFECT",
-    specs:  [
-      { label: " Model", value: "DA-D-GBO-2D4T" },
-         { label: " Power Source", value: "Gas" },
-      { label: "VOLTAGE ", value: "220V/50HZ/1PH" },
-         { label: " Operation Type", value: "Semi-Automatic" },
-           { label: " Body Material", value: "	Stainless Steel" },
-            { label: " Deck Size", value: "87X67X19 CM" },
-       { label: "	MJ/H ", value: "16MJ/±10%" },
-       { label: "	TEMPERATURE RANGE ", value: "AMBIENT TO 400°C" },
-          { label: "Weight", value: "205KG" }
-    
-    
-    ],
-    // accessories: ["Slicing Discs (2mm & 4mm)", "Shredding Discs (3mm, 4mm & 7mm)", "Dicing Grid (10x10mm)", "Ejector Disc", "Cleaning Brush"]
-  },
+  
 
   
 

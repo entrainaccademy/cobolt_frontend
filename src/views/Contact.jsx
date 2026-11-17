@@ -292,30 +292,37 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                
                   {/* Email */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Service Type Dropdown */}
                   <div className="group relative">
-                    <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
-                      Corporate Email *
+                    <label htmlFor="serviceType" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
+                      Inquiry Category
                     </label>
                     <div className="relative">
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
+                      <select
+                        id="serviceType"
+                        name="serviceType"
+                        value={formData.serviceType}
                         onChange={handleInputChange}
-                        className={`w-full pl-10 pr-4 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border ${
-                          formErrors.email ? 'border-[#DE1D3A] focus:ring-[#DE1D3A]/20' : 'border-[#E5E7EB] focus:ring-[#DE1D3A]/10'
-                        } focus:outline-none focus:ring-4 focus:border-[#DE1D3A] transition-all duration-300`}
-                        placeholder="e.g. vsinghania@aerosteel.com"
-                      />
-                      <Mail className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
+                        className="w-full pl-10 pr-10 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-4 focus:ring-[#DE1D3A]/10 focus:border-[#DE1D3A] transition-all duration-300 appearance-none"
+                      >
+                        <option value="Machinery Purchase">Machinery Purchase</option>
+                        <option value="Engineering Service">Engineering Service</option>
+                        <option value="AMC Pricing Request">AMC Pricing Request</option>
+                        <option value="Custom Fabrication Consulting">Custom Fabrication Consulting</option>
+                      </select>
+                      <Landmark className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
+                      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </div>
                     </div>
-                    {formErrors.email && (
-                      <p className="text-[#DE1D3A] text-[10px] font-semibold mt-1.5">{formErrors.email}</p>
-                    )}
                   </div>
+
+                 
+                
+                
 
                   {/* Phone */}
                   <div className="group relative">
@@ -342,75 +349,9 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Service Type Dropdown */}
-                  <div className="group relative">
-                    <label htmlFor="serviceType" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
-                      Inquiry Category
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="serviceType"
-                        name="serviceType"
-                        value={formData.serviceType}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-10 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-4 focus:ring-[#DE1D3A]/10 focus:border-[#DE1D3A] transition-all duration-300 appearance-none"
-                      >
-                        <option value="Machinery Purchase">Machinery Purchase</option>
-                        <option value="Engineering Service">Engineering Service</option>
-                        <option value="AMC Pricing Request">AMC Pricing Request</option>
-                        <option value="Custom Fabrication Consulting">Custom Fabrication Consulting</option>
-                      </select>
-                      <Landmark className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
-                      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </div>
-                    </div>
-                  </div>
+              
 
-                  {/* Subject */}
-                  <div className="group relative">
-                    <label htmlFor="subject" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
-                      Subject Title
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-4 focus:ring-[#DE1D3A]/10 focus:border-[#DE1D3A] transition-all duration-300"
-                        placeholder="e.g. COBOLT-X5 CNC specifications query"
-                      />
-                      <MessageSquare className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Message */}
-                <div className="group relative">
-                  <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
-                    Inquiry Message Details *
-                  </label>
-                  <div className="relative">
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows="5"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border ${
-                        formErrors.message ? 'border-[#DE1D3A] focus:ring-[#DE1D3A]/20' : 'border-[#E5E7EB] focus:ring-[#DE1D3A]/10'
-                      } focus:outline-none focus:ring-4 focus:border-[#DE1D3A] transition-all duration-300`}
-                      placeholder="Provide details about structural thickness parameters, axis speeds requirements, or materials characteristics."
-                    />
-                    <MessageSquare className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-5 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
-                  </div>
-                  {formErrors.message && (
-                    <p className="text-[#DE1D3A] text-[10px] font-semibold mt-1.5">{formErrors.message}</p>
-                  )}
-                </div>
+               
 
                 {/* Submit button */}
                 <div>

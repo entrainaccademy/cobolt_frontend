@@ -441,8 +441,6 @@ export const productsList = [
   
 
   
-
-  
   {
     id: "DA-M-GBO-1D2T",
     name: "D GAS BAKING OVEN 1D2T ",

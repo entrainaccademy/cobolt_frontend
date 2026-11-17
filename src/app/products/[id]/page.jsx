@@ -50,7 +50,7 @@ export async function generateStaticParams() {
     const backendProducts = await fetchProducts();
     if (Array.isArray(backendProducts)) {
       for (const p of backendProducts) {
-        if (p?.id && !ids.has(p.id.toLowerCase())) {
+        if (p?.id && !/[|<>:"/\\?*]/.test(p.id) && !ids.has(p.id.toLowerCase())) {
           ids.add(p.id.toLowerCase());
           params.push({ id: p.id });
         }

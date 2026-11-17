@@ -39,6 +39,7 @@ import {
   User,
   Download,
   BarChart3,
+  MapPin,
 } from 'lucide-react';
 import {
   adminLogin,
@@ -481,6 +482,7 @@ export default function AdminPage() {
       inq.name?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
       inq.email?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
       inq.phone?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
+      inq.place?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
       inq.company?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
       inq.subject?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
       inq.message?.toLowerCase().includes(inquirySearch.toLowerCase());
@@ -865,6 +867,12 @@ export default function AdminPage() {
 
                             <td className="px-5 py-3.5">
                               <div className="font-bold text-gray-900">{inq.name}</div>
+                              {inq.place && (
+                                <div className="text-[11px] text-[#DE1D3A] font-medium flex items-center gap-1 mt-0.5">
+                                  <MapPin className="w-3 h-3 flex-shrink-0" />
+                                  <span>{inq.place}</span>
+                                </div>
+                              )}
                               {inq.company && <div className="text-[10px] text-gray-400 font-medium">{inq.company}</div>}
                             </td>
 
@@ -2679,6 +2687,16 @@ function InquiryDetailModal({ inquiry, onClose, onUpdateStatus, onDelete }) {
             <span className="font-semibold text-gray-500 uppercase tracking-wider text-[10px]">Customer Name</span>
             <p className="text-sm font-bold text-gray-900">{inquiry.name}</p>
           </div>
+
+          {inquiry.place && (
+            <div>
+              <span className="font-semibold text-gray-500 uppercase tracking-wider text-[10px]">Location / Place</span>
+              <p className="text-gray-900 font-medium flex items-center gap-1.5 mt-0.5">
+                <MapPin className="w-3.5 h-3.5 text-[#DE1D3A] flex-shrink-0" />
+                <span>{inquiry.place}</span>
+              </p>
+            </div>
+          )}
 
           {inquiry.company && (
             <div>

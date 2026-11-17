@@ -24,10 +24,9 @@ Allow: /favicon.png
 Allow: /apple-touch-icon.png
 Allow: /favicon.svg
 Allow: /logo.png
-<<<<<<< HEAD
 Allow: /site.webmanifest
-=======
->>>>>>> admin
+Allow: /favicon-48x48.png
+Allow: /favicon-192x192.png
 Disallow: /private/
 
 User-agent: Bingbot

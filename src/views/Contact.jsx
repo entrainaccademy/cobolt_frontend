@@ -22,10 +22,12 @@ export default function Contact() {
   // State for form fields
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     phone: '',
+    category: 'Baking Equipments',
+    place: '',
+    email: '',
     company: '',
-    serviceType: 'Machinery Purchase',
+    serviceType: 'Baking Equipments',
     subject: '',
     message: ''
   });
@@ -69,18 +71,18 @@ export default function Contact() {
   // Form Validation
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = 'Contact name is required';
-    if (!formData.email.trim()) {
-      errors.email = 'Email address is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Please provide a valid corporate email';
-    }
+    if (!formData.name.trim()) errors.name = 'Full name is required';
     if (!formData.phone.trim()) {
-      errors.phone = 'Mobile or telephone number is required';
+      errors.phone = 'Contact number is required';
     } else if (!/^[0-9+\s-]{8,20}$/.test(formData.phone)) {
       errors.phone = 'Please provide a valid contact number';
     }
-    if (!formData.message.trim()) errors.message = 'Inquiry message details are required';
+    if (!formData.category?.trim()) {
+      errors.category = 'Inquiry category is required';
+    }
+    if (!formData.place.trim()) {
+      errors.place = 'Place / Location is required';
+    }
     return errors;
   };
 
@@ -106,14 +108,21 @@ export default function Contact() {
 
     setIsSubmitting(true);
     try {
-      await submitContactInquiry(formData);
+      const payload = {
+        ...formData,
+        category: formData.category || formData.serviceType || 'Baking Equipments',
+        serviceType: formData.category || formData.serviceType || 'Baking Equipments',
+      };
+      await submitContactInquiry(payload);
       setIsSubmitted(true);
       setFormData({
         name: '',
-        email: '',
         phone: '',
+        category: 'Baking Equipments',
+        place: '',
+        email: '',
         company: '',
-        serviceType: 'Machinery Purchase',
+        serviceType: 'Baking Equipments',
         subject: '',
         message: ''
       });
@@ -121,7 +130,7 @@ export default function Contact() {
       setTimeout(() => setIsSubmitted(false), 10000);
     } catch (err) {
       console.error('Contact inquiry submission failed:', err);
-      setSubmitError(err.message || 'Unable to submit your inquiry at this moment. Please reach us directly via WhatsApp or phone.');
+      setSubmitError(err.message || 'Unable to submit your callback request at this moment. Please reach us directly via WhatsApp or phone.');
     } finally {
       setIsSubmitting(false);
     }
@@ -234,7 +243,7 @@ export default function Contact() {
                     <span>Inquiry Submitted Successfully</span>
                   </div>
                   <p className="text-xs leading-relaxed">
-                    Thank you for connecting with Cobolt Machineries. Our system engineers will review your specifications and contact you at the provided email within 12-24 business hours.
+                    Thank you for connecting with Cobolt Machineries. Our team will review your requirement and call you shortly.
                   </p>
                 </div>
               ) : null}
@@ -248,7 +257,7 @@ export default function Contact() {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Name */}
+                  {/* Full Name */}
                   <div className="group relative">
                     <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
                       Full Name *
@@ -272,66 +281,14 @@ export default function Contact() {
                     )}
                   </div>
 
-                  {/* Company */}
-                  <div className="group relative">
-                    <label htmlFor="company" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
-                      Corporate/Entity Name
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        id="company"
-                        name="company"
-                        value={formData.company}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-4 focus:ring-[#DE1D3A]/10 focus:border-[#DE1D3A] transition-all duration-300"
-                        placeholder="e.g. AeroSteel Inc"
-                      />
-                      <Building className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
-                    </div>
-                  </div>
-                </div>
-
-                
-                  {/* Email */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Service Type Dropdown */}
-                  <div className="group relative">
-                    <label htmlFor="serviceType" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
-                      Inquiry Category
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="serviceType"
-                        name="serviceType"
-                        value={formData.serviceType}
-                        onChange={handleInputChange}
-                        className="w-full pl-10 pr-10 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-4 focus:ring-[#DE1D3A]/10 focus:border-[#DE1D3A] transition-all duration-300 appearance-none"
-                      >
-                        <option value="Machinery Purchase">Machinery Purchase</option>
-                        <option value="Engineering Service">Engineering Service</option>
-                        <option value="AMC Pricing Request">AMC Pricing Request</option>
-                        <option value="Custom Fabrication Consulting">Custom Fabrication Consulting</option>
-                      </select>
-                      <Landmark className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
-                      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </div>
-                    </div>
-                  </div>
-
-                 
-                
-                
-
-                  {/* Phone */}
+                  {/* Contact Number */}
                   <div className="group relative">
                     <label htmlFor="phone" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
                       Contact Number *
                     </label>
                     <div className="relative">
                       <input
-                        type="text"
+                        type="tel"
                         id="phone"
                         name="phone"
                         value={formData.phone}
@@ -349,16 +306,78 @@ export default function Contact() {
                   </div>
                 </div>
 
-              
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Category Dropdown */}
+                  <div className="group relative">
+                    <label htmlFor="category" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
+                      Inquiry Category *
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="category"
+                        name="category"
+                        value={formData.category}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormData(prev => ({ ...prev, category: val, serviceType: val }));
+                          if (formErrors.category) {
+                            setFormErrors(prev => ({ ...prev, category: '' }));
+                          }
+                        }}
+                        className={`w-full pl-10 pr-10 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border ${
+                          formErrors.category ? 'border-[#DE1D3A] focus:ring-[#DE1D3A]/20' : 'border-[#E5E7EB] focus:ring-[#DE1D3A]/10'
+                        } focus:outline-none focus:ring-4 focus:border-[#DE1D3A] transition-all duration-300 appearance-none`}
+                      >
+                        <option value="Baking Equipments">Baking Equipments</option>
+                        <option value="Food Preparation Machines">Food Preparation Machines</option>
+                        <option value="Cooking Equipments">Cooking Equipments</option>
+                        <option value="Refrigeration Items">Refrigeration Items</option>
+                        <option value="Stainless Steel Fabrications">Stainless Steel Fabrications</option>
+                        <option value="Industrial And Food Service">Industrial And Food Service</option>
+                        <option value="Machinery Purchase">Machinery Purchase (General)</option>
+                        <option value="Custom Fabrication Consulting">Custom Fabrication Consulting</option>
+                      </select>
+                      <Landmark className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
+                      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </div>
+                    </div>
+                    {formErrors.category && (
+                      <p className="text-[#DE1D3A] text-[10px] font-semibold mt-1.5">{formErrors.category}</p>
+                    )}
+                  </div>
 
-               
+                  {/* Place / Location */}
+                  <div className="group relative">
+                    <label htmlFor="place" className="block text-xs font-bold uppercase tracking-wider text-[#6B7280] mb-2">
+                      Place / Location *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        id="place"
+                        name="place"
+                        value={formData.place}
+                        onChange={handleInputChange}
+                        className={`w-full pl-10 pr-4 py-3 bg-[#FFFFFF] text-sm text-[#111827] rounded-xl border ${
+                          formErrors.place ? 'border-[#DE1D3A] focus:ring-[#DE1D3A]/20' : 'border-[#E5E7EB] focus:ring-[#DE1D3A]/10'
+                        } focus:outline-none focus:ring-4 focus:border-[#DE1D3A] transition-all duration-300`}
+                        placeholder="e.g. Malappuram, Kerala"
+                      />
+                      <MapPin className="w-4 h-4 text-[#6B7280]/65 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-[#DE1D3A] transition-colors duration-300" />
+                    </div>
+                    {formErrors.place && (
+                      <p className="text-[#DE1D3A] text-[10px] font-semibold mt-1.5">{formErrors.place}</p>
+                    )}
+                  </div>
+                </div>
 
                 {/* Submit button */}
                 <div>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full px-6 py-4 bg-gradient-to-r from-[#DE1D3A] to-[#B7152D] hover:from-[#B7152D] hover:to-[#DE1D3A] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#DE1D3A]/25 hover:shadow-xl hover:shadow-[#DE1D3A]/30 hover:scale-[1.01] active:scale-95 disabled:opacity-85"
+                    className="w-full px-6 py-4 bg-gradient-to-r from-[#DE1D3A] to-[#B7152D] hover:from-[#B7152D] hover:to-[#DE1D3A] text-white text-xs font-bold uppercase tracking-widest rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#DE1D3A]/25 hover:shadow-xl hover:shadow-[#DE1D3A]/30 hover:scale-[1.01] active:scale-95 disabled:opacity-85 cursor-pointer"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">

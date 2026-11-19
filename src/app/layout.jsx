@@ -116,6 +116,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
         {/* End Google Tag Manager */}
+        {/* Google Tag Manager (GTM-5FLNQXLB) & gtag setup */}
+        <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5FLNQXLB" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());`,
+          }}
+        />
       </head>
       <body className={`${inter.variable} ${outfit.variable} ${sora.variable} ${poppins.variable} bg-white text-text font-sans antialiased selection:bg-accent/20 selection:text-primary overflow-x-hidden min-h-screen flex flex-col`}>
         {/* Google Tag Manager (noscript) */}

@@ -21,7 +21,9 @@ import {
   Sparkles,
   ShoppingCart,
   Headphones,
+  ChevronDown,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import PageWrapper from '../components/PageWrapper';
 import ScrollReveal from '../components/ScrollReveal';
 import ClientMarquee from '../components/ClientMarquee';
@@ -406,12 +408,43 @@ const getPriceDisplay = (product, idx) => {
   };
 };
 
+// =========================================================================
+// FREQUENTLY ASKED QUESTIONS (FAQ) DATA
+// =========================================================================
+const FAQS = [
+  {
+    question: "What is commercial kitchen equipment?",
+    answer: "Commercial kitchen equipment is the heavy-duty machinery and fittings used to prepare, cook, bake, store and serve food in restaurants, hotels, cafés, bakeries and catering businesses. It is built to run for long hours every day. It uses durable materials such as stainless steel and is designed to be easy to clean and meet food-hygiene standards."
+  },
+  {
+    question: "Is commercial-grade equipment really worth the higher price compared with cheaper machines?",
+    answer: "Commercial kitchens run equipment for many hours every day, so a cheap machine that fails early costs more in repairs, downtime and spoiled stock. Cobolt builds with SS304 and SS202 stainless steel and practical, heavy-use designs. You can choose the grade that fits your budget and workload, and we’ll tell you honestly when a smaller or simpler model is enough."
+  },
+  {
+    question: "What if the machine breaks down and I can’t find spare parts or a technician?",
+    answer: "Cobolt provides after-sales support, technical assistance and Annual Maintenance Contracts (AMC). We also manufacture in-house, so parts for our machines are not tied to a distant importer."
+  },
+  {
+    question: "What warranty do I get, and what does it cover?",
+    answer: "Cobolt Machineries offers product-specific warranties covering eligible manufacturing defects, including parts and labour as per warranty terms. Misuse, normal wear and tear, and improper maintenance are excluded. Annual Maintenance Contracts (AMC) are also available for ongoing service support."
+  },
+  {
+    question: "Will the equipment fit my kitchen, power supply and layout?",
+    answer: "Before you order, our team plans the kitchen with you. We check your available space, gas or electrical connections and workflow, and we can customise sizes and stainless-steel workstations to fit. We deliver across India and handle installation, so the equipment is ready to use when it arrives."
+  },
+  {
+    question: "How do I choose between stainless steel grades (SS304 vs SS202) and between models?",
+    answer: "SS304 is the premium choice for wet, acidic or high-hygiene areas and the longest life. SS202 is a more economical option for lower-exposure uses. Tell us what you cook, how many covers you serve a day and your budget, and we’ll recommend the right model, such as a dough mixer, cooking range, fryer or shawarma machine."
+  }
+];
+
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState(fallbackProducts);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [expandedFaq, setExpandedFaq] = useState(null);
 
   // Company Statistics Counting Animation State
   const statsSectionRef = useRef(null);
@@ -980,57 +1013,92 @@ export default function Home() {
         </div>
       </section> */}
 
-      {/* Latest Blog Posts Section */}
-      <section className="py-24 bg-[#FFFFFF]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
-            <div className="space-y-4 text-left max-w-2xl">
-              <span className="text-[#DE1D3A] font-bold text-xs uppercase tracking-widest">
-                Technical Journals
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] font-display">
-                Latest Machinery Updates &amp; Trends
-              </h2>
-            </div>
-            <Link
-              href="/blog"
-              className="inline-flex items-center justify-center px-6 py-3 border border-[#E5E7EB] hover:border-[#DE1D3A] text-sm font-semibold rounded-lg text-[#DE1D3A] hover:bg-[#F8FAFC] transition-all duration-200 flex-shrink-0 group"
-            >
-              Visit Blog
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+     
+    
+      {/* =========================================================================
+          COMMERCIAL KITCHEN EQUIPMENT FAQ SECTION
+          ========================================================================= */}
+      <section className="py-20 md:py-28 bg-[#F8FAFC] border-t border-slate-200/80 relative overflow-hidden">
+        {/* Decorative background glows */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#DE1D3A]/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-200/50 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-3">
+            <span className="font-sans font-semibold tracking-wider text-xs text-[#DE1D3A] uppercase px-3.5 py-1.5 bg-[#FCE8EC]/70 rounded-full border border-[#DE1D3A]/20 inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#DE1D3A]" />
+              Frequently Asked Questions
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] font-display tracking-tight">
+              Commercial Kitchen Equipment FAQ
+            </h2>
+            <p className="text-[#64748B] text-sm sm:text-base leading-relaxed">
+              Clear answers to help you choose, customize, and maintain high-performance machinery for your commercial kitchen.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="border border-[#E5E7EB] bg-[#F8FAFC] hover:bg-[#FFFFFF] rounded-xl p-8 hover:shadow-xl transition-all duration-300 flex flex-col justify-between text-left group">
-              <div>
-                <span className="text-[#DE1D3A] text-xs font-semibold uppercase tracking-wider">Maintenance Guide</span>
-                <h3 className="font-display font-bold text-xl text-[#111827] group-hover:text-[#DE1D3A] transition-colors duration-200 mt-3 mb-2">
-                  5 Essential Checks for High-Speed Spindles
-                </h3>
-                <p className="text-[#6B7280] text-sm leading-relaxed mb-6">
-                  Spindle thermal drift is the primary cause of dimension errors. Learn how oil cooling systems and vibration sensing prevent spindle failure.
-                </p>
-              </div>
-              <Link href="/blog" className="text-[#DE1D3A] hover:text-[#B7152D] font-bold text-xs flex items-center gap-1.5 transition-colors duration-200">
-                Read Article <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+          <div className="space-y-3.5 text-left">
+            {FAQS.map((faq, index) => {
+              const isOpen = expandedFaq === index;
+              return (
+                <div
+                  key={index}
+                  className={`bg-white rounded-2xl border transition-all duration-300 overflow-hidden shadow-xs ${ 
+                    isOpen
+                      ? 'border-[#DE1D3A]/30 shadow-md shadow-[#DE1D3A]/5 ring-1 ring-[#DE1D3A]/10'
+                      : 'border-slate-200/90 hover:border-slate-300'
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setExpandedFaq(isOpen ? null : index)}
+                    className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left font-display font-bold text-sm sm:text-base text-slate-800 hover:text-[#DE1D3A] transition-colors cursor-pointer group"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="flex items-start gap-3">
+                      <span className="text-xs font-mono font-bold text-[#DE1D3A] px-2 py-0.5 bg-[#FCE8EC]/50 rounded mt-0.5 shrink-0">
+                        0{index + 1}
+                      </span>
+                      <span className="group-hover:text-[#DE1D3A] transition-colors">{faq.question}</span>
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-slate-400 transition-transform duration-300 flex-shrink-0 ${
+                        isOpen ? 'rotate-180 text-[#DE1D3A]' : 'group-hover:text-slate-600'
+                      }`}
+                    />
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      >
+                        <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed font-sans border-t border-slate-100 pl-14">
+                          {faq.answer}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
 
-            <div className="border border-[#E5E7EB] bg-[#F8FAFC] hover:bg-[#FFFFFF] rounded-xl p-8 hover:shadow-xl transition-all duration-300 flex flex-col justify-between text-left group">
-              <div>
-                <span className="text-[#DE1D3A] text-xs font-semibold uppercase tracking-wider">Industrial IoT</span>
-                <h3 className="font-display font-bold text-xl text-[#111827] group-hover:text-[#DE1D3A] transition-colors duration-200 mt-3 mb-2">
-                  Integrating PLC Data with Enterprise ERP Systems
-                </h3>
-                <p className="text-[#6B7280] text-sm leading-relaxed mb-6">
-                  How manufacturing floors leverage automated Modbus/TCP relays to log parts count and predictive health checks directly into billing databases.
-                </p>
-              </div>
-              <Link href="/blog" className="text-[#DE1D3A] hover:text-[#B7152D] font-bold text-xs flex items-center gap-1.5 transition-colors duration-200">
-                Read Article <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+          {/* Direct Support Note */}
+          <div className="mt-12 text-center p-6 bg-white border border-slate-200/80 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+            <div className="text-center sm:text-left">
+              <h4 className="font-display font-bold text-sm text-slate-900">Have a custom kitchen layout or specific machinery query?</h4>
+              <p className="text-xs text-slate-500 mt-0.5">Our technical consultants in Kerala provide end-to-end guidance from sizing to setup.</p>
             </div>
+            <Link
+              href="/contact"
+              className="whitespace-nowrap px-5 py-2.5 bg-slate-900 hover:bg-[#DE1D3A] text-white text-xs font-bold rounded-xl transition-colors duration-300 inline-flex items-center gap-1.5 shadow-sm"
+            >
+              <span>Consult Our Team</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </section>

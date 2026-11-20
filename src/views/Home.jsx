@@ -889,6 +889,17 @@ export default function Home() {
               </Link>
             ))}
           </div>
+
+          {/* All Product Button */}
+          <div className="mt-10 sm:mt-12 text-center flex justify-center">
+            <Link
+              href="/products"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[#DE1D3A] to-[#B7152D] hover:from-[#B7152D] hover:to-[#DE1D3A] text-white text-xs sm:text-sm font-bold uppercase tracking-wider rounded-xl shadow-lg shadow-[#DE1D3A]/20 hover:shadow-xl hover:shadow-[#DE1D3A]/30 hover:scale-[1.02] active:scale-95 transition-all duration-300 group cursor-pointer"
+            >
+              <span>all product</span>
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -967,52 +978,6 @@ export default function Home() {
 
      
 
-      {/* Why Choose Us / Core Strengths */}
-      {/* <section className="py-24 bg-[#F8FAFC]/50 border-y border-[#E5E7EB]/50 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#DE1D3A]/5 via-transparent to-transparent opacity-60 pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <span className="font-sans font-semibold tracking-wider text-xs text-[#DE1D3A] uppercase px-3.5 py-1.5 bg-[#FCE8EC]/50 rounded-full border border-[#DE1D3A]/20 inline-block">
-              Our Core Strengths
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] font-display tracking-tight">
-              Why Commercial Kitchens Partner with Cobolt
-            </h2>
-            <p className="text-[#6B7280] text-[14px] md:text-base max-w-2xl mx-auto leading-relaxed">
-              We understand that even a single minute of machine downtime represents massive loss. We engineer stability into every joint and code reliability into every system.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 bg-[#F8FAFC] gap-4 sm:gap-10">
-            {features.map((feature, idx) => (
-              <ScrollReveal
-                key={idx}
-                delay={idx * 0.08}
-                className="group relative border border-[#E5E7EB] shadow-xs shadow-[#DE1D3A]/60 hover:border-[#DE1D3A]/20 hover:shadow-[0_20px_40px_rgba(222,29,58,0.06)] rounded-2xl p-4 md:p-8 hover:-translate-y-2 transition-all duration-500 flex flex-col items-start text-left overflow-hidden bg-white"
-              >
-                <div className="hidden md:block absolute top-6 right-8 text-3xl font-extrabold font-display text-[#E5E7EB] select-none pointer-events-none group-hover:text-[#DE1D3A]/10 transition-colors duration-500">
-                  {String(idx + 1).padStart(2, '0')}
-                </div>
-
-                <div className="w-12 h-12 md:w-14 md:h-14 bg-[#DE1D3A]/5 text-[#DE1D3A] group-hover:bg-[#DE1D3A] group-hover:text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm shadow-[#DE1D3A]/5 group-hover:shadow-[#DE1D3A]/25 transition-all duration-500">
-                  <feature.icon className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" />
-                </div>
-
-                <h3 className="font-display font-semibold md:font-bold text-sm md:text-lg text-[#6B7280] mb-3 group-hover:text-[#DE1D3A] transition-colors duration-300">
-                  {feature.title}
-                </h3>
-                <p className="text-[#6B7280] text-[12px] md:text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-
-                <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-[#DE1D3A]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section> */}
-
      
     
       {/* =========================================================================
@@ -1025,16 +990,11 @@ export default function Home() {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-3">
-            <span className="font-sans font-semibold tracking-wider text-xs text-[#DE1D3A] uppercase px-3.5 py-1.5 bg-[#FCE8EC]/70 rounded-full border border-[#DE1D3A]/20 inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#DE1D3A]" />
-              Frequently Asked Questions
-            </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#111827] font-display tracking-tight">
+           
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#111827] font-display tracking-tight">
               Commercial Kitchen Equipment FAQ
             </h2>
-            <p className="text-[#64748B] text-sm sm:text-base leading-relaxed">
-              Clear answers to help you choose, customize, and maintain high-performance machinery for your commercial kitchen.
-            </p>
+          
           </div>
 
           <div className="space-y-3.5 text-left">
@@ -1056,7 +1016,7 @@ export default function Home() {
                     aria-expanded={isOpen}
                   >
                     <span className="flex items-start gap-3">
-                      <span className="text-xs font-mono font-bold text-[#DE1D3A] px-2 py-0.5 bg-[#FCE8EC]/50 rounded mt-0.5 shrink-0">
+                      <span className="text-xs font-poppins  font-thin text-[#8d8a8a] px-2 py-0.5  rounded mt-0.5 shrink-0">
                         0{index + 1}
                       </span>
                       <span className="group-hover:text-[#DE1D3A] transition-colors">{faq.question}</span>

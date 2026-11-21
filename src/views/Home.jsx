@@ -972,9 +972,7 @@ export default function Home() {
 
     
 
-      {/* =========================================================================
-          PRESERVED SUPPORTING SECTIONS (CLIENT MARQUEE, FEATURES, BLOG, CTA)
-          ========================================================================= */}
+    
 
      
 
